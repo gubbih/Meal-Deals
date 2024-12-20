@@ -1,49 +1,52 @@
 # Cheaper Meal Plan
 
-## Overview
-This project aims to create a simple and cost-effective meal planning application. The goal is to help users find recipes and purchase ingredients at the lowest prices.
+## Project Overview
+This project is a work-in-progress for building a simple meal planning application. The main idea is to help users find recipes and identify the cheapest places to buy ingredients.
 
 ---
 
-## Features
+## To-Do List
 
 ### Website Functionality
-- **Static Website Compatibility**  
-  The website should work as a static site, similar to the current setup on Digital Ocean.
+- [ ] **Static Website Compatibility**  
+      Ensure the website works as a static site, similar to the current setup on Digital Ocean.
 
-- **Database Management**  
-  Use Firebase or a similar service to manage the database. Azure's SQL database may also be tested as an alternative.
+- [ ] **Database Management**  
+      Use Firebase or a similar service to manage the database. Test Azure's SQL database as an alternative.
 
-- **Preloaded Recipes**  
-  Ensure there is at least one recipe available before implementing the core functionality.
+- [ ] **Preloaded Recipes**  
+      Add at least one recipe before implementing the core functionality.
 
-- **CRUD for Recipes**  
-  - Users/Admins can create, update, and delete recipes.  
-  - Initially, only the admin (myself) will have these permissions.
+- [ ] **CRUD for Recipes**  
+      - Enable Create, Read, Update, and Delete functionality for recipes.  
+      - Initially, only the admin (myself) will have permissions for Update and Delete.
 
-- **Recipe Source**  
-  Decide if recipes should be user-submitted or sourced from another website to prevent modification of certain recipes.
+- [ ] **Recipe Source**  
+      Decide whether recipes should:
+      - Be added by users.  
+      - Be sourced from another website to prevent modification of certain recipes.
 
-- **Ingredient Price Checker**  
-  Once a recipe is selected, send it to another page where all ingredients are gathered and checked for the lowest prices across various stores.
+- [ ] **Ingredient Price Checker**  
+      Implement functionality to send selected recipes to another page that:  
+      - Gathers all ingredients.  
+      - Checks where they can be purchased at the lowest prices.
 
 ---
 
-## Design
-
-- **One-Page Layout**  
-  - Generic and minimalistic, resembling a webshop.
-  - One side displays an image, and the other side contains all necessary information and options.
+### Design
+- [ ] **One-Page Layout**  
+      - A generic and minimalistic design resembling a webshop.  
+      - One side displays an image, and the other contains all necessary information and options.
 
 ---
 
 ## Future Plans
-
-- **Recipe Sharing**  
-  Expand the platform to allow users to share their own recipes and view "discount meals" created by others.
+- [ ] **Recipe Sharing**  
+      Expand functionality to allow users to:  
+      - Upload their own recipes.  
+      - Share "discount meals" with other users.
 
 ---
 
-## How to Contribute
-1. Fork the repository.
-2. Create a feature branch (`git c
+## Notes
+This is an ongoing project. Contributions and ideas are welcome! The project is not yet functional and is currently in the planning phase.
