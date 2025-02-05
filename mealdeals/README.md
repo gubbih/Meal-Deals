@@ -8,6 +8,9 @@ This project is a work-in-progress for building a simple meal planning applicati
 ## To-Do List
 
 ### Website Functionality
+- [ ] **Static Website Compatibility**  
+      Ensure the website works as a static site, similar to the current setup on Digital Ocean.
+
 - [ ] **Database Management**  
       Use Firebase or a similar service to manage the database. Test Azure's SQL database as an alternative.
 
@@ -27,10 +30,6 @@ This project is a work-in-progress for building a simple meal planning applicati
       Implement functionality to send selected recipes to another page that:  
       - Gathers all ingredients.  
       - Checks where they can be purchased at the lowest prices.
-
-      add meals to fav
-      fix foodcomponents to have them ALL added or find a better way to do that
-      
 
 ---
 
