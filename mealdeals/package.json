@@ -10,6 +10,7 @@
     "babel-plugin-react-css-modules": "^5.2.6",
     "cra-template-typescript": "1.2.0",
     "firebase": "^11.2.0",
+    "firebase-admin": "^13.0.2",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-normalize": "^13.0.1",
     "postcss-preset-env": "^10.1.3",
