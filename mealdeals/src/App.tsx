@@ -1,35 +1,31 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'; // Correct import
 import './App.css';
 import HomePage from './pages/HomePage';
 import MealPage from './pages/MealPage';
 import CreatePage from './pages/CreatePage';
 import UserPage from './pages/UserPage';
-
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
-  // Extract the meal ID from the URL if it exists
-  const mealId = window.location.pathname.startsWith("/meal/") 
-    ? window.location.pathname.split("/meal/")[1] 
-    : null;
-
   return (
-    <div>
+    <Router>
       <nav className="bg-green-500 p-4">
-        <a href="/" className="text-white text-2xl font-bold">Cheap meals!</a>
+        <Link to="/" className="text-white text-2xl font-bold">Cheap meals!</Link>
         <div>
-          <a href="/" className="text-white mx-2">Home</a>
-          <a href="/create" className="text-white mx-2">Create</a>
-          <a href="/user" className="text-white mx-2">User</a>
+          <Link to="/" className="text-white mx-2">Home</Link>
+          <Link to="/create" className="text-white mx-2">Create</Link>
+          <Link to="/user" className="text-white mx-2">User</Link>
         </div>
       </nav>
-      <div>
-        {/* Manually render components based on the current URL */}
-        {window.location.pathname === "/" && <HomePage />}
-        {mealId && <MealPage id={mealId} />}
-        {window.location.pathname === "/create" && <CreatePage />}
-        {window.location.pathname === "/user" && <UserPage />}
-      </div>
-    </div>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/meal/:id" element={<MealPage />} />
+        <Route path="/create" element={<CreatePage />} />
+        <Route path="/user" element={<UserPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </Router>
   );
 }
 

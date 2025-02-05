@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, doc, getDoc, addDoc } from 'firebase/firestore';
 import { getAuth, signInWithEmailAndPassword, signOut as firebaseSignOut, onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
-import { Meal } from '../models/Meal';
+import { dummyMeals, Meal } from '../models/Meal';
 import { User } from '../models/User';
 
 const firebaseConfig = {
@@ -20,15 +20,17 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 export const getMeals = async (): Promise<Meal[]> => {
-  const mealsCol = collection(db, 'meals');
-  const mealSnapshot = await getDocs(mealsCol);
-  return mealSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Meal));
+  //const mealsCol = collection(db, 'meals');
+  //const mealSnapshot = await getDocs(mealsCol);
+  //return mealSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Meal));
+  return dummyMeals as Meal[];
 };
 
 export const getMeal = async (id: string): Promise<Meal> => {
-  const mealDoc = doc(db, 'meals', id);
-  const mealSnapshot = await getDoc(mealDoc);
-  return { id: mealSnapshot.id, ...mealSnapshot.data() } as Meal;
+  //const mealDoc = doc(db, 'meals', id);
+  //const mealSnapshot = await getDoc(mealDoc);
+  //return { id: mealSnapshot.id, ...mealSnapshot.data() } as Meal;
+  return dummyMeals.find(meal => meal.id === id) as Meal;
 };
 
 export const addMeal = async (meal: Meal): Promise<void> => {
