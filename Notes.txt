@@ -21,3 +21,17 @@ Coop:
 365 kan ikke findes på etilbud
 
 link for api: https://api.etilbudsavis.dk/v2/offers?dealer_id=
+
+
+ideas
+DB setup
+
+FC
+    protien
+        kylling
+            Hakkekød
+            Inderfille
+        Oksekød
+            Hakkekød
+Will this work?
+So it firstly looks after chicken, then other atrabutes

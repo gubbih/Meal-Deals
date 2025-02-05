@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, doc, getDoc, addDoc } from 'firebase/firestore';
+import { Database, getDatabase, ref, set, push} from 'firebase/database';
 import { getAuth, signInWithEmailAndPassword, signOut as firebaseSignOut, onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { dummyMeals, Meal } from '../models/Meal';
@@ -16,51 +16,82 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db = getDatabase();
 const auth = getAuth(app);
+//##############################################
+//###########         GET           ############
+//##############################################
+
 
 export const getMeals = async (): Promise<Meal[]> => {
-  //const mealsCol = collection(db, 'meals');
-  //const mealSnapshot = await getDocs(mealsCol);
-  //return mealSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Meal));
+  // Todo: Implement fetching meals from Firebase
   return dummyMeals as Meal[];
 };
 
 export const getMeal = async (id: string): Promise<Meal> => {
-  //const mealDoc = doc(db, 'meals', id);
-  //const mealSnapshot = await getDoc(mealDoc);
-  //return { id: mealSnapshot.id, ...mealSnapshot.data() } as Meal;
+  //Todo: Implement fetching meal from Firebase
   return dummyMeals.find(meal => meal.id === id) as Meal;
 };
 
+//##############################################
+//###########         POST          ############
+//##############################################
+
 export const addMeal = async (meal: Meal): Promise<void> => {
-  const mealsCol = collection(db, 'meals');
-  await addDoc(mealsCol, meal);
+  const newMealRef = push(ref(db, 'meals'));
+  const data = {
+    name: meal.name,
+    description: meal.description,
+    price: meal.price,
+    priceCurrency: meal.priceCurrency,
+    imagePath: meal.imagePath,
+    foodComponents: meal.foodComponents
+  };
+  await set(newMealRef, data);
 };
+//##############################################
+//###########         PUT           ############
+//##############################################
+
+export const updateMeal = async (meal: Meal): Promise<void> => {
+  throw new Error('Not implemented');
+}
+
+export const updateUser = async (user: User): Promise<void> => {
+  throw new Error('Not implemented');
+}
+
+export const updateMealImage = async (mealId: string, image: File): Promise<string> => {
+  throw new Error('Not implemented');
+}
+
+
+//##############################################
+//###########         DELETE        ############
+//##############################################
+
+export const deleteMeal = async (id: string): Promise<void> => {
+  throw new Error('Not implemented');
+};
+
+export const deleteUser = async (id: string): Promise<void> => {
+  throw new Error('Not implemented');
+};
+
+
+//##############################################
+//###########         AUTH          ############
+//##############################################
 
 export const signIn = (email: string, password: string) => {
   return signInWithEmailAndPassword(auth, email, password);
 };
 
 export const signOut = () => {
-  return firebaseSignOut(auth);
+  throw new Error('Not implemented');
 };
 
 export const useAuth = (): User | null => {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser) {
-        const { uid, email, displayName } = firebaseUser;
-        const [firstName, lastName] = displayName ? displayName.split(' ') : ['', ''];
-        setUser({ id: uid, email: email || '', firstName, lastName });
-      } else {
-        setUser(null);
-      }
-    });
-    return unsubscribe;
-  }, []);
-
-  return user;
+  throw new Error('Not implemented');
 };
+
