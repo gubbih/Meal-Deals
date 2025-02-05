@@ -9,8 +9,6 @@ function CreatePage() {
     description: '',
     price: 0,
     priceCurrency: '',
-    weight: 0,
-    weightUnit: '',
     imagePath: '',
     foodComponents: []
   });

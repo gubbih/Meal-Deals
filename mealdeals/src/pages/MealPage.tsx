@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom'; // Import useParams
 import { getMeal } from '../services/firebase';
 import { Meal } from '../models/Meal';
 
-interface MealPageProps {
-  id: string;
-}
-
-function MealPage({ id }: MealPageProps) {
+function MealPage() {
+  const { id } = useParams<{ id: string }>(); // Use useParams to get the id
+  
   const [meal, setMeal] = useState<Meal | null>(null);
+  console.log("meal: ", meal);
 
   useEffect(() => {
-    getMeal(id).then(data => setMeal(data));
+    if (id) {
+      getMeal(id).then(data => setMeal(data));
+    }
   }, [id]);
 
   if (!meal) return <div>Loading...</div>;
@@ -50,3 +52,4 @@ function MealPage({ id }: MealPageProps) {
 }
 
 export default MealPage;
+
