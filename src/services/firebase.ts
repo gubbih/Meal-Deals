@@ -1,23 +1,25 @@
-import { initializeApp } from 'firebase/app';
-import { Database, getDatabase, ref, set, push} from 'firebase/database';
-import { getAuth, signInWithEmailAndPassword, signOut as firebaseSignOut, onAuthStateChanged } from 'firebase/auth';
-import { useEffect, useState } from 'react';
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, onValue, push, set } from "firebase/database";
 import { dummyMeals, Meal } from '../models/Meal';
 import { User } from '../models/User';
+import { FoodComponent } from '../models/FoodComponent';
+import { Offer } from '../models/Offer';
 
 const firebaseConfig = {
-    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_FIREBASE_APP_ID,
-    measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
+  apiKey: "AIzaSyCsCQ_943yRXb_mjw9_WLeIlN8Eu6SMLa8",
+  authDomain: "meal-deals-2b177.firebaseapp.com",
+  databaseURL: "https://meal-deals-2b177-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "meal-deals-2b177",
+  storageBucket: "meal-deals-2b177.firebasestorage.app",
+  messagingSenderId: "160668943646",
+  appId: "1:160668943646:web:34f06f3de84760385ef50f",
+  measurementId: "G-3W874VXGT0"
 };
-
 const app = initializeApp(firebaseConfig);
-const db = getDatabase();
-const auth = getAuth(app);
+const db = getDatabase(app);
+
+
+
 //##############################################
 //###########         GET           ############
 //##############################################
@@ -32,6 +34,36 @@ export const getMeal = async (id: string): Promise<Meal> => {
   //Todo: Implement fetching meal from Firebase
   return dummyMeals.find(meal => meal.id === id) as Meal;
 };
+
+export const getFoodComponents = async (): Promise<FoodComponent[]> => {
+  return new Promise((resolve, reject) => {
+    const foodRef = ref(db, "/foodcompents");
+
+    onValue(foodRef, (snapshot) => {
+      console.log("Data hentet fra foodComponents:", snapshot);
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const foodArray = Object.entries(data).map(([key, value]) => ({
+          category: key,              // Use the key as the category
+          items: value as string[],   // Assert that items is an array of strings
+        }));
+        console.log("Data hentet fra foodComponents:", foodArray);
+        resolve(foodArray as FoodComponent[]);
+      } else {
+        console.warn("Ingen data fundet i foodComponents!");
+        resolve([]);
+      }
+    }, (error) => {
+      console.error("Fejl ved hentning af data:", error);
+      reject(error);
+    });
+  });
+};
+
+export const getOffer = async (id: string): Promise<Offer> => {
+  throw new Error('Not implemented');
+}
+
 
 //##############################################
 //###########         POST          ############
@@ -84,7 +116,8 @@ export const deleteUser = async (id: string): Promise<void> => {
 //##############################################
 
 export const signIn = (email: string, password: string) => {
-  return signInWithEmailAndPassword(auth, email, password);
+  throw new Error('Not implemented');
+  //return signInWithEmailAndPassword(auth, email, password);
 };
 
 export const signOut = () => {
