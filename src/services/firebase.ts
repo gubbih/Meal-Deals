@@ -40,7 +40,6 @@ export const getFoodComponents = async (): Promise<FoodComponent[]> => {
     const foodRef = ref(db, "/foodcompents");
 
     onValue(foodRef, (snapshot) => {
-      console.log("Data hentet fra foodComponents:", snapshot);
       if (snapshot.exists()) {
         const data = snapshot.val();
         const foodArray = Object.entries(data).map(([key, value]) => ({
