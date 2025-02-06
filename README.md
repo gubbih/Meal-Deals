@@ -8,7 +8,7 @@ This project is a work-in-progress for building a simple meal planning applicati
 ## To-Do List
 
 ### Website Functionality
-- [ ] **Database Management**  
+- [x] **Database Management**  
       Use Firebase or a similar service to manage the database. Test Azure's SQL database as an alternative.
 
 - [ ] **Preloaded Recipes**  
@@ -35,7 +35,7 @@ This project is a work-in-progress for building a simple meal planning applicati
 ---
 
 ### Design
-- [ ] **One-Page Layout**  
+- [x] **One-Page Layout**  
       - A generic and minimalistic design resembling a webshop.  
       - One side displays an image, and the other contains all necessary information and options.
 
