@@ -8,5 +8,6 @@ export interface Offer {
   offerStart: string;
   offerEnd: string;
   category: string[];
+  matchedItems: string[];
   store: string;
 }

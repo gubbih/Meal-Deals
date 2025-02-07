@@ -26,6 +26,7 @@ function MealPage() {
   const [groupedOffers, setGroupedOffers] = useState<Record<string, Offer[]>>({});
   const [loading, setLoading] = useState(true);
   console.log("meal: ", meal);
+  console.log("offers: ", offers);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,29 +43,36 @@ function MealPage() {
 
   useEffect(() => {
     if (!meal?.foodComponents || offers.length === 0) return;
-
+  
     const grouped: Record<string, Offer[]> = {};
-
+  
     meal.foodComponents.forEach((fc) => {
-      if (!fc?.category) return;
-
+      if (!fc?.category || !fc?.items) return;
+  
+      // Convert `fc.items` to an array if it's a string
+      const foodItems = Array.isArray(fc.items) ? fc.items : [fc.items];
+      console.log("foodItems: ", foodItems);
+  
+      // Find offers that match either the category OR specific food items
       const matchedOffers = offers.filter((offer) =>
-        (offer.category ?? []).includes(fc.category)
+        (offer.matchedItems ?? []).some(item => foodItems.includes(item))
       );
-
+  
       matchedOffers.forEach((offer) => {
-        if (!grouped[offer.name]) { 
+        if (!grouped[offer.name]) {
           grouped[offer.name] = [];
         }
-        // Check for duplicates based on name and price
+        // Prevent duplicate offers based on name and price
         if (!grouped[offer.name].some(o => o.price === offer.price && o.name === offer.name)) {
           grouped[offer.name].push(offer);
         }
       });
     });
-
+  
     setGroupedOffers(grouped);
   }, [meal, offers]);
+  
+  
 
   if (loading || !meal) return <div>Loading...</div>;
 
@@ -163,10 +171,35 @@ function MealPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Object.entries(groupedOffers).map(([name, offers]) => (
-                <Row key={name} offers={offers} />
-              ))}
+              {meal.foodComponents.map((fc, index) => {
+                // Convert items to an array if it's a string
+                const foodItems = Array.isArray(fc.items) ? fc.items : [fc.items];
+
+                // Find all offers for this food component
+                const offersForComponent = offers.filter((offer) =>
+                  (offer.matchedItems ?? []).some(item => foodItems.includes(item))
+                );
+
+                return (
+                  <React.Fragment key={index}>
+                    {offersForComponent.length > 0 ? (
+                      offersForComponent.map((offer, idx) => <Row key={`${index}-${idx}`} offers={[offer]} />)
+                    ) : (
+                      <TableRow>
+                        <TableCell />
+                        <TableCell component="th" scope="row">{foodItems.join(", ")}</TableCell>
+                        <TableCell colSpan={5} align="center">
+                          <Typography variant="body2" color="textSecondary">
+                            Ikke på tilbud lige nu
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </React.Fragment>
+                );
+              })}
             </TableBody>
+
           </Table>
         </TableContainer>
       </div>
