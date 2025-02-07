@@ -8,19 +8,15 @@ function MealPage() {
   const { id } = useParams<{ id: string }>(); // Use useParams to get the id
   
   const [meal, setMeal] = useState<Meal | null>(null);
-  const [offer, setOffer] = useState<Offer | null>(null);
   console.log("meal: ", meal);
 
   useEffect(() => {
     if (id) {
       getMeal(id).then(data => setMeal(data));
     }
-    if (id) {
-      //getOffer(id).then(data => setOffer(data));
-    }
   }, [id]);
 
-  if (!meal || !offer) return <div>Loading...</div>;
+  if (!meal) return <div>Loading...</div>;
 
   return (
     <div className="p-4">
