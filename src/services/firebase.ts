@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, onValue, push, set, get } from "firebase/database";
+import { getDatabase, ref, push, set, get } from "firebase/database";
 import { dummyMeals, Meal } from '../models/Meal';
 import { User } from '../models/User';
 import { FoodComponent } from '../models/FoodComponent';
