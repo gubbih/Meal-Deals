@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { getMeal, getOffers } from '../services/firebase';
 import { Meal } from '../models/Meal';
 import { Offer } from '../models/Offer';
-import { FoodComponent } from '../models/FoodComponent';
 import { DateTime } from 'luxon';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
@@ -26,6 +25,7 @@ function MealPage() {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [groupedOffers, setGroupedOffers] = useState<Record<string, Offer[]>>({});
   const [loading, setLoading] = useState(true);
+  console.log("meal: ", meal);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +53,7 @@ function MealPage() {
       );
 
       matchedOffers.forEach((offer) => {
-        if (!grouped[offer.name]) {
+        if (!grouped[offer.name]) { 
           grouped[offer.name] = [];
         }
         // Check for duplicates based on name and price
