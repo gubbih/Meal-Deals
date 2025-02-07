@@ -35,3 +35,30 @@ FC
             Hakkekød
 Will this work?
 So it firstly looks after chicken, then other atrabutes
+
+
+Code for later:
+
+const MealComponent = ({ mealId }: { mealId: string }) => {
+  const [meal, setMeal] = useState<Meal | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    getMeal(mealId)
+      .then((data) => setMeal(data))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, [mealId]); // Fetch data when mealId changes
+
+  if (loading) return <p>Loading meal...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!meal) return <p>Meal not found</p>;
+
+  return (
+    <div>
+      <h2>{meal.name}</h2>
+      <p>Price: {meal.price} {meal.priceCurrency}</p>
+    </div>
+  );
+};
