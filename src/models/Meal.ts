@@ -8,6 +8,7 @@ export interface Meal {
     priceCurrency: string | null;
     imagePath: string;
     foodComponents: FoodComponent[];
+    category?: string;
     cuisine?: string;
     meal?: string;
 }
