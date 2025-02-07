@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, onValue, push, set } from "firebase/database";
+import { getDatabase, ref, onValue, push, set, get } from "firebase/database";
 import { dummyMeals, Meal } from '../models/Meal';
 import { User } from '../models/User';
 import { FoodComponent } from '../models/FoodComponent';
@@ -37,7 +37,7 @@ export const getMeal = async (id: string): Promise<Meal> => {
 
 export const getFoodComponents = async (): Promise<FoodComponent[]> => {
   return new Promise((resolve, reject) => {
-    const foodRef = ref(db, "/foodcompents");
+    const foodRef = ref(db, "/foodComponents");
 
     onValue(foodRef, (snapshot) => {
       if (snapshot.exists()) {
@@ -59,9 +59,22 @@ export const getFoodComponents = async (): Promise<FoodComponent[]> => {
   });
 };
 
-export const getOffer = async (id: string): Promise<Offer> => {
-  throw new Error('Not implemented');
-}
+export const getOffers = async (): Promise<Offer[]> => {
+  const foodRef = ref(db, "/offers");
+
+  try {
+    const snapshot = await get(foodRef);
+    if (!snapshot.exists()) {
+      return [];
+    }
+
+    const dataList = snapshot.val();
+    return Object.values(dataList) as Offer[];
+  } catch (error) {
+    console.error("Error fetching offers:", error);
+    throw new Error("Something went wrong");
+  }
+};
 
 
 //##############################################
