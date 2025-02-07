@@ -8,8 +8,15 @@ export interface Meal {
     priceCurrency: string | null;
     imagePath: string;
     foodComponents: FoodComponent[];
+    cuisine?: string;
+    meal?: string;
 }
-
+// cuisines
+/*
+Danish, Italian, Chinese, Thai, Indian, French, Japanese, and Mexican | None
+add "måltider?"
+morgenmad, frokost, aftensmad, dersert
+*/
 
 export const dummyMeals: Meal[] = [
     {
@@ -24,7 +31,8 @@ export const dummyMeals: Meal[] = [
         { category: "Kulhydrater", items: ["Basmatiris"] },
         { category: "Grøntsager", items: ["Broccoli", "Gulerod"] },
         { category: "Krydderier & Urter", items: ["Salt", "Sort peber", "Paprika"] }
-      ]
+      ],
+      meal: "aftensmad",
     },
     {
       id: "meal2",
@@ -38,7 +46,9 @@ export const dummyMeals: Meal[] = [
         { category: "Kulhydrater", items: ["Bagekartofler"] },
         { category: "Grøntsager", items: ["Salat", "Tomat"] },
         { category: "Krydderier & Urter", items: ["Salt", "Rosmarin"] }
-      ]
+      ],
+      cuisine: "Danish",
+      meal: "aftensmad",
     },
     {
       id: "meal3",

@@ -4,16 +4,17 @@ import { dummyMeals, Meal } from '../models/Meal';
 import { User } from '../models/User';
 import { FoodComponent } from '../models/FoodComponent';
 import { Offer } from '../models/Offer';
+require('dotenv').config();
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCsCQ_943yRXb_mjw9_WLeIlN8Eu6SMLa8",
-  authDomain: "meal-deals-2b177.firebaseapp.com",
-  databaseURL: "https://meal-deals-2b177-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "meal-deals-2b177",
-  storageBucket: "meal-deals-2b177.firebasestorage.app",
-  messagingSenderId: "160668943646",
-  appId: "1:160668943646:web:34f06f3de84760385ef50f",
-  measurementId: "G-3W874VXGT0"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}.firebaseapp.app`,
+  databaseURL: `https://${process.env.REACT_APP_FIREBASE_DATABASE_URL}.firebasedatabase.app`,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}.firebasestorage.app`,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -26,37 +27,63 @@ const db = getDatabase(app);
 
 
 export const getMeals = async (): Promise<Meal[]> => {
-  // Todo: Implement fetching meals from Firebase
-  return dummyMeals as Meal[];
+  const mealRef = ref(db, `/Meals/`);
+
+  try {
+    const snapshot = await get(mealRef);
+    if (!snapshot.exists()) {
+      throw new Error(`Meal not found`);
+    }
+
+    return snapshot.val() as Meal[];
+  } catch (error) {
+    console.error("Error fetching meal:", error);
+    throw new Error("Failed to fetch meal. Please try again later.");
+  }
 };
 
 export const getMeal = async (id: string): Promise<Meal> => {
-  //Todo: Implement fetching meal from Firebase
-  return dummyMeals.find(meal => meal.id === id) as Meal;
+  const mealRef = ref(db, `/Meals/${id}`);
+
+  try {
+    const snapshot = await get(mealRef);
+    if (!snapshot.exists()) {
+      throw new Error(`Meal with ID ${id} not found`);
+    }
+
+    return snapshot.val() as Meal;
+  } catch (error) {
+    console.error("Error fetching meal:", error);
+    throw new Error("Failed to fetch meal. Please try again later.");
+  }
 };
+// to use:
+/*
+const fetchMeal = async () => {
+  try {
+    const meal = await getMeal("12345");
+    console.log("Fetched meal:", meal);
+  } catch (error) {
+    console.error(error);
+  }
+};
+*/
 
 export const getFoodComponents = async (): Promise<FoodComponent[]> => {
-  return new Promise((resolve, reject) => {
-    const foodRef = ref(db, "/foodComponents");
+  const foodRef = ref(db, "/FoodComponent");
 
-    onValue(foodRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        const foodArray = Object.entries(data).map(([key, value]) => ({
-          category: key,              // Use the key as the category
-          items: value as string[],   // Assert that items is an array of strings
-        }));
-        console.log("Data hentet fra foodComponents:", foodArray);
-        resolve(foodArray as FoodComponent[]);
-      } else {
-        console.warn("Ingen data fundet i foodComponents!");
-        resolve([]);
-      }
-    }, (error) => {
-      console.error("Fejl ved hentning af data:", error);
-      reject(error);
-    });
-  });
+  try {
+    const snapshot = await get(foodRef);
+    if (!snapshot.exists()) {
+      return [];
+    }
+
+    const dataList = snapshot.val();
+    return Object.values(dataList) as FoodComponent[];
+  } catch (error) {
+    console.error("Error fetching FoodComponent:", error);
+    throw new Error("Something went wrong");
+  }
 };
 
 export const getOffers = async (): Promise<Offer[]> => {
