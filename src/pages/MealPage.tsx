@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'; // Import useParams
-import { getMeal, getOffer} from '../services/firebase';
+import { getMeal} from '../services/firebase';
 import { Meal } from '../models/Meal';
 import { Offer } from '../models/Offer';
 
@@ -16,7 +16,7 @@ function MealPage() {
       getMeal(id).then(data => setMeal(data));
     }
     if (id) {
-      getOffer(id).then(data => setOffer(data));
+      //getOffer(id).then(data => setOffer(data));
     }
   }, [id]);
 
