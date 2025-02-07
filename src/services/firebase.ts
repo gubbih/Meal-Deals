@@ -45,6 +45,7 @@ export const getMeals = async (): Promise<Meal[]> => {
         imagePath: child.val().imagePath,
         foodComponents: child.val().foodComponents,
         cuisine: child.val()?.crusine,
+        category: child.val()?.category,
         meal: child.val()?.meal
       }
       mealList.push(data);
@@ -53,7 +54,6 @@ export const getMeals = async (): Promise<Meal[]> => {
     return mealList;
   } catch (error) {
     console.error("Error fetching meal:", error);
-    return dummyMeals;
     throw new Error("Failed to fetch meal. Please try again later.");
   }
 };
@@ -141,7 +141,8 @@ export const getOffers = async (): Promise<Offer[]> => {
         weightUnit: child.val().weight_unit,
         offerStart: child.val().run_till,
         offerEnd: child.val().run_from,
-        category: child.val().category
+        category: child.val().category,
+        matchedItems: child.val().matchedItems
       }
       offerList.push(data);
     });
