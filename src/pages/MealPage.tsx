@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'; // Import useParams
-import { getMeal } from '../services/firebase';
+import { getMeal} from '../services/firebase';
 import { Meal } from '../models/Meal';
+import { Offer } from '../models/Offer';
 
 function MealPage() {
   const { id } = useParams<{ id: string }>(); // Use useParams to get the id
@@ -34,16 +35,19 @@ function MealPage() {
               <th className="px-4 py-2">Offer End</th>
             </tr>
           </thead>
+          
           <tbody>
-            {meal.foodComponents.map((foodComponent, index) => (
+            {/*
+            {meal.foodComponents.map((offer, index) => (
               <tr key={index}>
-                <td className="border px-4 py-2">{foodComponent.name}</td>
-                <td className="border px-4 py-2">{foodComponent.price}</td>
-                <td className="border px-4 py-2">{foodComponent.weight}</td>
-                <td className="border px-4 py-2">{foodComponent.offerStart}</td>
-                <td className="border px-4 py-2">{foodComponent.offerEnd}</td>
+                <td className="border px-4 py-2">{offer.name}</td>
+                <td className="border px-4 py-2">{offer.price}</td>
+                <td className="border px-4 py-2">{offer.weight}</td>
+                <td className="border px-4 py-2">{offer.offerStart}</td>
+                <td className="border px-4 py-2">{offer.offerEnd}</td>
               </tr>
             ))}
+            */}
           </tbody>
         </table>
       </div>
