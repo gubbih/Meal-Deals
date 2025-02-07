@@ -4,14 +4,14 @@ import { Meal } from '../models/Meal';
 
 function HomePage() {
   const [meals, setMeals] = useState<Meal[]>([]);
-
+  console.log("meals: ", meals);  // Log meals to the console
   useEffect(() => {
     getMeals().then(data => setMeals(data));
   }, []);
 
+
   return (
     <div className="p-4">
-      <h1 className="text-3xl font-bold mb-4">Home Page</h1>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {meals.map(meal => (
           <div key={meal.id} className="card">
