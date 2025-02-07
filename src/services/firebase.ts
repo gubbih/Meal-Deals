@@ -4,7 +4,6 @@ import { dummyMeals, Meal } from '../models/Meal';
 import { User } from '../models/User';
 import { FoodComponent } from '../models/FoodComponent';
 import { Offer } from '../models/Offer';
-require('dotenv').config();
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -27,17 +26,35 @@ const db = getDatabase(app);
 
 
 export const getMeals = async (): Promise<Meal[]> => {
-  const mealRef = ref(db, `/Meals/`);
+  const mealRef = ref(db, `meals/`);
 
   try {
     const snapshot = await get(mealRef);
     if (!snapshot.exists()) {
       throw new Error(`Meal not found`);
     }
+    const mealList: Meal[] = [];
+    snapshot.forEach((child) => {
 
-    return snapshot.val() as Meal[];
+      const data:Meal = {
+        id: child.key as string,
+        name: child.val().name,
+        description: child.val().description,
+        price: child.val().price,
+        priceCurrency: child.val().priceCurrency,
+        imagePath: child.val().imagePath,
+        foodComponents: child.val().foodComponents,
+        cuisine: child.val()?.crusine,
+        meal: child.val()?.meal
+      }
+      console.log("data: ", data);
+      mealList.push(data);
+    });
+
+    return mealList;
   } catch (error) {
     console.error("Error fetching meal:", error);
+    return dummyMeals;
     throw new Error("Failed to fetch meal. Please try again later.");
   }
 };
@@ -70,7 +87,7 @@ const fetchMeal = async () => {
 */
 
 export const getFoodComponents = async (): Promise<FoodComponent[]> => {
-  const foodRef = ref(db, "/FoodComponent");
+  const foodRef = ref(db, "/foodComponents");
 
   try {
     const snapshot = await get(foodRef);
@@ -79,7 +96,14 @@ export const getFoodComponents = async (): Promise<FoodComponent[]> => {
     }
 
     const dataList = snapshot.val();
-    return Object.values(dataList) as FoodComponent[];
+    const foodComponents = Object.values(dataList) as FoodComponent[];
+
+    // Sort the food components alphabetically by category
+    foodComponents.sort((a, b) => a.category.localeCompare(b.category));
+    foodComponents.forEach(fc => {
+      fc.items.sort();
+    });
+    return foodComponents;
   } catch (error) {
     console.error("Error fetching FoodComponent:", error);
     throw new Error("Something went wrong");

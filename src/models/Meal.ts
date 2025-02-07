@@ -15,7 +15,7 @@ export interface Meal {
 /*
 Danish, Italian, Chinese, Thai, Indian, French, Japanese, and Mexican | None
 add "måltider?"
-morgenmad, frokost, aftensmad, dersert
+morgenmad, frokost, aftensmad, dersert, snack, drikke
 */
 
 export const dummyMeals: Meal[] = [
