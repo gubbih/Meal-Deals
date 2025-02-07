@@ -47,7 +47,6 @@ export const getMeals = async (): Promise<Meal[]> => {
         cuisine: child.val()?.crusine,
         meal: child.val()?.meal
       }
-      console.log("data: ", data);
       mealList.push(data);
     });
 
@@ -67,8 +66,19 @@ export const getMeal = async (id: string): Promise<Meal> => {
     if (!snapshot.exists()) {
       throw new Error(`Meal with ID ${id} not found`);
     }
-
-    return snapshot.val() as Meal;
+    const data:Meal = {
+      id: snapshot.key as string,
+      name: snapshot.val().name,
+      description: snapshot.val().description,
+      price: snapshot.val().price,
+      priceCurrency: snapshot.val().priceCurrency,
+      imagePath: snapshot.val().imagePath,
+      foodComponents: snapshot.val().foodComponents,
+      cuisine: snapshot.val()?.crusine,
+      meal: snapshot.val()?.meal,
+      category: snapshot.val()?.category,
+    }
+    return data;
   } catch (error) {
     console.error("Error fetching meal:", error);
     throw new Error("Failed to fetch meal. Please try again later.");
@@ -118,9 +128,24 @@ export const getOffers = async (): Promise<Offer[]> => {
     if (!snapshot.exists()) {
       return [];
     }
+    const offerList: Offer[] = [];
+    snapshot.forEach((child) => {
 
-    const dataList = snapshot.val();
-    return Object.values(dataList) as Offer[];
+      const data: Offer = {
+        id: child.key as string,
+        name: child.val().name,
+        store: child.val().store,
+        price: child.val().price,
+        priceCurrency: child.val().valuta,
+        weight: child.val().weight,
+        weightUnit: child.val().weight_unit,
+        offerStart: child.val().run_till,
+        offerEnd: child.val().run_from,
+        category: child.val().category
+      }
+      offerList.push(data);
+    });
+    return Object.values(offerList) as Offer[];
   } catch (error) {
     console.error("Error fetching offers:", error);
     throw new Error("Something went wrong");
@@ -141,6 +166,7 @@ export const addMeal = async (meal: Meal): Promise<void> => {
     priceCurrency: meal.priceCurrency,
     imagePath: meal.imagePath,
     foodComponents: meal.foodComponents
+
   };
   await set(newMealRef, data);
 };

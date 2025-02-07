@@ -1,4 +1,5 @@
 export interface Offer {
+  id: string;
   name: string;
   price: number;
   priceCurrency: string;
@@ -6,5 +7,6 @@ export interface Offer {
   weightUnit: string;
   offerStart: string;
   offerEnd: string;
-  categories: string[];
+  category: string[];
+  store: string;
 }
