@@ -6,4 +6,5 @@ export interface Offer {
   weightUnit: string;
   offerStart: string;
   offerEnd: string;
+  categories: string[];
 }
