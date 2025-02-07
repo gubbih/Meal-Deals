@@ -60,7 +60,7 @@ export const getMeals = async (): Promise<Meal[]> => {
 };
 
 export const getMeal = async (id: string): Promise<Meal> => {
-  const mealRef = ref(db, `/Meals/${id}`);
+  const mealRef = ref(db, `/meals/${id}`);
 
   try {
     const snapshot = await get(mealRef);
