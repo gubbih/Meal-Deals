@@ -46,7 +46,7 @@ function CreatePage() {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setMeal({ ...meal, [name]: value });
@@ -79,7 +79,7 @@ function CreatePage() {
       label: `${fc.category}: ${item}`, // F.eks. "Drikkevarer: Cola"
       value: item,
       category: fc.category,
-    }))
+    })),
   );
 
   return (
