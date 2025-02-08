@@ -32,3 +32,10 @@ yarn.lock
 
 # Ignore specific directories
 public
+next-env.d.ts
+.next
+.vercel
+pnpm-lock.yaml
+.eslint.json
+.vscode
+.contentlayer
