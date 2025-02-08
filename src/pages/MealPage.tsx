@@ -49,7 +49,6 @@ function MealPage() {
   
       // Convert `fc.items` to an array if it's a string
       const foodItems = Array.isArray(fc.items) ? fc.items : [fc.items];
-      console.log("foodItems: ", foodItems);
   
       // Find offers that match either the category OR specific food items
       const matchedOffers = offers.filter((offer) =>
