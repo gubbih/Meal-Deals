@@ -162,7 +162,7 @@ export const addMeal = async (meal: Meal): Promise<void> => {
 export const updateMealImage = async (
   mealId: string,
   imagepath: string,
-  image: File,
+  image: File
 ): Promise<string> => {
   //upload image to storage
 
