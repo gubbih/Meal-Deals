@@ -71,7 +71,10 @@ function MealPage() {
         }
       });
     });
-
+    // Sort each group by price (lowest to highest)
+    Object.keys(grouped).forEach((key) => {
+      grouped[key].sort((a, b) => a.price - b.price);
+    });
     setGroupedOffers(grouped);
   }, [meal, offers]);
 
@@ -80,7 +83,7 @@ function MealPage() {
   function Row({ offers }: { offers: Offer[] }) {
     const [open, setOpen] = useState(false);
     const firstOffer = offers[0];
-    const remainingOffers = offers.slice(1);
+    const remainingOffers = offers;
 
     return (
       <React.Fragment>
