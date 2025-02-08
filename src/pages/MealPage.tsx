@@ -25,8 +25,6 @@ function MealPage() {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [groupedOffers, setGroupedOffers] = useState<Record<string, Offer[]>>({});
   const [loading, setLoading] = useState(true);
-  console.log("meal: ", meal);
-  console.log("offers: ", offers);
 
   useEffect(() => {
     const fetchData = async () => {
