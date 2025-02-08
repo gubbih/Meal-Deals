@@ -16,3 +16,13 @@ find some stuck images... ai?
 validation on create and user when that has been created
 fool proof the site
 add blacklist items for DK-Supermarket-offers
+
+
+
+Find a fix:
+ABC store has multiply catelogs for every loaction they have, so alot of offers from ABC is the same
+fixes?
+Merge all ABC stores together, might bring out wrong data from some ABC sotre and catelog link is going to be wrong
+let it be and let there be multipel ABC offers of the same thing
+delete ABC from the offer call, ABC is mostly a niche store in denmark, but some people might be unhappy
+find a way to add location city to ABC store name fx: ABC - {city}
