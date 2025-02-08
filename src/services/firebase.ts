@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, onValue, push, set, get } from "firebase/database";
+import { getDatabase, ref, push, set, get } from "firebase/database";
 import { dummyMeals, Meal } from '../models/Meal';
 import { User } from '../models/User';
 import { FoodComponent } from '../models/FoodComponent';
@@ -45,16 +45,15 @@ export const getMeals = async (): Promise<Meal[]> => {
         imagePath: child.val().imagePath,
         foodComponents: child.val().foodComponents,
         cuisine: child.val()?.crusine,
+        category: child.val()?.category,
         meal: child.val()?.meal
       }
-      console.log("data: ", data);
       mealList.push(data);
     });
 
     return mealList;
   } catch (error) {
     console.error("Error fetching meal:", error);
-    return dummyMeals;
     throw new Error("Failed to fetch meal. Please try again later.");
   }
 };
@@ -67,8 +66,19 @@ export const getMeal = async (id: string): Promise<Meal> => {
     if (!snapshot.exists()) {
       throw new Error(`Meal with ID ${id} not found`);
     }
-
-    return snapshot.val() as Meal;
+    const data:Meal = {
+      id: snapshot.key as string,
+      name: snapshot.val().name,
+      description: snapshot.val().description,
+      price: snapshot.val().price,
+      priceCurrency: snapshot.val().priceCurrency,
+      imagePath: snapshot.val().imagePath,
+      foodComponents: snapshot.val().foodComponents,
+      cuisine: snapshot.val()?.crusine,
+      meal: snapshot.val()?.meal,
+      category: snapshot.val()?.category,
+    }
+    return data;
   } catch (error) {
     console.error("Error fetching meal:", error);
     throw new Error("Failed to fetch meal. Please try again later.");
@@ -118,9 +128,25 @@ export const getOffers = async (): Promise<Offer[]> => {
     if (!snapshot.exists()) {
       return [];
     }
+    const offerList: Offer[] = [];
+    snapshot.forEach((child) => {
 
-    const dataList = snapshot.val();
-    return Object.values(dataList) as Offer[];
+      const data: Offer = {
+        id: child.key as string,
+        name: child.val().name,
+        store: child.val().store,
+        price: child.val().price,
+        priceCurrency: child.val().valuta,
+        weight: child.val().weight,
+        weightUnit: child.val().weight_unit,
+        offerStart: child.val().run_till,
+        offerEnd: child.val().run_from,
+        category: child.val().category,
+        matchedItems: child.val().matchedItems
+      }
+      offerList.push(data);
+    });
+    return Object.values(offerList) as Offer[];
   } catch (error) {
     console.error("Error fetching offers:", error);
     throw new Error("Something went wrong");
@@ -141,6 +167,7 @@ export const addMeal = async (meal: Meal): Promise<void> => {
     priceCurrency: meal.priceCurrency,
     imagePath: meal.imagePath,
     foodComponents: meal.foodComponents
+
   };
   await set(newMealRef, data);
 };

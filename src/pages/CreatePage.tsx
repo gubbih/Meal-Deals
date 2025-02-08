@@ -35,14 +35,14 @@ function CreatePage() {
 
   // Håndterer valg af food components fra dropdown
   const handleFoodComponentChange = (selectedOptions: any) => {
-    console.log("selectedOptions: ",selectedOptions);
+    console.log("selectedOptions: ", selectedOptions);
     setSelectedComponents(selectedOptions);
     const formattedComponents = selectedOptions.map((option: any) => {
-      const { label, ...rest } = option;
-      return rest;
+      const { label, value, ...rest } = option;
+      return { ...rest, items: value };
     });
     setMeal({ ...meal, foodComponents: formattedComponents });
-  };
+};
 
   // Sender data til databasen
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
