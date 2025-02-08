@@ -15,3 +15,4 @@ write rules for firebase DB
 find some stuck images... ai?
 validation on create and user when that has been created
 fool proof the site
+add blacklist items for DK-Supermarket-offers
