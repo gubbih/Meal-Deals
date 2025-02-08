@@ -171,34 +171,48 @@ function MealPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {meal.foodComponents.map((fc, index) => {
-                // Convert items to an array if it's a string
-                const foodItems = Array.isArray(fc.items) ? fc.items : [fc.items];
+  {meal.foodComponents.map((fc, index) => {
+    // Ensure `fc.items` is always an array
+    const foodItems = Array.isArray(fc.items) ? fc.items : [fc.items];
 
-                // Find all offers for this food component
-                const offersForComponent = offers.filter((offer) =>
-                  (offer.matchedItems ?? []).some(item => foodItems.includes(item))
-                );
+    // Group offers based on `matchedItems`
+    const groupedOffers: Record<string, Offer[]> = {};
 
-                return (
-                  <React.Fragment key={index}>
-                    {offersForComponent.length > 0 ? (
-                      offersForComponent.map((offer, idx) => <Row key={`${index}-${idx}`} offers={[offer]} />)
-                    ) : (
-                      <TableRow>
-                        <TableCell />
-                        <TableCell component="th" scope="row">{foodItems.join(", ")}</TableCell>
-                        <TableCell colSpan={5} align="center">
-                          <Typography variant="body2" color="textSecondary">
-                            Ikke på tilbud lige nu
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </React.Fragment>
-                );
-              })}
-            </TableBody>
+    offers.forEach((offer) => {
+      if (
+        (offer.matchedItems ?? []).some(item => foodItems.includes(item))
+      ) {
+        // Use the first matched item as the group key
+        const key = (offer.matchedItems ?? []).find(item => foodItems.includes(item)) || offer.name;
+        if (!groupedOffers[key]) {
+          groupedOffers[key] = [];
+        }
+        groupedOffers[key].push(offer);
+      }
+    });
+
+    return (
+      <React.Fragment key={index}>
+        {Object.keys(groupedOffers).length > 0 ? (
+          Object.entries(groupedOffers).map(([name, offers], idx) => (
+            <Row key={`${index}-${idx}`} offers={offers} />
+          ))
+        ) : (
+          <TableRow>
+            <TableCell />
+            <TableCell component="th" scope="row">{foodItems.join(", ")}</TableCell>
+            <TableCell colSpan={5} align="center">
+              <Typography variant="body2" color="textSecondary">
+                Ikke på tilbud lige nu
+              </Typography>
+            </TableCell>
+          </TableRow>
+        )}
+      </React.Fragment>
+    );
+  })}
+</TableBody>
+
 
           </Table>
         </TableContainer>
