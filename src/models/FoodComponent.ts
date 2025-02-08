@@ -1,4 +1,4 @@
 export interface FoodComponent {
-    category: string;
-    items: string[];
+  category: string;
+  items: string[];
 }

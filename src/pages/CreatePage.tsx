@@ -5,12 +5,27 @@ import { Meal } from "../models/Meal";
 import useFetchFoodComponents from "../hooks/useFetchFoodComponents";
 import { FoodComponent } from "../models/FoodComponent";
 
-const cuisines = [ "Ukendt",
-  "Danish", "Italian", "Chinese", "Thai", "Indian",
-  "French", "Japanese", "Mexican", "None"
+const cuisines = [
+  "Ukendt",
+  "Danish",
+  "Italian",
+  "Chinese",
+  "Thai",
+  "Indian",
+  "French",
+  "Japanese",
+  "Mexican",
+  "None",
 ];
 
-const meals = ["Morgenmad", "Frokost", "Aftensmad", "Dessert", "Snack", "Drikke"];
+const meals = [
+  "Morgenmad",
+  "Frokost",
+  "Aftensmad",
+  "Dessert",
+  "Snack",
+  "Drikke",
+];
 
 function CreatePage() {
   const { foodComponents, loading, error } = useFetchFoodComponents();
@@ -28,7 +43,11 @@ function CreatePage() {
   const [selectedComponents, setSelectedComponents] = useState([]);
 
   // Håndterer ændringer i inputfelter
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
     setMeal({ ...meal, [name]: value });
   };
@@ -42,7 +61,7 @@ function CreatePage() {
       return { ...rest, items: value };
     });
     setMeal({ ...meal, foodComponents: formattedComponents });
-};
+  };
 
   // Sender data til databasen
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -55,8 +74,8 @@ function CreatePage() {
   if (error) return <div>Error: {error}</div>;
 
   // Formatér foodComponents korrekt til brug i React-Select
-  const categoryOptions = foodComponents.flatMap(fc =>
-    fc.items.map(item => ({
+  const categoryOptions = foodComponents.flatMap((fc) =>
+    fc.items.map((item) => ({
       label: `${fc.category}: ${item}`, // F.eks. "Drikkevarer: Cola"
       value: item,
       category: fc.category,
@@ -111,7 +130,7 @@ function CreatePage() {
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
           >
-            {cuisines.map(cuisine => (
+            {cuisines.map((cuisine) => (
               <option key={cuisine} value={cuisine}>
                 {cuisine}
               </option>
@@ -128,7 +147,7 @@ function CreatePage() {
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
           >
-            {meals.map(mealType => (
+            {meals.map((mealType) => (
               <option key={mealType} value={mealType}>
                 {mealType}
               </option>

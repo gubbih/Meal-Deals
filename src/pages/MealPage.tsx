@@ -1,29 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { getMeal, getOffers } from '../services/firebase';
-import { Meal } from '../models/Meal';
-import { Offer } from '../models/Offer';
-import { DateTime } from 'luxon';
-import Box from '@mui/material/Box';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getMeal, getOffers } from "../services/firebase";
+import { Meal } from "../models/Meal";
+import { Offer } from "../models/Offer";
+import { DateTime } from "luxon";
+import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 function MealPage() {
   const { id } = useParams<{ id: string }>();
 
   const [meal, setMeal] = useState<Meal | null>(null);
   const [offers, setOffers] = useState<Offer[]>([]);
-  const [groupedOffers, setGroupedOffers] = useState<Record<string, Offer[]>>({});
+  const [groupedOffers, setGroupedOffers] = useState<Record<string, Offer[]>>(
+    {}
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,35 +43,37 @@ function MealPage() {
 
   useEffect(() => {
     if (!meal?.foodComponents || offers.length === 0) return;
-  
+
     const grouped: Record<string, Offer[]> = {};
-  
+
     meal.foodComponents.forEach((fc) => {
       if (!fc?.category || !fc?.items) return;
-  
+
       // Convert `fc.items` to an array if it's a string
       const foodItems = Array.isArray(fc.items) ? fc.items : [fc.items];
-  
+
       // Find offers that match either the category OR specific food items
       const matchedOffers = offers.filter((offer) =>
-        (offer.matchedItems ?? []).some(item => foodItems.includes(item))
+        (offer.matchedItems ?? []).some((item) => foodItems.includes(item))
       );
-  
+
       matchedOffers.forEach((offer) => {
         if (!grouped[offer.name]) {
           grouped[offer.name] = [];
         }
         // Prevent duplicate offers based on name and price
-        if (!grouped[offer.name].some(o => o.price === offer.price && o.name === offer.name)) {
+        if (
+          !grouped[offer.name].some(
+            (o) => o.price === offer.price && o.name === offer.name
+          )
+        ) {
           grouped[offer.name].push(offer);
         }
       });
     });
-  
+
     setGroupedOffers(grouped);
   }, [meal, offers]);
-  
-  
 
   if (loading || !meal) return <div>Loading...</div>;
 
@@ -81,24 +85,38 @@ function MealPage() {
     return (
       <React.Fragment>
         {/* Main row (first occurrence) */}
-        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+        <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
           <TableCell>
-            <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row">          
-            <a 
+          <TableCell component="th" scope="row">
+            <a
               className="font-medium text-blue-700 dark:text-blue-500 hover:underline"
-              href={`https://etilbudsavis.dk/${firstOffer.store}/tilbudsaviser/${firstOffer.catelogid}`} 
-              target="_blank" 
+              href={`https://etilbudsavis.dk/${firstOffer.store}/tilbudsaviser/${firstOffer.catelogid}`}
+              target="_blank"
               rel="noopener noreferrer"
             >
-            {firstOffer.name ?? "Unknown"}</a></TableCell>
-          <TableCell align="right">{firstOffer.price} {firstOffer.priceCurrency}</TableCell>
-          <TableCell align="right">{firstOffer.weight} {firstOffer.weightUnit}</TableCell>
-          <TableCell align="right">{DateTime.fromISO(firstOffer.offerStart).toFormat("yyyy-MM-dd")}</TableCell>
-          <TableCell align="right">{DateTime.fromISO(firstOffer.offerEnd).toFormat("yyyy-MM-dd")}</TableCell>
+              {firstOffer.name ?? "Unknown"}
+            </a>
+          </TableCell>
+          <TableCell align="right">
+            {firstOffer.price} {firstOffer.priceCurrency}
+          </TableCell>
+          <TableCell align="right">
+            {firstOffer.weight} {firstOffer.weightUnit}
+          </TableCell>
+          <TableCell align="right">
+            {DateTime.fromISO(firstOffer.offerStart).toFormat("yyyy-MM-dd")}
+          </TableCell>
+          <TableCell align="right">
+            {DateTime.fromISO(firstOffer.offerEnd).toFormat("yyyy-MM-dd")}
+          </TableCell>
           <TableCell align="right">{firstOffer.store}</TableCell>
         </TableRow>
 
@@ -126,19 +144,31 @@ function MealPage() {
                       {remainingOffers.map((offer, index) => (
                         <TableRow key={index}>
                           <TableCell>
-                            <a 
+                            <a
                               className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                              href={`https://etilbudsavis.dk/${offer.store}/tilbudsaviser/${offer.catelogid}`} 
-                              target="_blank" 
+                              href={`https://etilbudsavis.dk/${offer.store}/tilbudsaviser/${offer.catelogid}`}
+                              target="_blank"
                               rel="noopener noreferrer"
                             >
                               {offer.name ?? "Unknown"}
                             </a>
                           </TableCell>
-                          <TableCell>{offer.price} {offer.priceCurrency}</TableCell>
-                          <TableCell>{offer.weight} {offer.weightUnit}</TableCell>
-                          <TableCell>{DateTime.fromISO(offer.offerStart).toFormat("yyyy-MM-dd")}</TableCell>
-                          <TableCell>{DateTime.fromISO(offer.offerEnd).toFormat("yyyy-MM-dd")}</TableCell>
+                          <TableCell>
+                            {offer.price} {offer.priceCurrency}
+                          </TableCell>
+                          <TableCell>
+                            {offer.weight} {offer.weightUnit}
+                          </TableCell>
+                          <TableCell>
+                            {DateTime.fromISO(offer.offerStart).toFormat(
+                              "yyyy-MM-dd"
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {DateTime.fromISO(offer.offerEnd).toFormat(
+                              "yyyy-MM-dd"
+                            )}
+                          </TableCell>
                           <TableCell>{offer.store}</TableCell>
                         </TableRow>
                       ))}
@@ -163,7 +193,9 @@ function MealPage() {
       <p>Ting der skal bruges:</p>
       <ul>
         {meal.foodComponents.map((fc, index) => (
-          <li key={index}>{fc.category} - {fc.items}</li>
+          <li key={index}>
+            {fc.category} - {fc.items}
+          </li>
         ))}
       </ul>
 
@@ -186,17 +218,24 @@ function MealPage() {
             <TableBody>
               {meal.foodComponents.map((fc, index) => {
                 // Ensure `fc.items` is always an array
-                const foodItems = Array.isArray(fc.items) ? fc.items : [fc.items];
+                const foodItems = Array.isArray(fc.items)
+                  ? fc.items
+                  : [fc.items];
 
                 // Group offers based on `matchedItems`
                 const groupedOffers: Record<string, Offer[]> = {};
 
                 offers.forEach((offer) => {
                   if (
-                    (offer.matchedItems ?? []).some(item => foodItems.includes(item))
+                    (offer.matchedItems ?? []).some((item) =>
+                      foodItems.includes(item)
+                    )
                   ) {
                     // Use the first matched item as the group key
-                    const key = (offer.matchedItems ?? []).find(item => foodItems.includes(item)) || offer.name;
+                    const key =
+                      (offer.matchedItems ?? []).find((item) =>
+                        foodItems.includes(item)
+                      ) || offer.name;
                     if (!groupedOffers[key]) {
                       groupedOffers[key] = [];
                     }
@@ -207,13 +246,17 @@ function MealPage() {
                 return (
                   <React.Fragment key={index}>
                     {Object.keys(groupedOffers).length > 0 ? (
-                      Object.entries(groupedOffers).map(([name, offers], idx) => (
-                        <Row key={`${index}-${idx}`} offers={offers} />
-                      ))
+                      Object.entries(groupedOffers).map(
+                        ([name, offers], idx) => (
+                          <Row key={`${index}-${idx}`} offers={offers} />
+                        )
+                      )
                     ) : (
                       <TableRow>
                         <TableCell />
-                        <TableCell component="th" scope="row">{foodItems.join(", ")}</TableCell>
+                        <TableCell component="th" scope="row">
+                          {foodItems.join(", ")}
+                        </TableCell>
                         <TableCell colSpan={5} align="center">
                           <Typography variant="body2" color="textSecondary">
                             Ikke på tilbud lige nu

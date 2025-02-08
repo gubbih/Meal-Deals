@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { getFoodComponents } from '../services/firebase'; // Adjust the import path as necessary
-import { FoodComponent } from '../models/FoodComponent';
+import { useState, useEffect } from "react";
+import { getFoodComponents } from "../services/firebase"; // Adjust the import path as necessary
+import { FoodComponent } from "../models/FoodComponent";
 
 const useFetchFoodComponents = () => {
   const [foodComponents, setFoodComponents] = useState<FoodComponent[]>([]);
@@ -9,11 +9,11 @@ const useFetchFoodComponents = () => {
 
   useEffect(() => {
     getFoodComponents()
-      .then(data => {
+      .then((data) => {
         setFoodComponents(data);
         setLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         setError(err.message);
         setLoading(false);
       });
