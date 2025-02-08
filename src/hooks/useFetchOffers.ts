@@ -9,11 +9,10 @@ export const useOffers = (realTime: boolean = false) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-      getOffers()
-        .then((data) => setOffers(data))
-        .catch((err) => setError(err.message))
-        .finally(() => setLoading(false));
-    
+    getOffers()
+      .then((data) => setOffers(data))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }, [realTime]);
 
   return { offers, loading, error };

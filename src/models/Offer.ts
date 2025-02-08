@@ -10,4 +10,5 @@ export interface Offer {
   category: string[];
   matchedItems: string[];
   store: string;
+  catelogid: string;
 }
