@@ -90,11 +90,13 @@ function MealPage() {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row">          <a 
-            href={`https://etilbudsavis.dk/${firstOffer.store}/tilbudsaviser/${firstOffer.catelogid}`} 
-            target="_blank" 
-            rel="noopener noreferrer"
-          >
+          <TableCell component="th" scope="row">          
+            <a 
+              className="font-medium text-blue-700 dark:text-blue-500 hover:underline"
+              href={`https://etilbudsavis.dk/${firstOffer.store}/tilbudsaviser/${firstOffer.catelogid}`} 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
             {firstOffer.name ?? "Unknown"}</a></TableCell>
           <TableCell align="right">{firstOffer.price} {firstOffer.priceCurrency}</TableCell>
           <TableCell align="right">{firstOffer.weight} {firstOffer.weightUnit}</TableCell>
@@ -128,6 +130,7 @@ function MealPage() {
                         <TableRow key={index}>
                           <TableCell>
                             <a 
+                              className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                               href={`https://etilbudsavis.dk/${offer.store}/tilbudsaviser/${offer.catelogid}`} 
                               target="_blank" 
                               rel="noopener noreferrer"
