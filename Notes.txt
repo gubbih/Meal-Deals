@@ -1,5 +1,5 @@
 ToDo:
-Link to each offer
+Link to each offer (etilbudsavis.dk/{butik}/tilbudsaviser/{catalogid}) remember to open in a new link
 add image storage (https://supabase.com/storage)
 better design
 delete/edit meals
