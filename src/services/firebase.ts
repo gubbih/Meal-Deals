@@ -141,8 +141,9 @@ export const getOffers = async (): Promise<Offer[]> => {
         weightUnit: child.val().weight_unit,
         offerStart: child.val().run_till,
         offerEnd: child.val().run_from,
-        category: child.val().category,
-        matchedItems: child.val().matchedItems
+        category: child.val().categories,
+        matchedItems: child.val().matchedItems,
+        catelogid: child.val().catelog_id
       }
       offerList.push(data);
     });
