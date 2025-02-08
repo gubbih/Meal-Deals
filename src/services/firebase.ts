@@ -4,6 +4,7 @@ import { Meal } from '../models/Meal';
 import { User } from '../models/User';
 import { FoodComponent } from '../models/FoodComponent';
 import { Offer } from '../models/Offer';
+import { Category } from "@mui/icons-material";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -84,17 +85,6 @@ export const getMeal = async (id: string): Promise<Meal> => {
     throw new Error("Failed to fetch meal. Please try again later.");
   }
 };
-// to use:
-/*
-const fetchMeal = async () => {
-  try {
-    const meal = await getMeal("12345");
-    console.log("Fetched meal:", meal);
-  } catch (error) {
-    console.error(error);
-  }
-};
-*/
 
 export const getFoodComponents = async (): Promise<FoodComponent[]> => {
   const foodRef = ref(db, "/foodComponents");
@@ -176,17 +166,41 @@ export const addMeal = async (meal: Meal): Promise<void> => {
 //###########         PUT           ############
 //##############################################
 
-export const updateMeal = async (meal: Meal): Promise<void> => {
+export const updateMealImage = async (mealId: string,imagepath: string , image: File): Promise<string> => {
+  //upload image to storage
+  
   throw new Error('Not implemented');
+  return imagepath
+}
+
+export const updateMeal = async (meal: Meal, image?: File): Promise<void> => {
+  const mealRef = ref(db, `/meals/${meal.id}`);
+  const data = {
+    name: meal.name,
+    description: meal.description,
+    price: meal.price,
+    priceCurrency: meal.priceCurrency,
+    imagePath: meal.imagePath,
+    foodComponents: meal.foodComponents,
+    Category: meal.category,
+    Cuisine: meal.cuisine
+  };
+  //check if image is the same:
+  if(!image){
+    await set(mealRef, data);
+  }else{
+    //add updateMealImage 
+    const newImagePath = await updateMealImage(meal.id, meal.imagePath, image);
+    data.imagePath = newImagePath;
+    await set(mealRef, data);
+  }
 }
 
 export const updateUser = async (user: User): Promise<void> => {
   throw new Error('Not implemented');
 }
 
-export const updateMealImage = async (mealId: string, image: File): Promise<string> => {
-  throw new Error('Not implemented');
-}
+
 
 
 //##############################################
