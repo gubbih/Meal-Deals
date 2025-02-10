@@ -17,6 +17,7 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { FoodComponent } from "../models/FoodComponent";
 
 function MealPage() {
   const { id } = useParams<{ id: string }>();
@@ -80,7 +81,13 @@ function MealPage() {
 
   if (loading || !meal) return <div>Loading...</div>;
 
-  function Row({ offers }: { offers: Offer[] }) {
+  function Row({
+    offers,
+    foodComponentName,
+  }: {
+    offers: Offer[];
+    foodComponentName: FoodComponent;
+  }) {
     const [open, setOpen] = useState(false);
     const firstOffer = offers[0];
     const remainingOffers = offers;
@@ -105,7 +112,7 @@ function MealPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {firstOffer.name ?? "Unknown"}
+              {foodComponentName.items}
             </a>
           </TableCell>
           <TableCell align="right">
@@ -227,7 +234,7 @@ function MealPage() {
 
                 // Group offers based on `matchedItems`
                 const groupedOffers: Record<string, Offer[]> = {};
-
+                console.log(groupedOffers);
                 offers.forEach((offer) => {
                   if (
                     (offer.matchedItems ?? []).some((item) =>
@@ -249,11 +256,13 @@ function MealPage() {
                 return (
                   <React.Fragment key={index}>
                     {Object.keys(groupedOffers).length > 0 ? (
-                      Object.entries(groupedOffers).map(
-                        ([name, offers], idx) => (
-                          <Row key={`${index}-${idx}`} offers={offers} />
-                        )
-                      )
+                      Object.entries(groupedOffers).map(([name, meal], idx) => (
+                        <Row
+                          key={`${index}-${idx}`}
+                          offers={groupedOffers[name]}
+                          foodComponentName={fc}
+                        />
+                      ))
                     ) : (
                       <TableRow>
                         <TableCell />
