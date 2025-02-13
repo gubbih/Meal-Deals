@@ -6,6 +6,7 @@ import MealPage from "./pages/MealPage";
 import CreatePage from "./pages/CreatePage";
 import UserPage from "./pages/UserPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import EditMealPage from "./pages/MealEditPage";
 import { IoMoon, IoSunny } from "react-icons/io5";
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
         <Route path="/create" element={<CreatePage />} />
         <Route path="/user" element={<UserPage />} />
         <Route path="*" element={<NotFoundPage />} />
+        <Route path="/meal/:id/edit" element={<EditMealPage />} />
       </Routes>
     </Router>
   );
