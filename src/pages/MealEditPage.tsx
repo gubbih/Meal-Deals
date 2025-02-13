@@ -20,20 +20,10 @@ function EditMealPage() {
     error: mealError,
   } = useFetchMeal(id || "");
   const [meal, setMeal] = useState<Meal | null>(null);
-  const [selectedComponents, setSelectedComponents] = useState<
-    { label: string; value: string; category: string }[]
-  >([]);
   //To do add ignore to useeffect
   useEffect(() => {
     if (fetchedMeal) {
       setMeal(fetchedMeal);
-      setSelectedComponents(
-        fetchedMeal.foodComponents.map((fc) => ({
-          label: `${fc.category ? fc?.category : "Ukendt"}: ${Array.isArray(fc.items) ? "Multiple" : "Single"}`, // F.eks. "Drikkevarer: Cola"
-          value: Array.isArray(fc.items) ? fc.items.join(", ") : fc.items,
-          category: fc.category,
-        }))
-      );
     }
   }, [fetchedMeal]);
 
@@ -52,7 +42,6 @@ function EditMealPage() {
   // Håndterer valg af food components fra dropdown
   const handleFoodComponentChange = (selectedOptions: any) => {
     console.log("selectedOptions: ", selectedOptions);
-    setSelectedComponents(selectedOptions);
     if (meal) {
       const formattedComponents = selectedOptions.map((option: any) => {
         const { label, value, ...rest } = option;

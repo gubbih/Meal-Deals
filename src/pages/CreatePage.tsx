@@ -31,7 +31,6 @@ function CreatePage() {
 
   // Håndterer valg af food components fra dropdown
   const handleFoodComponentChange = (selectedOptions: any) => {
-    console.log("selectedOptions: ", selectedOptions);
     const formattedComponents = selectedOptions.map((option: any) => {
       const { label, value, ...rest } = option;
       return { ...rest, items: value };
