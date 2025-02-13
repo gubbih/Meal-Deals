@@ -7,7 +7,7 @@ interface MealFormProps {
   meal: Meal;
   cuisines: string[];
   meals: string[];
-  categoryOptions: { label: string; value: string; category: string }[];
+  categoryOptions: { label: string; value: string[]; category: string }[];
   handleChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -26,6 +26,7 @@ const MealForm: React.FC<MealFormProps> = ({
   handleFoodComponentChange,
   handleSubmit,
 }) => {
+  console.log("meal: ", meal);
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -69,7 +70,7 @@ const MealForm: React.FC<MealFormProps> = ({
           <label className="block text-gray-700">Cuisine</label>
           <select
             name="cuisine"
-            value={meal.cuisine}
+            value={meal.cuisine || ""}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
           >
@@ -86,7 +87,7 @@ const MealForm: React.FC<MealFormProps> = ({
           <label className="block text-gray-700">Meal Type</label>
           <select
             name="meal"
-            value={meal.meal}
+            value={meal.meal || ""}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
           >
@@ -106,8 +107,8 @@ const MealForm: React.FC<MealFormProps> = ({
             isMulti
             onChange={handleFoodComponentChange}
             value={meal.foodComponents.map((component: FoodComponent) => ({
-              label: `${component.category}: ${component.items.join(", ")}`,
-              value: component.items.join(", "),
+              label: `${component.category}: ${component.items}`,
+              value: component.items,
               category: component.category,
             }))}
             placeholder="Vælg madkomponenter..."

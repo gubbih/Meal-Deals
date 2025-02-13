@@ -22,7 +22,7 @@ function MealPage() {
     {}
   );
   const [loading, setLoading] = useState(true);
-
+  console.log("meal: ", meal);
   useEffect(() => {
     const fetchData = async () => {
       if (id) {

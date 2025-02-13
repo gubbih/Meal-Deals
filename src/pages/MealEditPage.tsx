@@ -1,35 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getMeal, updateMeal } from "../services/firebase";
+import { updateMeal } from "../services/firebase";
 import { Meal } from "../models/Meal";
 import useFetchFoodComponents from "../hooks/useFetchFoodComponents";
 import MealForm from "../components/MealForm";
 import { cuisines, meals } from "../assets/Arrays";
+import useFetchMeal from "../hooks/useFetchMeal";
 
 function EditMealPage() {
-  const { id } = useParams<{ id: string }>();
-  const { foodComponents, loading, error } = useFetchFoodComponents();
+  const { id } = useParams<{ id: string }>() || { id: "" };
+  const {
+    foodComponents,
+    loading: foodComponentsLoading,
+    error: foodComponentsError,
+  } = useFetchFoodComponents();
+  const {
+    meal: fetchedMeal,
+    loading: mealLoading,
+    error: mealError,
+  } = useFetchMeal(id || "");
   const [meal, setMeal] = useState<Meal | null>(null);
   const [selectedComponents, setSelectedComponents] = useState<
     { label: string; value: string; category: string }[]
   >([]);
-
+  //To do add ignore to useeffect
   useEffect(() => {
-    const fetchMeal = async () => {
-      if (!id) return;
-      const fetchedMeal = await getMeal(id);
+    if (fetchedMeal) {
       setMeal(fetchedMeal);
-      console.log("fetchedMeal: ", fetchedMeal);
       setSelectedComponents(
         fetchedMeal.foodComponents.map((fc) => ({
-          label: `${fc.category}: ${fc.items ? fc.items.join(", ") : fc.items}`,
-          value: fc.items ? fc.items.join(", ") : fc.items,
+          label: `${fc.category ? fc?.category : "Ukendt"}: ${Array.isArray(fc.items) ? "Multiple" : "Single"}`, // F.eks. "Drikkevarer: Cola"
+          value: Array.isArray(fc.items) ? fc.items.join(", ") : fc.items,
           category: fc.category,
         }))
       );
-    };
-    fetchMeal();
-  }, [id]);
+    }
+  }, [fetchedMeal]);
 
   // Håndterer ændringer i inputfelter
   const handleChange = (
@@ -65,15 +71,16 @@ function EditMealPage() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!meal) return <div>Loading meal data...</div>;
+  if (!id) return <div>No meal found</div>;
+  if (mealError) return <div>Error: {mealError}</div>;
+  if (foodComponentsError) return <div>Error: {foodComponentsError}</div>;
+  if (mealLoading || foodComponentsLoading) return <div>Loading...</div>;
 
   // Formatér foodComponents korrekt til brug i React-Select
   const categoryOptions = foodComponents.flatMap((fc) =>
     fc.items.map((item) => ({
       label: `${fc.category}: ${item}`, // F.eks. "Drikkevarer: Cola"
-      value: item,
+      value: [item],
       category: fc.category,
     }))
   );
@@ -81,15 +88,17 @@ function EditMealPage() {
   return (
     <div className="p-4">
       <h1 className="text-3xl font-bold mb-4">Edit Meal</h1>
-      <MealForm
-        meal={meal}
-        cuisines={cuisines}
-        meals={meals}
-        categoryOptions={categoryOptions}
-        handleChange={handleChange}
-        handleFoodComponentChange={handleFoodComponentChange}
-        handleSubmit={handleSubmit}
-      />
+      {meal && (
+        <MealForm
+          meal={meal}
+          cuisines={cuisines}
+          meals={meals}
+          categoryOptions={categoryOptions}
+          handleChange={handleChange}
+          handleFoodComponentChange={handleFoodComponentChange}
+          handleSubmit={handleSubmit}
+        />
+      )}
     </div>
   );
 }

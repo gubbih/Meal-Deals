@@ -18,7 +18,6 @@ function CreatePage() {
     cuisine: "",
     meal: "",
   });
-  const [selectedComponents, setSelectedComponents] = useState([]);
 
   // Håndterer ændringer i inputfelter
   const handleChange = (
@@ -33,7 +32,6 @@ function CreatePage() {
   // Håndterer valg af food components fra dropdown
   const handleFoodComponentChange = (selectedOptions: any) => {
     console.log("selectedOptions: ", selectedOptions);
-    setSelectedComponents(selectedOptions);
     const formattedComponents = selectedOptions.map((option: any) => {
       const { label, value, ...rest } = option;
       return { ...rest, items: value };
@@ -55,7 +53,7 @@ function CreatePage() {
   const categoryOptions = foodComponents.flatMap((fc) =>
     fc.items.map((item) => ({
       label: `${fc.category}: ${item}`, // F.eks. "Drikkevarer: Cola"
-      value: item,
+      value: [item],
       category: fc.category,
     }))
   );
