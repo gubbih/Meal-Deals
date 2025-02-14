@@ -8,15 +8,22 @@ const useFetchFoodComponents = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getFoodComponents()
-      .then((data) => {
+    const fetchFoodComponents = async () => {
+      try {
+        const data = await getFoodComponents();
         setFoodComponents(data);
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError(String(error));
+        }
+      } finally {
         setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+      }
+    };
+
+    fetchFoodComponents();
   }, []);
 
   return { foodComponents, loading, error };

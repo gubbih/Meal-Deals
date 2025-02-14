@@ -3,9 +3,10 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import "./App.css";
 import HomePage from "./pages/HomePage";
 import MealPage from "./pages/MealPage";
-import CreatePage from "./pages/CreatePage";
+import CreateMealPage from "./pages/CreateMealPage";
 import UserPage from "./pages/UserPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import EditMealPage from "./pages/EditMealPage";
 import { IoMoon, IoSunny } from "react-icons/io5";
 
 function App() {
@@ -43,9 +44,10 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/meal/:id" element={<MealPage />} />
-        <Route path="/create" element={<CreatePage />} />
+        <Route path="/create" element={<CreateMealPage />} />
         <Route path="/user" element={<UserPage />} />
         <Route path="*" element={<NotFoundPage />} />
+        <Route path="/meal/:id/edit" element={<EditMealPage />} />
       </Routes>
     </Router>
   );

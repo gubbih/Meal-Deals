@@ -4,7 +4,6 @@ import { Meal } from "../models/Meal";
 import { User } from "../models/User";
 import { FoodComponent } from "../models/FoodComponent";
 import { Offer } from "../models/Offer";
-import { Category } from "@mui/icons-material";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -41,9 +40,8 @@ export const getMeals = async (): Promise<Meal[]> => {
         priceCurrency: child.val().priceCurrency,
         imagePath: child.val().imagePath,
         foodComponents: child.val().foodComponents,
-        cuisine: child.val()?.crusine,
-        category: child.val()?.category,
-        meal: child.val()?.meal,
+        mealCuisine: child.val()?.mealCuisine,
+        mealType: child.val()?.mealType,
       };
       mealList.push(data);
     });
@@ -71,9 +69,8 @@ export const getMeal = async (id: string): Promise<Meal> => {
       priceCurrency: snapshot.val().priceCurrency,
       imagePath: snapshot.val().imagePath,
       foodComponents: snapshot.val().foodComponents,
-      cuisine: snapshot.val()?.crusine,
-      meal: snapshot.val()?.meal,
-      category: snapshot.val()?.category,
+      mealCuisine: snapshot.val()?.mealCuisine,
+      mealType: snapshot.val()?.mealType,
     };
     return data;
   } catch (error) {
@@ -152,6 +149,8 @@ export const addMeal = async (meal: Meal): Promise<void> => {
     priceCurrency: meal.priceCurrency,
     imagePath: meal.imagePath,
     foodComponents: meal.foodComponents,
+    mealCuisine: meal.mealCuisine,
+    mealType: meal.mealType,
   };
   await set(newMealRef, data);
 };
@@ -162,7 +161,7 @@ export const addMeal = async (meal: Meal): Promise<void> => {
 export const updateMealImage = async (
   mealId: string,
   imagepath: string,
-  image: File
+  image: File,
 ): Promise<string> => {
   //upload image to storage
 
@@ -179,8 +178,8 @@ export const updateMeal = async (meal: Meal, image?: File): Promise<void> => {
     priceCurrency: meal.priceCurrency,
     imagePath: meal.imagePath,
     foodComponents: meal.foodComponents,
-    Category: meal.category,
-    Cuisine: meal.cuisine,
+    mealCuisine: meal.mealCuisine,
+    mealType: meal.mealType,
   };
   //check if image is the same:
   if (!image) {

@@ -23,10 +23,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 22
-          cache: yarn
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm install
 
       - name: Prettier check
-        run: yarn prettier --check .
+        run: npx prettier --check .
