@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { getMeal, getOffers } from "../services/firebase";
 import { Meal } from "../models/Meal";
 import { Offer } from "../models/Offer";
-//F:\Meal Deals\src\Component\TableRows.tsx
 import { Row } from "../components/TableRows";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -39,11 +38,8 @@ function MealPage() {
 
     meal.foodComponents.forEach((fc) => {
       if (!fc?.category || !fc?.items) return;
-
-      // Convert `fc.items` to an array if it's a string
       const foodItems = Array.isArray(fc.items) ? fc.items : [fc.items];
 
-      // Find offers that match either the category OR specific food items
       const matchedOffers = offers.filter((offer) =>
         (offer.matchedItems ?? []).some((item) => foodItems.includes(item)),
       );
@@ -52,7 +48,6 @@ function MealPage() {
         if (!grouped[offer.name]) {
           grouped[offer.name] = [];
         }
-        // Prevent duplicate offers based on name and price
         if (
           !grouped[offer.name].some(
             (o) => o.price === offer.price && o.name === offer.name,
@@ -104,12 +99,10 @@ function MealPage() {
             </TableHead>
             <TableBody>
               {meal.foodComponents.map((fc, index) => {
-                // Ensure `fc.items` is always an array
                 const foodItems = Array.isArray(fc.items)
                   ? fc.items
                   : [fc.items];
 
-                // Group offers based on `matchedItems`
                 const groupedOffers: Record<string, Offer[]> = {};
                 offers.forEach((offer) => {
                   if (
@@ -117,7 +110,6 @@ function MealPage() {
                       foodItems.includes(item),
                     )
                   ) {
-                    // Use the first matched item as the group key
                     const key =
                       (offer.matchedItems ?? []).find((item) =>
                         foodItems.includes(item),
