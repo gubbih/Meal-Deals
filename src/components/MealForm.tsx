@@ -47,13 +47,6 @@ const MealForm: React.FC<MealFormProps> = ({
     label: mealType,
   }));
 
-  // Filter out selected options from foodComponentOptions
-  const selectedItems = useMemo(() => {
-    return new Set(
-      defaultMeal.foodComponents.flatMap((component) => component.items)
-    );
-  }, [defaultMeal.foodComponents]);
-
   const filteredFoodComponentOptions = useMemo(() => {
     return foodComponentOptions
       .filter(
