@@ -11,7 +11,7 @@ interface MealFormProps {
   onInputChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => void;
   onFoodComponentChange: (selectedOptions: any) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -52,8 +52,8 @@ const MealForm: React.FC<MealFormProps> = ({
       .filter(
         (option) =>
           !defaultMeal.foodComponents.some(
-            (component) => component.items.includes(option.value[0]) // Access the first element
-          )
+            (component) => component.items.includes(option.value[0]), // Access the first element
+          ),
       )
       .map((option) => ({
         ...option,
@@ -106,7 +106,7 @@ const MealForm: React.FC<MealFormProps> = ({
           <Select
             name="mealCuisine"
             value={cuisineOptions.find(
-              (option) => option.value === defaultMeal.mealCuisine
+              (option) => option.value === defaultMeal.mealCuisine,
             )}
             onChange={onCuisineChange} // This stays the same
             options={cuisineOptions}
@@ -120,7 +120,7 @@ const MealForm: React.FC<MealFormProps> = ({
           <Select
             name="mealType"
             value={mealTypeOptions.find(
-              (option) => option.value === defaultMeal.mealType
+              (option) => option.value === defaultMeal.mealType,
             )}
             onChange={onMealTypeChange} // This stays the same
             options={mealTypeOptions}
@@ -141,7 +141,7 @@ const MealForm: React.FC<MealFormProps> = ({
                   label: `${component.category}: ${item}`,
                   value: [item], // Now as an array
                   category: component.category,
-                }))
+                })),
             )}
             placeholder="Vælg madkomponenter..."
             styles={{

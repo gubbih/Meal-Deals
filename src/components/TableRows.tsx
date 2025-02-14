@@ -104,12 +104,12 @@ export function Row({
                         </TableCell>
                         <TableCell>
                           {DateTime.fromISO(offer.offerStart).toFormat(
-                            "yyyy-MM-dd"
+                            "yyyy-MM-dd",
                           )}
                         </TableCell>
                         <TableCell>
                           {DateTime.fromISO(offer.offerEnd).toFormat(
-                            "yyyy-MM-dd"
+                            "yyyy-MM-dd",
                           )}
                         </TableCell>
                         <TableCell>{offer.store}</TableCell>

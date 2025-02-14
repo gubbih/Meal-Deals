@@ -39,7 +39,7 @@ function EditMealPage() {
   const onInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     if (meal) {
       const { name, value } = e.target;
@@ -76,7 +76,7 @@ function EditMealPage() {
         label: `${fc.category}: ${item}`,
         value: [item],
         category: fc.category,
-      }))
+      })),
     );
   }, [foodComponents]);
 
