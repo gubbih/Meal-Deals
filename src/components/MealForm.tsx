@@ -29,8 +29,6 @@ const MealForm: React.FC<MealFormProps> = ({
   onCuisineChange,
   onMealTypeChange,
 }) => {
-  console.log("meal: ", meal);
-
   // Ensure meal object has default values
   const defaultMeal = {
     mealCuisine: meal.mealCuisine || "",

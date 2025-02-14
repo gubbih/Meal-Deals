@@ -111,7 +111,6 @@ function MealPage() {
 
                 // Group offers based on `matchedItems`
                 const groupedOffers: Record<string, Offer[]> = {};
-                console.log(groupedOffers);
                 offers.forEach((offer) => {
                   if (
                     (offer.matchedItems ?? []).some((item) =>

@@ -33,7 +33,6 @@ function EditMealPage() {
   useEffect(() => {
     if (fetchedMeal) {
       setMeal(fetchedMeal);
-      console.log("fetchedMeal: ", fetchedMeal);
     }
   }, [fetchedMeal]);
 

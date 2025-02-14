@@ -72,7 +72,6 @@ export const getMeal = async (id: string): Promise<Meal> => {
       mealCuisine: snapshot.val()?.mealCuisine,
       mealType: snapshot.val()?.mealType,
     };
-    console.log("data: ", data);
     return data;
   } catch (error) {
     console.error("Error fetching meal:", error);

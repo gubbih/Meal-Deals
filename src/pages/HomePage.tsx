@@ -4,7 +4,6 @@ import { Meal } from "../models/Meal";
 
 function HomePage() {
   const [meals, setMeals] = useState<Meal[]>([]);
-  console.log("meals: ", meals); // Log meals to the console
   useEffect(() => {
     getMeals().then((data) => setMeals(data));
   }, []);
