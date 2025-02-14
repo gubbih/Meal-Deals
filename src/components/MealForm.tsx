@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import Select from "react-select";
+import makeAnimated from "react-select/animated";
 import { Meal } from "../models/Meal";
 import { FoodComponent } from "../models/FoodComponent";
 import { cuisines, mealsTypes } from "../assets/Arrays";
@@ -11,14 +12,14 @@ interface MealFormProps {
   onInputChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) => void;
   onFoodComponentChange: (selectedOptions: any) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onCuisineChange: (selectedOption: any) => void;
   onMealTypeChange: (selectedOption: any) => void;
 }
-
+const animatedComponents = makeAnimated();
 const MealForm: React.FC<MealFormProps> = ({
   meal,
   foodComponentOptions,
@@ -45,18 +46,14 @@ const MealForm: React.FC<MealFormProps> = ({
   }));
 
   const filteredFoodComponentOptions = useMemo(() => {
-    return foodComponentOptions
-      .filter(
-        (option) =>
-          !defaultMeal.foodComponents.some((component) =>
-            component.items.includes(option.value[0]),
-          ),
-      )
-      .map((option) => ({
-        ...option,
-        value: option.value,
-        label: `${option.category}: ${option.value[0]}`,
-      }));
+    return foodComponentOptions.map((option) => ({
+      ...option,
+      value: option.value,
+      label: `${option.category}: ${option.value[0]}`,
+      isDisabled: defaultMeal.foodComponents.some((component) =>
+        component.items.includes(option.value[0])
+      ),
+    }));
   }, [foodComponentOptions, defaultMeal.foodComponents]);
 
   return (
@@ -100,7 +97,7 @@ const MealForm: React.FC<MealFormProps> = ({
             name="mealCuisine"
             value={
               cuisineOptions.find(
-                (option) => option.value === defaultMeal.mealCuisine,
+                (option) => option.value === defaultMeal.mealCuisine
               ) || null
             }
             onChange={onCuisineChange}
@@ -115,7 +112,7 @@ const MealForm: React.FC<MealFormProps> = ({
             name="mealType"
             value={
               mealTypeOptions.find(
-                (option) => option.value === defaultMeal.mealType,
+                (option) => option.value === defaultMeal.mealType
               ) || null
             }
             onChange={onMealTypeChange}
@@ -127,6 +124,8 @@ const MealForm: React.FC<MealFormProps> = ({
         <div className="mb-4">
           <label className="block text-gray-700">Madkomponenter</label>
           <Select
+            closeMenuOnSelect={false}
+            components={animatedComponents}
             options={filteredFoodComponentOptions}
             isMulti
             onChange={onFoodComponentChange}
@@ -134,18 +133,17 @@ const MealForm: React.FC<MealFormProps> = ({
               (component: FoodComponent) =>
                 (Array.isArray(component.items) ? component.items : []).map(
                   (item) => {
+                    /*removes selected from list
                     const matchedOption = filteredFoodComponentOptions.find(
-                      (option) => option.value[0] === item,
-                    );
-                    return (
-                      matchedOption || {
-                        label: `${component.category}: ${item}`,
-                        value: [item],
-                        category: component.category,
-                      }
-                    );
-                  },
-                ),
+                      (option) => option.value[0] === item
+                    );*/
+                    return /*matchedOption ||*/ {
+                      label: `${component.category}: ${item}`,
+                      value: [item],
+                      category: component.category,
+                    };
+                  }
+                )
             )}
             placeholder="Vælg madkomponenter..."
             styles={{
@@ -153,6 +151,18 @@ const MealForm: React.FC<MealFormProps> = ({
                 ...base,
                 borderRadius: "8px",
                 padding: "5px",
+              }),
+              option: (styles, { isDisabled, isFocused, isSelected }) => ({
+                ...styles,
+                backgroundColor: isDisabled
+                  ? undefined
+                  : isSelected
+                    ? "#ccc"
+                    : isFocused
+                      ? "#eee"
+                      : undefined,
+                color: isDisabled ? "#ccc" : isSelected ? "#fff" : "#000",
+                cursor: isDisabled ? "not-allowed" : "default",
               }),
             }}
           />
