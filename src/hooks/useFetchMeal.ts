@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { Meal } from "../models/Meal";
 import { getMeal } from "../services/firebase";
+import { Meal } from "../models/Meal";
 
-const useFetchMeal = (id: string) => {
+export function useFetchMeal(id: string) {
   const [meal, setMeal] = useState<Meal | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -10,15 +10,14 @@ const useFetchMeal = (id: string) => {
   useEffect(() => {
     const fetchMeal = async () => {
       try {
-        const data = await getMeal(id);
-        setMeal(data);
-      } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError(String(error));
-        }
-      } finally {
+        const mealData = await getMeal(id);
+        console.log("Fetched meal data:", mealData);
+
+        setMeal(mealData);
+        setLoading(false);
+      } catch (error: any) {
+        console.error("Error fetching meal:", error);
+        setError(error.message);
         setLoading(false);
       }
     };
@@ -27,6 +26,4 @@ const useFetchMeal = (id: string) => {
   }, [id]);
 
   return { meal, loading, error };
-};
-
-export default useFetchMeal;
+}

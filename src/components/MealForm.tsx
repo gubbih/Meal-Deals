@@ -29,14 +29,11 @@ const MealForm: React.FC<MealFormProps> = ({
   onCuisineChange,
   onMealTypeChange,
 }) => {
-  // Ensure meal object has default values
   const defaultMeal = {
     mealCuisine: meal.mealCuisine || "",
     mealType: meal.mealType || "",
     ...meal,
   };
-
-  // Convert cuisines and mealsTypes to react-select format
   const cuisineOptions = cuisines.map((cuisine) => ({
     value: cuisine,
     label: cuisine,
@@ -51,23 +48,23 @@ const MealForm: React.FC<MealFormProps> = ({
     return foodComponentOptions
       .filter(
         (option) =>
-          !defaultMeal.foodComponents.some(
-            (component) => component.items.includes(option.value[0]), // Access the first element
+          !defaultMeal.foodComponents.some((component) =>
+            component.items.includes(option.value[0]),
           ),
       )
       .map((option) => ({
         ...option,
-        value: option.value, // Already an array
-        label: `${option.category}: ${option.value[0]}`, // Use the first value for display
+        value: option.value,
+        label: `${option.category}: ${option.value[0]}`,
       }));
   }, [foodComponentOptions, defaultMeal.foodComponents]);
 
   return (
-    <div>
+    <div className="p-4 bg-white shadow-md rounded w-full">
       <form onSubmit={onSubmit}>
         {/* Name */}
         <div className="mb-4">
-          <label className="block text-gray-700">Name</label>
+          <label className="block text-gray-700">Navn</label>
           <input
             type="text"
             name="name"
@@ -76,10 +73,9 @@ const MealForm: React.FC<MealFormProps> = ({
             className="w-full p-2 border border-gray-300 rounded"
           />
         </div>
-
         {/* Description */}
         <div className="mb-4">
-          <label className="block text-gray-700">Description</label>
+          <label className="block text-gray-700">Beskrivelse</label>
           <textarea
             name="description"
             value={defaultMeal.description}
@@ -87,10 +83,9 @@ const MealForm: React.FC<MealFormProps> = ({
             className="w-full p-2 border border-gray-300 rounded"
           />
         </div>
-
         {/* Image URL */}
         <div className="mb-4">
-          <label className="block text-gray-700">Image URL</label>
+          <label className="block text-gray-700">Billed Link</label>
           <input
             type="text"
             name="imagePath"
@@ -99,49 +94,58 @@ const MealForm: React.FC<MealFormProps> = ({
             className="w-full p-2 border border-gray-300 rounded"
           />
         </div>
-
-        {/* Cuisine Type */}
         <div className="mb-4">
-          <label className="block text-gray-700">Cuisine</label>
+          <label className="block text-gray-700">Køkkenstil</label>
           <Select
             name="mealCuisine"
-            value={cuisineOptions.find(
-              (option) => option.value === defaultMeal.mealCuisine,
-            )}
-            onChange={onCuisineChange} // This stays the same
+            value={
+              cuisineOptions.find(
+                (option) => option.value === defaultMeal.mealCuisine,
+              ) || null
+            }
+            onChange={onCuisineChange}
             options={cuisineOptions}
             className="w-full"
           />
         </div>
-
-        {/* Meal Type */}
+        {/* mealType */}
         <div className="mb-4">
-          <label className="block text-gray-700">Meal Type</label>
+          <label className="block text-gray-700">Måltid</label>
           <Select
             name="mealType"
-            value={mealTypeOptions.find(
-              (option) => option.value === defaultMeal.mealType,
-            )}
-            onChange={onMealTypeChange} // This stays the same
+            value={
+              mealTypeOptions.find(
+                (option) => option.value === defaultMeal.mealType,
+              ) || null
+            }
+            onChange={onMealTypeChange}
             options={mealTypeOptions}
             className="w-full"
           />
         </div>
-
         {/* Food Components Multi-Select */}
         <div className="mb-4">
-          <label className="block text-gray-700">Food Components</label>
+          <label className="block text-gray-700">Madkomponenter</label>
           <Select
             options={filteredFoodComponentOptions}
             isMulti
             onChange={onFoodComponentChange}
             value={defaultMeal.foodComponents.flatMap(
               (component: FoodComponent) =>
-                component.items.map((item) => ({
-                  label: `${component.category}: ${item}`,
-                  value: [item], // Now as an array
-                  category: component.category,
-                })),
+                (Array.isArray(component.items) ? component.items : []).map(
+                  (item) => {
+                    const matchedOption = filteredFoodComponentOptions.find(
+                      (option) => option.value[0] === item,
+                    );
+                    return (
+                      matchedOption || {
+                        label: `${component.category}: ${item}`,
+                        value: [item],
+                        category: component.category,
+                      }
+                    );
+                  },
+                ),
             )}
             placeholder="Vælg madkomponenter..."
             styles={{
@@ -153,14 +157,13 @@ const MealForm: React.FC<MealFormProps> = ({
             }}
           />
         </div>
-
         <button type="submit" className="bg-green-500 text-white p-2 rounded">
-          {defaultMeal.id ? "Update" : "Create"} Meal
+          {defaultMeal.id ? "Update" : "Create"} Ret
         </button>
+        <a href="/" className="bg-red-500 text-white p-2 rounded ml-2 mt-2 ">
+          Anullere
+        </a>
       </form>
-      <button className="bg-red-500 text-white p-2 rounded ml-2">
-        <a href="/">Exit</a>
-      </button>
     </div>
   );
 };

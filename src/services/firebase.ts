@@ -1,5 +1,13 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, push, set, get } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  push,
+  set,
+  get,
+  update,
+  remove,
+} from "firebase/database";
 import { Meal } from "../models/Meal";
 import { User } from "../models/User";
 import { FoodComponent } from "../models/FoodComponent";
@@ -152,7 +160,7 @@ export const addMeal = async (meal: Meal): Promise<void> => {
     mealCuisine: meal.mealCuisine,
     mealType: meal.mealType,
   };
-  await set(newMealRef, data);
+  await update(newMealRef, data);
 };
 //##############################################
 //###########         PUT           ############
@@ -201,11 +209,14 @@ export const updateUser = async (user: User): Promise<void> => {
 //##############################################
 
 export const deleteMeal = async (id: string): Promise<void> => {
-  throw new Error("Not implemented");
-};
-
-export const deleteUser = async (id: string): Promise<void> => {
-  throw new Error("Not implemented");
+  const mealRef = ref(db, `/meals/${id}`);
+  try {
+    await remove(mealRef);
+    console.log(`Meal with ID ${id} has been deleted successfully.`);
+  } catch (error) {
+    console.error("Error deleting meal:", error);
+    throw new Error("Failed to delete meal. Please try again later.");
+  }
 };
 
 //##############################################
