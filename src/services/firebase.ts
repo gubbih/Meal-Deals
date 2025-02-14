@@ -4,7 +4,6 @@ import { Meal } from "../models/Meal";
 import { User } from "../models/User";
 import { FoodComponent } from "../models/FoodComponent";
 import { Offer } from "../models/Offer";
-import { Category } from "@mui/icons-material";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -70,9 +69,10 @@ export const getMeal = async (id: string): Promise<Meal> => {
       priceCurrency: snapshot.val().priceCurrency,
       imagePath: snapshot.val().imagePath,
       foodComponents: snapshot.val().foodComponents,
-      mealCuisine: snapshot.val()?.crusine,
-      mealType: snapshot.val()?.meal,
+      mealCuisine: snapshot.val()?.mealCuisine,
+      mealType: snapshot.val()?.mealType,
     };
+    console.log("data: ", data);
     return data;
   } catch (error) {
     console.error("Error fetching meal:", error);

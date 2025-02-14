@@ -1,10 +1,15 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { updateMeal } from "../services/firebase";
 import { Meal } from "../models/Meal";
 import useFetchFoodComponents from "../hooks/useFetchFoodComponents";
 import MealForm from "../components/MealForm";
 import useFetchMeal from "../hooks/useFetchMeal";
+import useUpdateMeal from "../hooks/useUpdateMeal";
+interface SelectedOption {
+  label: string;
+  value: string[];
+  category: string;
+}
 
 function EditMealPage() {
   const { id } = useParams<{ id: string }>() || { id: "" };
@@ -18,22 +23,17 @@ function EditMealPage() {
     loading: mealLoading,
     error: mealError,
   } = useFetchMeal(id || "");
+  const {
+    updateMealData,
+    loading: updateLoading,
+    error: updateError,
+  } = useUpdateMeal();
   const [meal, setMeal] = useState<Meal | null>(null);
-  const [selectedComponents, setSelectedComponents] = useState<
-    { label: string; value: string; category: string }[]
-  >([]);
 
   useEffect(() => {
     if (fetchedMeal) {
       setMeal(fetchedMeal);
       console.log("fetchedMeal: ", fetchedMeal);
-      setSelectedComponents(
-        fetchedMeal.foodComponents.map((fc) => ({
-          label: `${fc.category}: ${Array.isArray(fc.items) ? fc.items.join(", ") : fc.items}`,
-          value: Array.isArray(fc.items) ? fc.items.join(", ") : fc.items,
-          category: fc.category,
-        }))
-      );
     }
   }, [fetchedMeal]);
 
@@ -48,40 +48,45 @@ function EditMealPage() {
     }
   };
 
-  const onFoodComponentChange = (selectedOptions: any) => {
-    console.log("selectedOptions: ", selectedOptions);
-    setSelectedComponents(selectedOptions);
+  const onFoodComponentChange = (selectedOptions: SelectedOption[]) => {
     if (meal) {
-      const formattedComponents = selectedOptions.map((option: any) => {
-        const { label, value, ...rest } = option;
-        return { ...rest, items: value };
-      });
+      const formattedComponents = selectedOptions.map((option) => ({
+        category: option.category,
+        items: option.value,
+      }));
       setMeal({ ...meal, foodComponents: formattedComponents });
+    }
+  };
+  const handleSelectChange = (key: keyof Meal) => (selectedOption: any) => {
+    if (meal) {
+      setMeal({ ...meal, [key]: selectedOption.value });
     }
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (meal) {
-      await updateMeal(meal);
-      alert("Meal successfully updated!");
+      await updateMealData(meal);
     }
   };
 
   const categoryOptions = useMemo(() => {
+    if (!foodComponents.length) return [];
     return foodComponents.flatMap((fc) =>
       fc.items.map((item) => ({
         label: `${fc.category}: ${item}`,
-        value: item,
+        value: [item],
         category: fc.category,
       }))
     );
   }, [foodComponents]);
 
+  const isLoading = mealLoading || foodComponentsLoading || updateLoading;
+  const error = mealError || foodComponentsError || updateError;
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
   if (!id) return <div>No meal found</div>;
-  if (mealError || foodComponentsError)
-    return <div>Error: {mealError || foodComponentsError}</div>;
-  if (mealLoading || foodComponentsLoading) return <div>Loading...</div>;
 
   return (
     <div className="p-4">
@@ -93,6 +98,8 @@ function EditMealPage() {
           foodComponentOptions={categoryOptions}
           onInputChange={onInputChange}
           onFoodComponentChange={onFoodComponentChange}
+          onCuisineChange={handleSelectChange("mealCuisine")}
+          onMealTypeChange={handleSelectChange("mealType")}
           onSubmit={onSubmit}
         />
       )}

@@ -18,9 +18,6 @@ function MealPage() {
   const { id } = useParams<{ id: string }>();
   const [meal, setMeal] = useState<Meal | null>(null);
   const [offers, setOffers] = useState<Offer[]>([]);
-  const [groupedOffers, setGroupedOffers] = useState<Record<string, Offer[]>>(
-    {}
-  );
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
@@ -69,7 +66,6 @@ function MealPage() {
     Object.keys(grouped).forEach((key) => {
       grouped[key].sort((a, b) => a.price - b.price);
     });
-    setGroupedOffers(grouped);
   }, [meal, offers]);
 
   if (loading || !meal) return <div>Loading...</div>;
