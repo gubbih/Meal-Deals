@@ -79,8 +79,8 @@ function MealPage() {
       <h1 className="text-3xl font-bold mb-4">{meal.name}</h1>
       <img src={meal.imagePath} alt={meal.name} className="mb-4" />
       <p>{meal.description}</p>
-      <p>{meal.category}</p>
-      <p>{meal.cuisine}</p>
+      <p>{meal.mealType}</p>
+      <p>{meal.mealCuisine}</p>
       <p>Ting der skal bruges:</p>
       <ul>
         {meal.foodComponents.map((fc, index) => (

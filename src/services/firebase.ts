@@ -41,9 +41,8 @@ export const getMeals = async (): Promise<Meal[]> => {
         priceCurrency: child.val().priceCurrency,
         imagePath: child.val().imagePath,
         foodComponents: child.val().foodComponents,
-        cuisine: child.val()?.crusine,
-        category: child.val()?.category,
-        meal: child.val()?.meal,
+        mealCuisine: child.val()?.mealCuisine,
+        mealType: child.val()?.mealType,
       };
       mealList.push(data);
     });
@@ -71,9 +70,8 @@ export const getMeal = async (id: string): Promise<Meal> => {
       priceCurrency: snapshot.val().priceCurrency,
       imagePath: snapshot.val().imagePath,
       foodComponents: snapshot.val().foodComponents,
-      cuisine: snapshot.val()?.crusine,
-      meal: snapshot.val()?.meal,
-      category: snapshot.val()?.category,
+      mealCuisine: snapshot.val()?.crusine,
+      mealType: snapshot.val()?.meal,
     };
     return data;
   } catch (error) {
@@ -152,6 +150,8 @@ export const addMeal = async (meal: Meal): Promise<void> => {
     priceCurrency: meal.priceCurrency,
     imagePath: meal.imagePath,
     foodComponents: meal.foodComponents,
+    mealCuisine: meal.mealCuisine,
+    mealType: meal.mealType,
   };
   await set(newMealRef, data);
 };
@@ -179,8 +179,8 @@ export const updateMeal = async (meal: Meal, image?: File): Promise<void> => {
     priceCurrency: meal.priceCurrency,
     imagePath: meal.imagePath,
     foodComponents: meal.foodComponents,
-    Category: meal.category,
-    Cuisine: meal.cuisine,
+    mealCuisine: meal.mealCuisine,
+    mealType: meal.mealType,
   };
   //check if image is the same:
   if (!image) {

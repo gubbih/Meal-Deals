@@ -2,34 +2,48 @@ import React from "react";
 import Select from "react-select";
 import { Meal } from "../models/Meal";
 import { FoodComponent } from "../models/FoodComponent";
+import { cuisines, mealsTypes } from "../assets/Arrays";
 
 interface MealFormProps {
   meal: Meal;
-  cuisines: string[];
-  meals: string[];
-  categoryOptions: { label: string; value: string[]; category: string }[];
-  handleChange: (
+  foodComponentOptions: { value: string; category: string }[];
+  categoryOptions: { label: string; value: string; category: string }[];
+  onInputChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => void;
-  handleFoodComponentChange: (selectedOptions: any) => void;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onFoodComponentChange: (selectedOptions: any) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
 const MealForm: React.FC<MealFormProps> = ({
   meal,
-  cuisines,
-  meals,
+  foodComponentOptions,
   categoryOptions,
-  handleChange,
-  handleFoodComponentChange,
-  handleSubmit,
+  onInputChange,
+  onFoodComponentChange,
+  onSubmit,
 }) => {
   console.log("meal: ", meal);
+
+  // Filter out selected options from foodComponentOptions
+  const filteredFoodComponentOptions = foodComponentOptions
+    .filter(
+      (option) =>
+        !meal.foodComponents.some((component) =>
+          component.items.includes(option.value)
+        )
+    )
+    .map((option) => ({
+      ...option,
+      value: [option.value],
+      label: `${option.category}: ${option.value}`,
+    }));
+
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={onSubmit}>
         {/* Name */}
         <div className="mb-4">
           <label className="block text-gray-700">Name</label>
@@ -37,7 +51,7 @@ const MealForm: React.FC<MealFormProps> = ({
             type="text"
             name="name"
             value={meal.name}
-            onChange={handleChange}
+            onChange={onInputChange}
             className="w-full p-2 border border-gray-300 rounded"
           />
         </div>
@@ -48,7 +62,7 @@ const MealForm: React.FC<MealFormProps> = ({
           <textarea
             name="description"
             value={meal.description}
-            onChange={handleChange}
+            onChange={onInputChange}
             className="w-full p-2 border border-gray-300 rounded"
           />
         </div>
@@ -60,7 +74,7 @@ const MealForm: React.FC<MealFormProps> = ({
             type="text"
             name="imagePath"
             value={meal.imagePath}
-            onChange={handleChange}
+            onChange={onInputChange}
             className="w-full p-2 border border-gray-300 rounded"
           />
         </div>
@@ -69,9 +83,9 @@ const MealForm: React.FC<MealFormProps> = ({
         <div className="mb-4">
           <label className="block text-gray-700">Cuisine</label>
           <select
-            name="cuisine"
-            value={meal.cuisine || ""}
-            onChange={handleChange}
+            name="mealCuisine" // Ensure this matches the property name in the meal object
+            value={meal.mealCuisine || ""}
+            onChange={onInputChange}
             className="w-full p-2 border border-gray-300 rounded"
           >
             {cuisines.map((cuisine) => (
@@ -86,12 +100,12 @@ const MealForm: React.FC<MealFormProps> = ({
         <div className="mb-4">
           <label className="block text-gray-700">Meal Type</label>
           <select
-            name="meal"
-            value={meal.meal || ""}
-            onChange={handleChange}
+            name="mealType"
+            value={meal.mealType || ""}
+            onChange={onInputChange}
             className="w-full p-2 border border-gray-300 rounded"
           >
-            {meals.map((mealType) => (
+            {mealsTypes.map((mealType) => (
               <option key={mealType} value={mealType}>
                 {mealType}
               </option>
@@ -103,9 +117,9 @@ const MealForm: React.FC<MealFormProps> = ({
         <div className="mb-4">
           <label className="block text-gray-700">Food Components</label>
           <Select
-            options={categoryOptions}
+            options={filteredFoodComponentOptions}
             isMulti
-            onChange={handleFoodComponentChange}
+            onChange={onFoodComponentChange}
             value={meal.foodComponents.map((component: FoodComponent) => ({
               label: `${component.category}: ${component.items}`,
               value: component.items,

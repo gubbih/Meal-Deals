@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { updateMeal } from "../services/firebase";
 import { Meal } from "../models/Meal";
 import useFetchFoodComponents from "../hooks/useFetchFoodComponents";
 import MealForm from "../components/MealForm";
-import { cuisines, meals } from "../assets/Arrays";
 import useFetchMeal from "../hooks/useFetchMeal";
 
 function EditMealPage() {
@@ -20,15 +19,25 @@ function EditMealPage() {
     error: mealError,
   } = useFetchMeal(id || "");
   const [meal, setMeal] = useState<Meal | null>(null);
-  //To do add ignore to useeffect
+  const [selectedComponents, setSelectedComponents] = useState<
+    { label: string; value: string; category: string }[]
+  >([]);
+
   useEffect(() => {
     if (fetchedMeal) {
       setMeal(fetchedMeal);
+      console.log("fetchedMeal: ", fetchedMeal);
+      setSelectedComponents(
+        fetchedMeal.foodComponents.map((fc) => ({
+          label: `${fc.category}: ${Array.isArray(fc.items) ? fc.items.join(", ") : fc.items}`,
+          value: Array.isArray(fc.items) ? fc.items.join(", ") : fc.items,
+          category: fc.category,
+        }))
+      );
     }
   }, [fetchedMeal]);
 
-  // Håndterer ændringer i inputfelter
-  const handleChange = (
+  const onInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
@@ -39,20 +48,19 @@ function EditMealPage() {
     }
   };
 
-  // Håndterer valg af food components fra dropdown
-  const handleFoodComponentChange = (selectedOptions: any) => {
+  const onFoodComponentChange = (selectedOptions: any) => {
     console.log("selectedOptions: ", selectedOptions);
+    setSelectedComponents(selectedOptions);
     if (meal) {
       const formattedComponents = selectedOptions.map((option: any) => {
         const { label, value, ...rest } = option;
-        return { ...rest, items: value.split(", ") };
+        return { ...rest, items: value };
       });
       setMeal({ ...meal, foodComponents: formattedComponents });
     }
   };
 
-  // Sender data til databasen
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (meal) {
       await updateMeal(meal);
@@ -60,19 +68,20 @@ function EditMealPage() {
     }
   };
 
-  if (!id) return <div>No meal found</div>;
-  if (mealError) return <div>Error: {mealError}</div>;
-  if (foodComponentsError) return <div>Error: {foodComponentsError}</div>;
-  if (mealLoading || foodComponentsLoading) return <div>Loading...</div>;
+  const categoryOptions = useMemo(() => {
+    return foodComponents.flatMap((fc) =>
+      fc.items.map((item) => ({
+        label: `${fc.category}: ${item}`,
+        value: item,
+        category: fc.category,
+      }))
+    );
+  }, [foodComponents]);
 
-  // Formatér foodComponents korrekt til brug i React-Select
-  const categoryOptions = foodComponents.flatMap((fc) =>
-    fc.items.map((item) => ({
-      label: `${fc.category}: ${item}`, // F.eks. "Drikkevarer: Cola"
-      value: [item],
-      category: fc.category,
-    }))
-  );
+  if (!id) return <div>No meal found</div>;
+  if (mealError || foodComponentsError)
+    return <div>Error: {mealError || foodComponentsError}</div>;
+  if (mealLoading || foodComponentsLoading) return <div>Loading...</div>;
 
   return (
     <div className="p-4">
@@ -80,12 +89,11 @@ function EditMealPage() {
       {meal && (
         <MealForm
           meal={meal}
-          cuisines={cuisines}
-          meals={meals}
           categoryOptions={categoryOptions}
-          handleChange={handleChange}
-          handleFoodComponentChange={handleFoodComponentChange}
-          handleSubmit={handleSubmit}
+          foodComponentOptions={categoryOptions}
+          onInputChange={onInputChange}
+          onFoodComponentChange={onFoodComponentChange}
+          onSubmit={onSubmit}
         />
       )}
     </div>

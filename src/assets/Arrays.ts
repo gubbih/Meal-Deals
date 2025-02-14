@@ -11,7 +11,7 @@ export const cuisines = [
   "None",
 ];
 
-export const meals = [
+export const mealsTypes = [
   "Morgenmad",
   "Frokost",
   "Aftensmad",
