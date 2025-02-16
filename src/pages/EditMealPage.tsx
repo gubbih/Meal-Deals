@@ -6,12 +6,6 @@ import MealForm from "../components/MealForm";
 import { useFetchMeal } from "../hooks/useFetchMeal";
 import useUpdateMeal from "../hooks/useUpdateMeal";
 
-interface SelectedOption {
-  label: string;
-  value: string[];
-  category: string;
-}
-
 function EditMealPage() {
   const { id } = useParams<{ id: string }>() || { id: "" };
   console.log("id", id);
@@ -41,7 +35,7 @@ function EditMealPage() {
         ...fetchedMeal,
         mealCuisine: fetchedMeal.mealCuisine || "",
         mealType: fetchedMeal.mealType || "",
-        foodComponents: Array.isArray(fetchedMeal.foodComponents)
+        foodComponents: fetchedMeal.foodComponents
           ? fetchedMeal.foodComponents
           : [],
       });
@@ -51,7 +45,7 @@ function EditMealPage() {
   const onInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) => {
     if (meal) {
       const { name, value } = e.target;
@@ -59,9 +53,10 @@ function EditMealPage() {
     }
   };
 
-  const onFoodComponentChange = (selectedOptions: SelectedOption[]) => {
+  const onFoodComponentChange = (selectedOptions: any) => {
     if (meal) {
-      const formattedComponents = selectedOptions.map((option) => ({
+      console.log("selectedOptions", selectedOptions);
+      const formattedComponents = selectedOptions.map((option: any) => ({
         category: option.category,
         items: option.value,
       }));
@@ -106,20 +101,23 @@ function EditMealPage() {
   if (!id) return <div>No meal found</div>;
 
   return (
-    <div className="p-4">
-      <h1 className="text-3xl font-bold mb-4">Edit Meal</h1>
-      {meal && (
-        <MealForm
-          meal={meal}
-          categoryOptions={categoryOptions}
-          foodComponentOptions={categoryOptions}
-          onInputChange={onInputChange}
-          onFoodComponentChange={onFoodComponentChange}
-          onCuisineChange={handleSelectChange("mealCuisine")}
-          onMealTypeChange={handleSelectChange("mealType")}
-          onSubmit={onSubmit}
-        />
-      )}
+    <div className="">
+      <div className="p-6">
+        <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+          Edit Meal
+        </h1>
+        {meal && (
+          <MealForm
+            meal={meal}
+            foodComponentOptions={categoryOptions}
+            onInputChange={onInputChange}
+            onFoodComponentChange={onFoodComponentChange}
+            onCuisineChange={handleSelectChange("mealCuisine")}
+            onMealTypeChange={handleSelectChange("mealType")}
+            onSubmit={onSubmit}
+          />
+        )}
+      </div>
     </div>
   );
 }
