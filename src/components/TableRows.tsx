@@ -28,8 +28,8 @@ export function Row({
   return (
     <React.Fragment>
       {/* Main row (first occurrence) */}
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell>
+      <TableRow className="hover:bg-gray-100 dark:hover:bg-gray-800 border-b dark:border-gray-700">
+        <TableCell className="px-6 py-4">
           <IconButton
             aria-label="expand row"
             size="small"
@@ -38,7 +38,7 @@ export function Row({
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
+        <TableCell component="th" scope="row" className="px-6 py-4">
           <a
             className="font-medium text-blue-700 dark:text-blue-500 hover:underline"
             href={`https://etilbudsavis.dk/${firstOffer.store}/tilbudsaviser/${firstOffer.catelogid}`}
@@ -48,19 +48,36 @@ export function Row({
             {foodComponentName.items}
           </a>
         </TableCell>
-        <TableCell align="right">
+        <TableCell
+          align="left"
+          className="px-6 py-4 text-gray-900 dark:text-gray-200"
+        >
           {firstOffer.price} {firstOffer.priceCurrency}
         </TableCell>
-        <TableCell align="right">
+        <TableCell
+          align="left"
+          className="px-6 py-4 text-gray-900 dark:text-gray-200"
+        >
           {firstOffer.weight} {firstOffer.weightUnit}
         </TableCell>
-        <TableCell align="right">
+        <TableCell
+          align="left"
+          className="px-6 py-4 text-gray-900 dark:text-gray-200"
+        >
           {DateTime.fromISO(firstOffer.offerStart).toFormat("yyyy-MM-dd")}
         </TableCell>
-        <TableCell align="right">
+        <TableCell
+          align="left"
+          className="px-6 py-4 text-gray-900 dark:text-gray-200"
+        >
           {DateTime.fromISO(firstOffer.offerEnd).toFormat("yyyy-MM-dd")}
         </TableCell>
-        <TableCell align="right">{firstOffer.store}</TableCell>
+        <TableCell
+          align="left"
+          className="px-6 py-4 text-gray-900 dark:text-gray-200"
+        >
+          {firstOffer.store}
+        </TableCell>
       </TableRow>
 
       {/* Expandable row for remaining offers */}
@@ -69,18 +86,35 @@ export function Row({
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  component="div"
+                  className="text-gray-900 dark:text-gray-200"
+                >
                   More Offers for {firstOffer.name}
                 </Typography>
                 <Table size="small" aria-label="additional offers">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Name</TableCell>
-                      <TableCell>Price</TableCell>
-                      <TableCell>Weight</TableCell>
-                      <TableCell>Offer Start</TableCell>
-                      <TableCell>Offer End</TableCell>
-                      <TableCell>Store</TableCell>
+                      <TableCell className="text-gray-900 dark:text-gray-200">
+                        Name
+                      </TableCell>
+                      <TableCell className="text-gray-900 dark:text-gray-200">
+                        Price
+                      </TableCell>
+                      <TableCell className="text-gray-900 dark:text-gray-200">
+                        Weight
+                      </TableCell>
+                      <TableCell className="text-gray-900 dark:text-gray-200">
+                        Offer Start
+                      </TableCell>
+                      <TableCell className="text-gray-900 dark:text-gray-200">
+                        Offer End
+                      </TableCell>
+                      <TableCell className="text-gray-900 dark:text-gray-200">
+                        Store
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -96,23 +130,25 @@ export function Row({
                             {offer.name ?? "Unknown"}
                           </a>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-gray-900 dark:text-gray-200">
                           {offer.price} {offer.priceCurrency}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-gray-900 dark:text-gray-200">
                           {offer.weight} {offer.weightUnit}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-gray-900 dark:text-gray-200">
                           {DateTime.fromISO(offer.offerStart).toFormat(
-                            "yyyy-MM-dd",
+                            "yyyy-MM-dd"
                           )}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-gray-900 dark:text-gray-200">
                           {DateTime.fromISO(offer.offerEnd).toFormat(
-                            "yyyy-MM-dd",
+                            "yyyy-MM-dd"
                           )}
                         </TableCell>
-                        <TableCell>{offer.store}</TableCell>
+                        <TableCell className="text-gray-900 dark:text-gray-200">
+                          {offer.store}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

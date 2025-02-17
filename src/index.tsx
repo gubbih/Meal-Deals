@@ -5,12 +5,14 @@ import App from "./App";
 
 // Create a root element
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement,
+  document.getElementById("root") as HTMLElement
 );
 
 // Render the App component inside React.StrictMode
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <div className="bg-white dark:bg-black dark:bg-gray-900 h-screen">
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  </div>
 );

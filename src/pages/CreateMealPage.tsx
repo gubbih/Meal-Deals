@@ -21,13 +21,14 @@ function CreateMealPage() {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) => {
     const { name, value } = e.target;
     setMeal({ ...meal, [name]: value });
   };
 
   const handleFoodComponentChange = (selectedOptions: any) => {
+    console.log("selectedOptions", selectedOptions);
     const formattedComponents = selectedOptions.map((option: any) => {
       const { label, value, ...rest } = option;
       return { ...rest, items: value };
@@ -56,40 +57,41 @@ function CreateMealPage() {
         label: `${fc.category}: ${item}`,
         value: [item],
         category: fc.category,
-      })),
+      }))
     );
   }, [foodComponents]);
 
-  // Memoize selectedItems to avoid unnecessary re-renders
-  const selectedItems = useMemo(() => {
-    return new Set(meal.foodComponents.flatMap((component) => component.items));
-  }, [meal.foodComponents]);
-
-  // Memoize filteredFoodComponentOptions
-  const filteredFoodComponentOptions = useMemo(() => {
-    return categoryOptions
-      .filter((option) => !selectedItems.has(option.value[0]))
-      .map((option) => ({
-        ...option,
-        label: `${option.category}: ${option.value}`,
-      }));
-  }, [categoryOptions, selectedItems]);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center w-56 h-56 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+        <div className="px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">
+          Loading...
+        </div>
+      </div>
+    );
+  if (error)
+    return (
+      <p
+        id="standard_error_help"
+        className="mt-2 text-xs text-red-600 dark:text-red-400"
+      >
+        <span className="font-medium">Oh, snapp!</span> {error}
+      </p>
+    );
 
   return (
-    <div className="p-4">
-      <h1 className="text-3xl font-bold mb-4">Create New Meal</h1>
+    <div className="p-4 bg-white dark:bg-black dark:bg-gray-900">
+      <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+        Create New Meal
+      </h1>
       <MealForm
         meal={meal}
-        foodComponentOptions={filteredFoodComponentOptions}
-        categoryOptions={categoryOptions}
+        foodComponentOptions={categoryOptions}
         onInputChange={handleChange}
         onFoodComponentChange={handleFoodComponentChange}
-        onSubmit={handleSubmit}
         onCuisineChange={handleCuisineChange}
         onMealTypeChange={handleMealTypeChange}
+        onSubmit={handleSubmit}
       />
     </div>
   );
