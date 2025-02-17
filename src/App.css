@@ -70,4 +70,152 @@
 
     @apply border-b-2 border-green-300 dark:border-green-700;
   }
+
+  .Toastify__toast {
+    &-theme--dark {
+      @apply bg-gray-900 text-gray-200;
+    }
+    &-theme--light {
+      @apply bg-white text-gray-900;
+    }
+    &-theme--colored.Toastify__toast--default {
+      @apply bg-white text-gray-900;
+    }
+    &-theme--colored.Toastify__toast--info {
+      @apply text-blue-900 bg-blue-100;
+    }
+    &-theme--colored.Toastify__toast--success {
+      @apply text-green-900 bg-green-100;
+    }
+    &-theme--colored.Toastify__toast--warning {
+      @apply text-yellow-900 bg-yellow-100;
+    }
+    &-theme--colored.Toastify__toast--error {
+      @apply text-red-900 bg-red-100;
+    }
+  }
+
+  .Toastify__toast-container {
+    @apply z-50 fixed top-0 left-1/2 transform -translate-x-1/2;
+  }
+
+  .Toastify__toast-icon {
+    @apply flex items-center justify-center;
+  }
+
+  .Toastify__toast--close-on-click {
+    @apply cursor-pointer;
+  }
+
+  .Toastify__close-button {
+    @apply text-gray-600 dark:text-gray-200;
+  }
+
+  .Toastify__close-button--light {
+    @apply text-gray-900;
+  }
+
+  .Toastify__progress-bar--wrp {
+    @apply relative;
+  }
+
+  .Toastify__progress-bar--bg {
+    @apply absolute inset-0;
+  }
+
+  .Toastify__progress-bar--animated {
+    @apply animate-progress;
+  }
+
+  .Toastify__progress-bar {
+    &-theme--light {
+      @apply bg-gray-300;
+    }
+    &-theme--dark {
+      @apply bg-gray-700;
+    }
+    &--info {
+      @apply bg-blue-500;
+    }
+    &--success {
+      @apply bg-green-500;
+    }
+    &--warning {
+      @apply bg-yellow-500;
+    }
+    &--error {
+      @apply bg-red-500;
+    }
+    &-theme--colored.Toastify__progress-bar--info,
+    &-theme--colored.Toastify__progress-bar--success,
+    &-theme--colored.Toastify__progress-bar--warning,
+    &-theme--colored.Toastify__progress-bar--error {
+      @apply bg-transparent;
+    }
+  }
+
+  .Toastify__toast-theme--light.Toastify__toast--success {
+    @apply bg-green-100 text-green-900 dark:bg-gray-700;
+  }
+
+  .Toastify__toast-theme--light.Toastify__toast--error {
+    @apply bg-red-100 text-red-900 dark:bg-gray-700;
+  }
+
+  .Toastify__toast-theme--light.Toastify__toast--warning {
+    @apply bg-yellow-100 text-yellow-900 dark:bg-gray-700;
+  }
+
+  .Toastify__toast-theme--light.Toastify__toast--info {
+    @apply bg-blue-100 text-blue-900 dark:bg-gray-700;
+  }
+
+  .Toastify__toast-theme--dark.Toastify__toast--success {
+    @apply bg-green-900 text-green-100 dark:bg-gray-700;
+  }
+
+  .Toastify__toast-theme--dark.Toastify__toast--error {
+    @apply bg-red-900 text-red-100 dark:bg-gray-700;
+  }
+
+  .Toastify__toast-theme--dark.Toastify__toast--warning {
+    @apply bg-yellow-900 text-yellow-100 dark:bg-gray-700;
+  }
+
+  .Toastify__toast-theme--dark.Toastify__toast--info {
+    @apply bg-blue-900 text-blue-100 dark:bg-gray-700;
+  }
+
+  /* Dark mode styles with hover effects */
+  .dark .Toastify__toast-theme--light.Toastify__toast--success {
+    @apply bg-green-900 text-green-100 hover:bg-green-800 dark:bg-gray-700;
+  }
+
+  .dark .Toastify__toast-theme--light.Toastify__toast--error {
+    @apply bg-red-900 text-red-100 hover:bg-red-200 dark:bg-gray-700;
+  }
+
+  .dark .Toastify__toast-theme--light.Toastify__toast--warning {
+    @apply bg-yellow-900 text-yellow-100 hover:bg-yellow-800 dark:bg-gray-700;
+  }
+
+  .dark .Toastify__toast-theme--light.Toastify__toast--info {
+    @apply bg-blue-900 text-blue-100 hover:bg-blue-800 dark:bg-gray-700;
+  }
+
+  .dark .Toastify__toast-theme--dark.Toastify__toast--success {
+    @apply bg-green-100 text-green-900 hover:bg-green-200 dark:bg-gray-700;
+  }
+
+  .dark .Toastify__toast-theme--dark.Toastify__toast--error {
+    @apply bg-red-100 text-red-900 hover:bg-red-200 dark:bg-gray-700;
+  }
+
+  .dark .Toastify__toast-theme--dark.Toastify__toast--warning {
+    @apply bg-yellow-100 text-yellow-900 hover:bg-yellow-200 dark:bg-gray-700;
+  }
+
+  .dark .Toastify__toast-theme--dark.Toastify__toast--info {
+    @apply bg-blue-100 text-blue-900 hover:bg-blue-200 dark:bg-gray-700;
+  }
 }

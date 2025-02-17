@@ -11,8 +11,6 @@ export function useFetchMeal(id: string) {
     const fetchMeal = async () => {
       try {
         const mealData = await getMeal(id);
-        console.log("Fetched meal data:", mealData);
-
         setMeal(mealData);
         setLoading(false);
       } catch (error: any) {

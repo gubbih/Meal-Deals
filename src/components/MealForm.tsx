@@ -11,7 +11,7 @@ interface MealFormProps {
   onInputChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) => void;
   onFoodComponentChange: (selectedOptions: any) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -49,7 +49,7 @@ const MealForm: React.FC<MealFormProps> = ({
       value: option.value,
       label: `${option.category}: ${option.value[0]}`,
       isDisabled: defaultMeal.foodComponents.some((component) =>
-        component.items.includes(option.value[0]),
+        component.items.includes(option.value[0])
       ),
     }));
   }, [foodComponentOptions, defaultMeal.foodComponents]);
@@ -110,7 +110,7 @@ const MealForm: React.FC<MealFormProps> = ({
                 required
                 value={
                   cuisineOptions.find(
-                    (option) => option.value === defaultMeal.mealCuisine,
+                    (option) => option.value === defaultMeal.mealCuisine
                   ) || null
                 }
                 onChange={onCuisineChange}
@@ -130,7 +130,7 @@ const MealForm: React.FC<MealFormProps> = ({
                 required
                 value={
                   mealTypeOptions.find(
-                    (option) => option.value === defaultMeal.mealType,
+                    (option) => option.value === defaultMeal.mealType
                   ) || null
                 }
                 onChange={onMealTypeChange}
@@ -164,7 +164,7 @@ const MealForm: React.FC<MealFormProps> = ({
                       value: [item],
                       category: component.category,
                     };
-                  }),
+                  })
               )}
               placeholder="Vælg madkomponenter..."
               styles={{

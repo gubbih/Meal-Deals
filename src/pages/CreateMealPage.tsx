@@ -1,10 +1,13 @@
 import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { addMeal } from "../services/firebase";
 import { Meal } from "../models/Meal";
 import useFetchFoodComponents from "../hooks/useFetchFoodComponents";
 import MealForm from "../components/MealForm";
+import Toast from "../components/Toast";
 
 function CreateMealPage() {
+  const navigate = useNavigate();
   const { foodComponents, loading, error } = useFetchFoodComponents();
   const [meal, setMeal] = useState<Meal>({
     id: "",
@@ -17,18 +20,21 @@ function CreateMealPage() {
     mealType: "",
     mealCuisine: "",
   });
+  const [toast, setToast] = useState<{
+    type: "success" | "error" | "warning";
+    message: string;
+  } | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) => {
     const { name, value } = e.target;
     setMeal({ ...meal, [name]: value });
   };
 
   const handleFoodComponentChange = (selectedOptions: any) => {
-    console.log("selectedOptions", selectedOptions);
     const formattedComponents = selectedOptions.map((option: any) => {
       const { label, value, ...rest } = option;
       return { ...rest, items: value };
@@ -46,18 +52,26 @@ function CreateMealPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await addMeal(meal);
-    alert("Meal successfully added!");
+    try {
+      await addMeal(meal);
+      setToast({ type: "success", message: "Meal successfully added!" });
+      navigate("/", {
+        state: {
+          toast: { type: "success", message: "Meal successfully added!" },
+        },
+      });
+    } catch (error) {
+      setToast({ type: "error", message: "Failed to add meal!" });
+    }
   };
 
-  // Moved categoryOptions to useMemo for optimization
   const categoryOptions = useMemo(() => {
     return foodComponents.flatMap((fc) =>
       fc.items.map((item) => ({
         label: `${fc.category}: ${item}`,
         value: [item],
         category: fc.category,
-      })),
+      }))
     );
   }, [foodComponents]);
 
@@ -81,6 +95,7 @@ function CreateMealPage() {
 
   return (
     <div className="p-4 bg-white dark:bg-black dark:bg-gray-900">
+      {toast && <Toast type={toast.type} message={toast.message} />}
       <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
         Create New Meal
       </h1>
