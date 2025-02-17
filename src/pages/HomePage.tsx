@@ -53,16 +53,16 @@ function HomePage() {
           </a>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 ">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {meals.map((meal) => (
             <div key={meal.id} className=" flex justify-center">
-              <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+              <div className=" w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                 <img
                   src={meal.imagePath}
                   alt={meal.name}
-                  className=" rounded-t-md h-full max-h-64 w-full object-cover p-5"
+                  className="rounded-t-md h-64 w-full object-cover"
                 />
-                <div className="px-4 pb-4">
+                <div className="p-4">
                   <h2 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
                     {meal.name}
                   </h2>

@@ -22,7 +22,7 @@ function Navigation() {
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
-      <div className="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4">
+      <div className="flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="/" className="flex items-center space-x-3 ">
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
             Cheap Meals
@@ -71,7 +71,6 @@ function Navigation() {
             id="mega-menu"
             className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
           >
-            {" "}
             <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
               <ul className="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 ">
                 <Link
@@ -86,13 +85,26 @@ function Navigation() {
                 >
                   Create meal
                 </Link>
+                <div className="block items-center md:order-2 space-x-1 md:space-x-2">
+                  <button
+                    onClick={darkModeHandler}
+                    className={`relative inline-flex items-center h-6 rounded-full w-11 focus:outline-none ${
+                      dark ? "bg-blue-600" : "bg-gray-200"
+                    }`}
+                  >
+                    <span
+                      className={`transform transition ease-in-out duration-200 ${
+                        dark ? "translate-x-6" : "translate-x-1"
+                      } inline-block w-4 h-4 rounded-full bg-white`}
+                    />
+                    {dark ? (
+                      <IoSunny className="absolute left-1 text-yellow-500" />
+                    ) : (
+                      <IoMoon className="absolute right-1 text-gray-500" />
+                    )}
+                  </button>
+                </div>
               </ul>
-            </div>
-            <div className="bg-green-500 dark:bg-blue-900 items-center justify-between hidden w-full md:flex md:w-auto md:order-1 ">
-              <button onClick={() => darkModeHandler()}>
-                {dark && <IoSunny />}
-                {!dark && <IoMoon />}
-              </button>
             </div>
           </div>
         </div>
