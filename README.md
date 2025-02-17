@@ -13,10 +13,10 @@ This project is a work-in-progress for building a simple meal planning applicati
 - [x] **Database Management**  
        Use Firebase or a similar service to manage the database. Test Azure's SQL database as an alternative.
 
-- [ ] **Preloaded Recipes**  
+- [x] **Preloaded Recipes**  
        Add at least one recipe before implementing the core functionality.
 
-- [ ] **CRUD for Recipes**  
+- [x] **CRUD for Recipes**  
        - Enable Create, Read, Update, and Delete functionality for recipes.  
        - Initially, only the admin (myself) will have permissions for Update and Delete.
 
@@ -30,7 +30,18 @@ This project is a work-in-progress for building a simple meal planning applicati
        - Checks where they can be purchased at the lowest prices.
 
       add meals to fav
-      fix foodcomponents to have them ALL added or find a better way to do that
+      fix foodcomponents to have them ALL added or find a better way to do that 80% ish
+      loading on all sites
+      rediirect after create/update meal
+      user login/create
+             -only users can create meals and delete their own (meal with userid unless admin)
+      firebase admin sdk
+      better styling on create/update page
+      better validation, not HTML
+      mealform has some problems, better typecasting
+      fix nav, create should be on the left side
+      test mobil version
+      
 
 ---
 
