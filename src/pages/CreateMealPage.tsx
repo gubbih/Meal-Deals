@@ -31,7 +31,7 @@ function CreateMealPage() {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setMeal({ ...meal, [name]: value });
@@ -90,7 +90,7 @@ function CreateMealPage() {
         label: `${fc.category}: ${item}`,
         value: [item],
         category: fc.category,
-      }))
+      })),
     );
   }, [foodComponents]);
 

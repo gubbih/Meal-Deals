@@ -41,7 +41,6 @@ This project is a work-in-progress for building a simple meal planning applicati
       mealform has some problems, better typecasting
       fix nav, create should be on the left side
       test mobil version
-      
 
 ---
 
