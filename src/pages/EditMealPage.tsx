@@ -45,7 +45,7 @@ function EditMealPage() {
   const onInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     if (meal) {
       const { name, value } = e.target;

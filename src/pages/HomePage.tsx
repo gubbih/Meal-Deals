@@ -20,7 +20,7 @@ function HomePage() {
 
   const handleDelete = async (mealId: string) => {
     const confirmDelete = window.confirm(
-      "Er du sikker på, at du vil slette dette ret?"
+      "Er du sikker på, at du vil slette dette ret?",
     );
 
     if (confirmDelete) {
