@@ -12,7 +12,6 @@ function useUpdateMeal() {
     try {
       await updateMeal(meal);
       setLoading(false);
-      alert("Meal successfully updated!");
     } catch (err: any) {
       setLoading(false);
       setError(err.message);

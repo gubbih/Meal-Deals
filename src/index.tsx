@@ -10,7 +10,7 @@ const root = ReactDOM.createRoot(
 
 // Render the App component inside React.StrictMode
 root.render(
-  <div className="bg-white dark:bg-black dark:bg-gray-900 h-screen">
+  <div className="bg-white dark:bg-black dark:bg-gray-900 min-h-screen">
     <React.StrictMode>
       <App />
     </React.StrictMode>

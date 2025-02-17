@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { getMeals } from "../services/firebase";
 import { Meal } from "../models/Meal";
 import useDeleteMeal from "../hooks/useDeleteMeal";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Toast from "../components/Toast";
+import Modal from "../components/Modal";
 
 function HomePage() {
+  const location = useLocation();
   const [meals, setMeals] = useState<Meal[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [mealToDelete, setMealToDelete] = useState<string | null>(null);
+  const [toast, setToast] = useState<{
+    type: "success" | "error" | "warning";
+    message: string;
+  } | null>(location.state?.toast || null);
   const { handleDeleteMeal } = useDeleteMeal();
 
   useEffect(() => {
@@ -18,31 +26,37 @@ function HomePage() {
     setMeals(data);
   };
 
-  const handleDelete = async (mealId: string) => {
-    const confirmDelete = window.confirm(
-      "Er du sikker på, at du vil slette dette ret?",
-    );
+  const handleDelete = (mealId: string) => {
+    setMealToDelete(mealId);
+    setIsModalVisible(true);
+  };
 
-    if (confirmDelete) {
-      await handleDeleteMeal(mealId);
-      toast.success("Ret blev succesfuldt slettet!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-
-      fetchMeals();
+  const confirmDelete = async () => {
+    if (mealToDelete) {
+      try {
+        await handleDeleteMeal(mealToDelete);
+        setToast({ type: "success", message: "Ret blev succesfuldt slettet!" });
+        fetchMeals();
+      } catch (error) {
+        setToast({
+          type: "error",
+          message: "Der opstod en fejl under sletning!",
+        });
+      } finally {
+        setIsModalVisible(false);
+        setMealToDelete(null);
+      }
     }
+  };
+
+  const cancelDelete = () => {
+    setIsModalVisible(false);
+    setMealToDelete(null);
   };
 
   return (
     <div className="p-4">
-      <ToastContainer />
+      {toast && <Toast type={toast.type} message={toast.message} />}
       {meals.length === 0 ? (
         <div className="flex justify-center">
           <a
@@ -54,6 +68,12 @@ function HomePage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Modal
+            isVisible={isModalVisible}
+            onClose={cancelDelete}
+            onConfirm={confirmDelete}
+            message="Er du sikker på, at du vil slette denne ret?"
+          />
           {meals.map((meal) => (
             <div key={meal.id} className=" flex justify-center">
               <div className=" w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
@@ -81,11 +101,13 @@ function HomePage() {
                     Rediger
                   </a>
                   <button
+                    data-modal-target="popup-modal"
+                    className="block text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                    type="button"
                     onClick={(e) => {
                       e.preventDefault();
                       handleDelete(meal.id);
                     }}
-                    className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
                   >
                     Slet
                   </button>

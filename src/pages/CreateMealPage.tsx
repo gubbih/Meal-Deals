@@ -1,10 +1,14 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { addMeal } from "../services/firebase";
 import { Meal } from "../models/Meal";
 import useFetchFoodComponents from "../hooks/useFetchFoodComponents";
 import MealForm from "../components/MealForm";
+import Toast from "../components/Toast";
+import Modal from "../components/Modal";
 
 function CreateMealPage() {
+  const navigate = useNavigate();
   const { foodComponents, loading, error } = useFetchFoodComponents();
   const [meal, setMeal] = useState<Meal>({
     id: "",
@@ -17,6 +21,12 @@ function CreateMealPage() {
     mealType: "",
     mealCuisine: "",
   });
+  const [toast, setToast] = useState<{
+    type: "success" | "error" | "warning";
+    message: string;
+  } | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [navigateAway, setNavigateAway] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -28,7 +38,6 @@ function CreateMealPage() {
   };
 
   const handleFoodComponentChange = (selectedOptions: any) => {
-    console.log("selectedOptions", selectedOptions);
     const formattedComponents = selectedOptions.map((option: any) => {
       const { label, value, ...rest } = option;
       return { ...rest, items: value };
@@ -46,11 +55,35 @@ function CreateMealPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await addMeal(meal);
-    alert("Meal successfully added!");
+    try {
+      await addMeal(meal);
+      setToast({ type: "success", message: "Meal successfully added!" });
+      navigate("/", {
+        state: {
+          toast: { type: "success", message: "Meal successfully added!" },
+        },
+      });
+    } catch (error) {
+      setToast({ type: "error", message: "Failed to add meal!" });
+    }
   };
 
-  // Moved categoryOptions to useMemo for optimization
+  const handleCancel = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    setIsModalVisible(true);
+  };
+
+  const confirmNavigateAway = () => {
+    setIsModalVisible(false);
+    setNavigateAway(true);
+  };
+
+  useEffect(() => {
+    if (navigateAway) {
+      navigate("/");
+    }
+  }, [navigateAway, navigate]);
+
   const categoryOptions = useMemo(() => {
     return foodComponents.flatMap((fc) =>
       fc.items.map((item) => ({
@@ -81,6 +114,13 @@ function CreateMealPage() {
 
   return (
     <div className="p-4 bg-white dark:bg-black dark:bg-gray-900">
+      <Modal
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onConfirm={confirmNavigateAway}
+        message="Er du sikker på at gå væk fra denne side, tingene er ikke gemt?"
+      />
+      {toast && <Toast type={toast.type} message={toast.message} />}
       <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
         Create New Meal
       </h1>
@@ -92,6 +132,7 @@ function CreateMealPage() {
         onCuisineChange={handleCuisineChange}
         onMealTypeChange={handleMealTypeChange}
         onSubmit={handleSubmit}
+        onCancel={handleCancel}
       />
     </div>
   );
