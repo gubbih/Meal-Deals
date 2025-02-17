@@ -72,6 +72,7 @@ function HomePage() {
             isVisible={isModalVisible}
             onClose={cancelDelete}
             onConfirm={confirmDelete}
+            message="Er du sikker på, at du vil slette denne ret?"
           />
           {meals.map((meal) => (
             <div key={meal.id} className=" flex justify-center">

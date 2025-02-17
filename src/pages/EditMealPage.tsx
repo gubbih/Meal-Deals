@@ -6,6 +6,7 @@ import MealForm from "../components/MealForm";
 import { useFetchMeal } from "../hooks/useFetchMeal";
 import useUpdateMeal from "../hooks/useUpdateMeal";
 import Toast from "../components/Toast";
+import Modal from "../components/Modal";
 
 function EditMealPage() {
   const { id } = useParams<{ id: string }>() || { id: "" };
@@ -33,6 +34,25 @@ function EditMealPage() {
     type: "success" | "error" | "warning";
     message: string;
   } | null>(null);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [navigateAway, setNavigateAway] = useState(false);
+
+  const handleCancel = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    setIsModalVisible(true);
+  };
+
+  const confirmNavigateAway = () => {
+    setIsModalVisible(false);
+    setNavigateAway(true);
+  };
+
+  useEffect(() => {
+    if (navigateAway) {
+      navigate("/");
+    }
+  }, [navigateAway, navigate]);
 
   useEffect(() => {
     if (fetchedMeal) {
@@ -113,6 +133,12 @@ function EditMealPage() {
 
   return (
     <div className="">
+      <Modal
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onConfirm={confirmNavigateAway}
+        message="Er du sikker på at gå væk fra denne side, tingene er ikke gemt?"
+      />
       <div className="p-6">
         {toast && <Toast type={toast.type} message={toast.message} />}
         <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
@@ -127,6 +153,7 @@ function EditMealPage() {
             onCuisineChange={handleSelectChange("mealCuisine")}
             onMealTypeChange={handleSelectChange("mealType")}
             onSubmit={onSubmit}
+            onCancel={handleCancel}
           />
         )}
       </div>

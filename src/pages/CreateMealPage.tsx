@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { addMeal } from "../services/firebase";
 import { Meal } from "../models/Meal";
 import useFetchFoodComponents from "../hooks/useFetchFoodComponents";
 import MealForm from "../components/MealForm";
 import Toast from "../components/Toast";
+import Modal from "../components/Modal";
 
 function CreateMealPage() {
   const navigate = useNavigate();
@@ -24,6 +25,8 @@ function CreateMealPage() {
     type: "success" | "error" | "warning";
     message: string;
   } | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [navigateAway, setNavigateAway] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -65,6 +68,22 @@ function CreateMealPage() {
     }
   };
 
+  const handleCancel = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    setIsModalVisible(true);
+  };
+
+  const confirmNavigateAway = () => {
+    setIsModalVisible(false);
+    setNavigateAway(true);
+  };
+
+  useEffect(() => {
+    if (navigateAway) {
+      navigate("/");
+    }
+  }, [navigateAway, navigate]);
+
   const categoryOptions = useMemo(() => {
     return foodComponents.flatMap((fc) =>
       fc.items.map((item) => ({
@@ -95,6 +114,12 @@ function CreateMealPage() {
 
   return (
     <div className="p-4 bg-white dark:bg-black dark:bg-gray-900">
+      <Modal
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onConfirm={confirmNavigateAway}
+        message="Er du sikker på at gå væk fra denne side, tingene er ikke gemt?"
+      />
       {toast && <Toast type={toast.type} message={toast.message} />}
       <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
         Create New Meal
@@ -107,6 +132,7 @@ function CreateMealPage() {
         onCuisineChange={handleCuisineChange}
         onMealTypeChange={handleMealTypeChange}
         onSubmit={handleSubmit}
+        onCancel={handleCancel}
       />
     </div>
   );

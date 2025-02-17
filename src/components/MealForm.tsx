@@ -17,6 +17,7 @@ interface MealFormProps {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onCuisineChange: (selectedOption: any) => void;
   onMealTypeChange: (selectedOption: any) => void;
+  onCancel: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 const animatedComponents = makeAnimated();
 const MealForm: React.FC<MealFormProps> = ({
@@ -27,6 +28,7 @@ const MealForm: React.FC<MealFormProps> = ({
   onSubmit,
   onCuisineChange,
   onMealTypeChange,
+  onCancel,
 }) => {
   const defaultMeal = {
     mealCuisine: meal.mealCuisine || "",
@@ -191,7 +193,11 @@ const MealForm: React.FC<MealFormProps> = ({
         <button type="submit" className="bg-green-500 text-white p-2 rounded">
           {defaultMeal.id ? "Update" : "Create"} Ret
         </button>
-        <a href="/" className="bg-red-500 text-white p-2 rounded ml-2 mt-2 ">
+        <a
+          href="/"
+          onClick={onCancel}
+          className="bg-red-500 text-white p-2 rounded ml-2 mt-2 "
+        >
           Anullere
         </a>
       </form>
