@@ -1,4 +1,3 @@
-// src/pages/HomePage.tsx (with favorite indicators)
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getMeals } from "../services/firebase";
@@ -8,6 +7,7 @@ import Toast from "../components/Toast";
 import Modal from "../components/Modal";
 import { useAuth } from "../services/firebase";
 import useFavoriteMeals from "../hooks/useFavoriteMeals";
+import FavoriteButton from "../components/FavoriteButton";
 
 function HomePage() {
   const location = useLocation();
@@ -15,16 +15,21 @@ function HomePage() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [mealToDelete, setMealToDelete] = useState<string | null>(null);
   const [toast, setToast] = useState<{
-    type: "success" | "error" | "warning";
+    type: "success" | "error" | "warning" | "info";
     message: string;
   } | null>(location.state?.toast || null);
   const { handleDeleteMeal } = useDeleteMeal();
   const { user } = useAuth();
   const { favorites, addToFavorites, removeFromFavorites } = useFavoriteMeals();
+  const [localFavorites, setLocalFavorites] = useState<string[]>(favorites);
 
   useEffect(() => {
     fetchMeals();
   }, []);
+
+  useEffect(() => {
+    setLocalFavorites(favorites);
+  }, [favorites]);
 
   const fetchMeals = async () => {
     const data = await getMeals();
@@ -72,11 +77,13 @@ function HomePage() {
     }
 
     try {
-      if (favorites.includes(mealId)) {
+      if (localFavorites.includes(mealId)) {
         await removeFromFavorites(mealId);
-        setToast({ type: "success", message: "Removed from favorites" });
+        setLocalFavorites(localFavorites.filter((id) => id !== mealId));
+        setToast({ type: "info", message: "Removed from favorites" });
       } else {
         await addToFavorites(mealId);
+        setLocalFavorites([...localFavorites, mealId]);
         setToast({ type: "success", message: "Added to favorites" });
       }
     } catch (error) {
@@ -88,92 +95,125 @@ function HomePage() {
     <div className="p-4">
       {toast && <Toast type={toast.type} message={toast.message} />}
       {meals.length === 0 ? (
-        <div className="flex justify-center">
-          <a
-            href="/meal/new"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-          >
-            Create New Meal
-          </a>
-        </div>
+        <CreateNewMealButton />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Modal
-            isVisible={isModalVisible}
-            onClose={cancelDelete}
-            onConfirm={confirmDelete}
-            message="Er du sikker på, at du vil slette denne ret?"
-          />
-          {meals.map((meal) => (
-            <div key={meal.id} className="flex justify-center">
-              <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                <div className="relative">
-                  <img
-                    src={meal.imagePath}
-                    alt={meal.name}
-                    className="rounded-t-md h-64 w-full object-cover"
-                  />
-                  {user && (
-                    <button
-                      onClick={(e) => handleToggleFavorite(meal.id, e)}
-                      className="absolute top-2 right-2 p-2 bg-white bg-opacity-70 rounded-full hover:bg-opacity-100 transition"
-                    >
-                      <svg
-                        className={`w-6 h-6 ${favorites.includes(meal.id) ? "text-red-600" : "text-gray-600"}`}
-                        fill={
-                          favorites.includes(meal.id) ? "currentColor" : "none"
-                        }
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                        />
-                      </svg>
-                    </button>
-                  )}
-                </div>
-                <div className="p-4">
-                  <h2 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                    {meal.name}
-                  </h2>
-                </div>
-                <div className="flex items-center justify-between px-2 m-2">
-                  <a
-                    href={`/meal/${meal.id}`}
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                  >
-                    Se ret
-                  </a>
-                  <a
-                    href={`/meal/${meal.id}/edit`}
-                    className="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900"
-                  >
-                    Rediger
-                  </a>
-                  <button
-                    data-modal-target="popup-modal"
-                    className="block text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleDelete(meal.id);
-                    }}
-                  >
-                    Slet
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <MealGrid
+          meals={meals}
+          user={user}
+          localFavorites={localFavorites}
+          handleToggleFavorite={handleToggleFavorite}
+          handleDelete={handleDelete}
+        />
       )}
+      <Modal
+        isVisible={isModalVisible}
+        onClose={cancelDelete}
+        onConfirm={confirmDelete}
+        message="Er du sikker på, at du vil slette denne ret?"
+      />
     </div>
   );
 }
+
+const CreateNewMealButton = () => (
+  <div className="flex justify-center">
+    <a
+      href="/create/"
+      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+    >
+      Create New Meal
+    </a>
+  </div>
+);
+
+const MealGrid = ({
+  meals,
+  user,
+  localFavorites,
+  handleToggleFavorite,
+  handleDelete,
+}: {
+  meals: Meal[];
+  user: any;
+  localFavorites: string[];
+  handleToggleFavorite: (mealId: string, event: React.MouseEvent) => void;
+  handleDelete: (mealId: string) => void;
+}) => (
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+    {meals.map((meal) => (
+      <MealCard
+        key={meal.id}
+        meal={meal}
+        user={user}
+        localFavorites={localFavorites}
+        handleToggleFavorite={handleToggleFavorite}
+        handleDelete={handleDelete}
+      />
+    ))}
+  </div>
+);
+
+const MealCard = ({
+  meal,
+  user,
+  localFavorites,
+  handleToggleFavorite,
+  handleDelete,
+}: {
+  meal: Meal;
+  user: any;
+  localFavorites: string[];
+  handleToggleFavorite: (mealId: string, event: React.MouseEvent) => void;
+  handleDelete: (mealId: string) => void;
+}) => (
+  <div className="flex justify-center">
+    <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+      <div className="relative">
+        <img
+          src={meal.imagePath}
+          alt={meal.name}
+          className="rounded-t-md h-64 w-full object-cover"
+        />
+        {user && (
+          <FavoriteButton
+            mealId={meal.id}
+            favorites={localFavorites}
+            handleToggleFavorite={handleToggleFavorite}
+          />
+        )}
+      </div>
+      <div className="p-4">
+        <h2 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+          {meal.name}
+        </h2>
+      </div>
+      <div className="flex items-center justify-between px-2 m-2">
+        <a
+          href={`/meal/${meal.id}`}
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        >
+          Se ret
+        </a>
+        <a
+          href={`/meal/${meal.id}/edit`}
+          className="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900"
+        >
+          Rediger
+        </a>
+        <button
+          data-modal-target="popup-modal"
+          className="block text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            handleDelete(meal.id);
+          }}
+        >
+          Slet
+        </button>
+      </div>
+    </div>
+  </div>
+);
 
 export default HomePage;
