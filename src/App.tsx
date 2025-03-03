@@ -7,7 +7,9 @@ import CreateMealPage from "./pages/CreateMealPage";
 import UserPage from "./pages/UserPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import EditMealPage from "./pages/EditMealPage";
+import FavoritesPage from "./pages/FavoritesPage";
 import Navigation from "./components/Navigation";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -21,7 +23,22 @@ function App() {
             <Route path="/create" element={<CreateMealPage />} />
             <Route path="/user" element={<UserPage />} />
             <Route path="*" element={<NotFoundPage />} />
-            <Route path="/meal/:id/edit" element={<EditMealPage />} />
+            <Route
+              path="/meal/:id/edit"
+              element={
+                <ProtectedRoute>
+                  <EditMealPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/favorites"
+              element={
+                <ProtectedRoute>
+                  <FavoritesPage />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </div>
       </div>

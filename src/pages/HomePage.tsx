@@ -1,3 +1,4 @@
+// src/pages/HomePage.tsx (with favorite indicators)
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getMeals } from "../services/firebase";
@@ -5,6 +6,8 @@ import { Meal } from "../models/Meal";
 import useDeleteMeal from "../hooks/useDeleteMeal";
 import Toast from "../components/Toast";
 import Modal from "../components/Modal";
+import { useAuth } from "../services/firebase";
+import useFavoriteMeals from "../hooks/useFavoriteMeals";
 
 function HomePage() {
   const location = useLocation();
@@ -16,6 +19,8 @@ function HomePage() {
     message: string;
   } | null>(location.state?.toast || null);
   const { handleDeleteMeal } = useDeleteMeal();
+  const { user } = useAuth();
+  const { favorites, addToFavorites, removeFromFavorites } = useFavoriteMeals();
 
   useEffect(() => {
     fetchMeals();
@@ -54,6 +59,31 @@ function HomePage() {
     setMealToDelete(null);
   };
 
+  const handleToggleFavorite = async (
+    mealId: string,
+    event: React.MouseEvent
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!user) {
+      setToast({ type: "warning", message: "Please sign in to add favorites" });
+      return;
+    }
+
+    try {
+      if (favorites.includes(mealId)) {
+        await removeFromFavorites(mealId);
+        setToast({ type: "success", message: "Removed from favorites" });
+      } else {
+        await addToFavorites(mealId);
+        setToast({ type: "success", message: "Added to favorites" });
+      }
+    } catch (error) {
+      setToast({ type: "error", message: "Failed to update favorites" });
+    }
+  };
+
   return (
     <div className="p-4">
       {toast && <Toast type={toast.type} message={toast.message} />}
@@ -75,13 +105,38 @@ function HomePage() {
             message="Er du sikker på, at du vil slette denne ret?"
           />
           {meals.map((meal) => (
-            <div key={meal.id} className=" flex justify-center">
-              <div className=" w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                <img
-                  src={meal.imagePath}
-                  alt={meal.name}
-                  className="rounded-t-md h-64 w-full object-cover"
-                />
+            <div key={meal.id} className="flex justify-center">
+              <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                <div className="relative">
+                  <img
+                    src={meal.imagePath}
+                    alt={meal.name}
+                    className="rounded-t-md h-64 w-full object-cover"
+                  />
+                  {user && (
+                    <button
+                      onClick={(e) => handleToggleFavorite(meal.id, e)}
+                      className="absolute top-2 right-2 p-2 bg-white bg-opacity-70 rounded-full hover:bg-opacity-100 transition"
+                    >
+                      <svg
+                        className={`w-6 h-6 ${favorites.includes(meal.id) ? "text-red-600" : "text-gray-600"}`}
+                        fill={
+                          favorites.includes(meal.id) ? "currentColor" : "none"
+                        }
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        />
+                      </svg>
+                    </button>
+                  )}
+                </div>
                 <div className="p-4">
                   <h2 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
                     {meal.name}
