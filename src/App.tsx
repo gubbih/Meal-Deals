@@ -15,8 +15,8 @@ function App() {
   return (
     <Router>
       <div className="bg-white dark:bg-gray-900 w-full flex justify-center">
+        <Navigation />
         <div className="w-4/5">
-          <Navigation />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/meal/:id" element={<MealPage />} />
