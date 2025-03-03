@@ -3,10 +3,11 @@ import { useAuth } from "../services/firebase";
 import useSignIn from "../hooks/useSignIn";
 import useSignOut from "../hooks/useSignOut";
 import useSignUp from "../hooks/useSignUp";
-import useUpdateUserProfile from "../hooks/useUpdateUser";
 import useFetchMeals from "../hooks/useFetchMeals";
 import { Link } from "react-router-dom";
 import Toast from "../components/Toast";
+
+//import useUpdateUserProfile from "../hooks/useUpdateUser";
 
 function UserPage() {
   const { user, loading: authLoading } = useAuth();
@@ -21,7 +22,7 @@ function UserPage() {
     loading: signUpLoading,
     error: signUpError,
   } = useSignUp();
-  const { updateUserProfile, loading: updateLoading } = useUpdateUserProfile();
+  //const { updateUserProfile, loading: updateLoading } = useUpdateUserProfile();
   const { meals } = useFetchMeals();
 
   const [email, setEmail] = useState("");

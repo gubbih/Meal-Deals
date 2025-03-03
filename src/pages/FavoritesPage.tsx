@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { getMeal } from "../services/firebase";
 import { Meal } from "../models/Meal";
-import { useAuth } from "../services/firebase";
 import useFavoriteMeals from "../hooks/useFavoriteMeals";
 import Toast from "../components/Toast";
 
 const FavoritesPage: React.FC = () => {
-  const { user } = useAuth();
   const { favorites } = useFavoriteMeals();
   const [favoriteMeals, setFavoriteMeals] = useState<Meal[]>([]);
   const [toast, setToast] = useState<{
@@ -15,10 +13,10 @@ const FavoritesPage: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
-    if (user && favorites.length > 0) {
+    if (favorites.length > 0) {
       fetchFavoriteMeals();
     }
-  }, [user, favorites]);
+  });
 
   const fetchFavoriteMeals = async () => {
     try {

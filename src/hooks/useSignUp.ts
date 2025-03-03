@@ -10,7 +10,7 @@ const useSignUp = () => {
   const handleSignUp = async (
     email: string,
     password: string,
-    displayName: string
+    displayName: string,
   ) => {
     setLoading(true);
     setError(null);

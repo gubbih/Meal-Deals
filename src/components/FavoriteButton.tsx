@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../services/firebase";
+//import { useAuth } from "../services/firebase";
 
 interface FavoriteButtonProps {
   mealId: string;
   favorites: string[];
   handleToggleFavorite: (
     mealId: string,
-    event: React.MouseEvent<HTMLDivElement>
+    event: React.MouseEvent<HTMLDivElement>,
   ) => void;
 }
 
@@ -15,7 +15,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   favorites,
   handleToggleFavorite,
 }) => {
-  const { user } = useAuth();
+  //const { user } = useAuth();
   const [isFavorite, setIsFavorite] = useState(favorites.includes(mealId));
 
   useEffect(() => {

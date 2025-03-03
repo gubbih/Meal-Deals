@@ -16,7 +16,6 @@ import {
   onAuthStateChanged,
   updateProfile,
   sendPasswordResetEmail,
-  User as FirebaseUser,
 } from "firebase/auth";
 import { Meal } from "../models/Meal";
 import { User } from "../models/User";
@@ -182,12 +181,12 @@ export const addMeal = async (meal: Meal): Promise<void> => {
 export const updateMealImage = async (
   mealId: string,
   imagepath: string,
-  image: File
+  image: File,
 ): Promise<string> => {
   //upload image to storage
 
   throw new Error("Not implemented");
-  return imagepath;
+  //return imagepath;
 };
 
 export const updateMeal = async (meal: Meal, image?: File): Promise<void> => {
@@ -235,13 +234,13 @@ export const deleteMeal = async (id: string): Promise<void> => {
 export const signUp = async (
   email: string,
   password: string,
-  displayName: string
+  displayName: string,
 ): Promise<User> => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
-      password
+      password,
     );
     await updateProfile(userCredential.user, { displayName });
 
@@ -358,7 +357,7 @@ export const getAllUsers = async (): Promise<User[]> => {
 
 export const addFavoriteMeal = async (
   userId: string,
-  mealId: string
+  mealId: string,
 ): Promise<void> => {
   const userPrefsRef = ref(db, `users/${userId}/favoriteRecipes`);
 
@@ -382,7 +381,7 @@ export const addFavoriteMeal = async (
 
 export const removeFavoriteMeal = async (
   userId: string,
-  mealId: string
+  mealId: string,
 ): Promise<void> => {
   const userPrefsRef = ref(db, `users/${userId}/favoriteRecipes`);
 
