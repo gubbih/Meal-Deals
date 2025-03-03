@@ -71,34 +71,46 @@ function UserPage() {
     <div className="container mx-auto p-4">
       {toast && <Toast type={toast.type} message={toast.message} />}
 
-      <h1 className="text-3xl font-bold mb-4">User Profile</h1>
+      <h1 className="text-3xl font-semibold mb-4 text-center dark:text-white">
+        User Profile
+      </h1>
 
       {user ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <h2 className="text-2xl font-semibold mb-4">Profile Information</h2>
+            <h2 className="text-2xl font-semibold mb-4 dark:text-white">
+              Profile Information
+            </h2>
             <div className="space-y-4">
               <div>
-                <p className="text-gray-500 dark:text-gray-400">Display Name</p>
-                <p className="font-medium">{user.displayName || "Not set"}</p>
+                <p className="text-gray-500 dark:text-gray-400 dark:text-white">
+                  Display Name
+                </p>
+                <p className="font-medium dark:text-white">
+                  {user.displayName || "Not set"}
+                </p>
               </div>
               <div>
-                <p className="text-gray-500 dark:text-gray-400">Email</p>
-                <p className="font-medium">{user.email}</p>
+                <p className="text-gray-500 dark:text-gray-400 dark:text-white">
+                  Email
+                </p>
+                <p className="font-medium dark:text-white">{user.email}</p>
               </div>
               <div>
-                <p className="text-gray-500 dark:text-gray-400">
+                <p className="text-gray-500 dark:text-gray-400 dark:text-white">
                   Account Created
                 </p>
-                <p className="font-medium">
+                <p className="font-medium dark:text-white">
                   {user.createdAt
                     ? new Date(user.createdAt).toLocaleDateString()
                     : "Unknown"}
                 </p>
               </div>
               <div>
-                <p className="text-gray-500 dark:text-gray-400">Last Login</p>
-                <p className="font-medium">
+                <p className="text-gray-500 dark:text-gray-400 dark:text-white">
+                  Last Login
+                </p>
+                <p className="font-medium dark:text-white">
                   {user.lastLogin
                     ? new Date(user.lastLogin).toLocaleDateString()
                     : "Unknown"}
@@ -116,7 +128,9 @@ function UserPage() {
           </div>
 
           <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <h2 className="text-2xl font-semibold mb-4">Favorite Meals</h2>
+            <h2 className="text-2xl font-semibold mb-4 dark:text-white">
+              Favorite Meals
+            </h2>
             {favoriteMeals.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {favoriteMeals.map((meal) => (
