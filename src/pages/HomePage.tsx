@@ -169,11 +169,13 @@ const MealCard = ({
   <div className="flex justify-center">
     <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
       <div className="relative">
-        <img
-          src={meal.imagePath}
-          alt={meal.name}
-          className="rounded-t-md h-64 w-full object-cover"
-        />
+        <a href={`/meal/${meal.id}`}>
+          <img
+            src={meal.imagePath}
+            alt={meal.name}
+            className="rounded-t-md h-64 w-full object-cover"
+          />
+        </a>
         {user && (
           <FavoriteButton
             mealId={meal.id}
@@ -183,35 +185,33 @@ const MealCard = ({
         )}
       </div>
       <div className="p-4">
-        <h2 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-          {meal.name}
-        </h2>
-      </div>
-      <div className="flex items-center justify-between px-2 m-2">
-        <a
-          href={`/meal/${meal.id}`}
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-        >
-          Se ret
+        <a href={`/meal/${meal.id}`}>
+          <h2 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+            {meal.name}
+          </h2>
         </a>
-        <a
-          href={`/meal/${meal.id}/edit`}
-          className="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900"
-        >
-          Rediger
-        </a>
-        <button
-          data-modal-target="popup-modal"
-          className="block text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            handleDelete(meal.id);
-          }}
-        >
-          Slet
-        </button>
       </div>
+      {user && (
+        <div className="flex items-center justify-between px-2 m-2">
+          <a
+            href={`/meal/${meal.id}/edit`}
+            className="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900"
+          >
+            Rediger
+          </a>
+          <button
+            data-modal-target="popup-modal"
+            className="block text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              handleDelete(meal.id);
+            }}
+          >
+            Slet
+          </button>
+        </div>
+      )}
     </div>
   </div>
 );
