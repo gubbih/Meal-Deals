@@ -54,7 +54,7 @@ const useFavoriteMeals = () => {
     removeFromFavorites,
     loading,
     error,
-    favorites: user?.preferences?.favoriteRecipes || [],
+    favorites: user?.favoriteRecipes || [],
   };
 };
 

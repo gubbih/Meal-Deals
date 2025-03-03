@@ -58,10 +58,8 @@ function UserPage() {
   };
 
   // Filter favorite meals
-  const favoriteMeals = user?.preferences?.favoriteRecipes
-    ? meals.filter((meal) =>
-        user.preferences?.favoriteRecipes?.includes(meal.id)
-      )
+  const favoriteMeals = user?.favoriteRecipes
+    ? meals.filter((meal) => user.favoriteRecipes?.includes(meal.id))
     : [];
 
   if (authLoading) {

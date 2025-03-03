@@ -5,8 +5,5 @@ export interface User {
   isAdmin?: boolean;
   createdAt?: string;
   lastLogin?: string;
-  preferences?: {
-    favoriteRecipes?: string[];
-    dietaryRestrictions?: string[];
-  };
+  favoriteRecipes?: string[];
 }

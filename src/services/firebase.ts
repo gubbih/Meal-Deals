@@ -254,10 +254,7 @@ export const signUp = async (
       isAdmin: false,
       createdAt: new Date().toISOString(),
       lastLogin: new Date().toISOString(),
-      preferences: {
-        favoriteRecipes: [],
-        dietaryRestrictions: [],
-      },
+      favoriteRecipes: [],
     };
 
     await set(userRef, userData);
@@ -296,7 +293,7 @@ export const getUser = async (uid: string): Promise<User | null> => {
       isAdmin: snapshot.val().isAdmin,
       createdAt: snapshot.val().createdAt,
       lastLogin: snapshot.val().lastLogin,
-      preferences: snapshot.val().preferences,
+      favoriteRecipes: snapshot.val().favoriteRecipes,
     };
   } catch (error) {
     console.error("Error fetching user:", error);
@@ -347,7 +344,7 @@ export const getAllUsers = async (): Promise<User[]> => {
         isAdmin: child.val().isAdmin,
         createdAt: child.val().createdAt,
         lastLogin: child.val().lastLogin,
-        preferences: child.val().preferences,
+        favoriteRecipes: child.val().favoriteRecipes,
       };
       userList.push(data);
     });
@@ -426,9 +423,7 @@ export const useAuth = () => {
               isAdmin: false,
               createdAt: new Date().toISOString(),
               lastLogin: new Date().toISOString(),
-              preferences: {
-                favoriteRecipes: [],
-              },
+              favoriteRecipes: [],
             };
 
             const userRef = ref(db, `users/${firebaseUser.uid}`);
