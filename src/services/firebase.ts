@@ -8,10 +8,20 @@ import {
   update,
   remove,
 } from "firebase/database";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword as firebaseSignIn,
+  signOut as firebaseSignOut,
+  onAuthStateChanged,
+  updateProfile,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 import { Meal } from "../models/Meal";
 import { User } from "../models/User";
 import { FoodComponent } from "../models/FoodComponent";
 import { Offer } from "../models/Offer";
+import { useState, useEffect } from "react";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -23,7 +33,9 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
+
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getDatabase(app);
 
 //##############################################
@@ -174,7 +186,7 @@ export const updateMealImage = async (
   //upload image to storage
 
   throw new Error("Not implemented");
-  return imagepath;
+  //return imagepath;
 };
 
 export const updateMeal = async (meal: Meal, image?: File): Promise<void> => {
@@ -200,10 +212,6 @@ export const updateMeal = async (meal: Meal, image?: File): Promise<void> => {
   }
 };
 
-export const updateUser = async (user: User): Promise<void> => {
-  throw new Error("Not implemented");
-};
-
 //##############################################
 //###########         DELETE        ############
 //##############################################
@@ -223,15 +231,226 @@ export const deleteMeal = async (id: string): Promise<void> => {
 //###########         AUTH          ############
 //##############################################
 
+export const signUp = async (
+  email: string,
+  password: string,
+  displayName: string,
+): Promise<User> => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+    await updateProfile(userCredential.user, { displayName });
+
+    // Create user in database
+    const userRef = ref(db, `users/${userCredential.user.uid}`);
+    const userData: User = {
+      uid: userCredential.user.uid,
+      email: userCredential.user.email as string,
+      displayName: displayName,
+      isAdmin: false,
+      createdAt: new Date().toISOString(),
+      lastLogin: new Date().toISOString(),
+      favoriteRecipes: [],
+    };
+
+    await set(userRef, userData);
+    return userData;
+  } catch (error) {
+    console.error("Error creating user:", error);
+    throw error;
+  }
+};
+
 export const signIn = (email: string, password: string) => {
-  throw new Error("Not implemented");
-  //return signInWithEmailAndPassword(auth, email, password);
+  return firebaseSignIn(auth, email, password);
 };
 
 export const signOut = () => {
-  throw new Error("Not implemented");
+  return firebaseSignOut(auth);
 };
 
-export const useAuth = (): User | null => {
-  throw new Error("Not implemented");
+export const resetPassword = (email: string) => {
+  return sendPasswordResetEmail(auth, email);
+};
+
+export const getUser = async (uid: string): Promise<User | null> => {
+  const userRef = ref(db, `users/${uid}`);
+
+  try {
+    const snapshot = await get(userRef);
+    if (!snapshot.exists()) {
+      return null;
+    }
+
+    return {
+      uid: snapshot.key as string,
+      email: snapshot.val().email,
+      displayName: snapshot.val().displayName,
+      isAdmin: snapshot.val().isAdmin,
+      createdAt: snapshot.val().createdAt,
+      lastLogin: snapshot.val().lastLogin,
+      favoriteRecipes: snapshot.val().favoriteRecipes,
+    };
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    throw new Error("Failed to fetch user data.");
+  }
+};
+
+export const updateUser = async (user: User): Promise<void> => {
+  const userRef = ref(db, `users/${user.uid}`);
+
+  try {
+    // Update lastLogin
+    user.lastLogin = new Date().toISOString();
+    await update(userRef, user);
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw new Error("Failed to update user data.");
+  }
+};
+
+export const deleteUser = async (uid: string): Promise<void> => {
+  const userRef = ref(db, `users/${uid}`);
+
+  try {
+    await remove(userRef);
+    console.log(`User with ID ${uid} has been deleted successfully.`);
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    throw new Error("Failed to delete user data.");
+  }
+};
+
+export const getAllUsers = async (): Promise<User[]> => {
+  const usersRef = ref(db, "users/");
+
+  try {
+    const snapshot = await get(usersRef);
+    if (!snapshot.exists()) {
+      return [];
+    }
+
+    const userList: User[] = [];
+    snapshot.forEach((child) => {
+      const data: User = {
+        uid: child.key as string,
+        email: child.val().email,
+        displayName: child.val().displayName,
+        isAdmin: child.val().isAdmin,
+        createdAt: child.val().createdAt,
+        lastLogin: child.val().lastLogin,
+        favoriteRecipes: child.val().favoriteRecipes,
+      };
+      userList.push(data);
+    });
+
+    return userList;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw new Error("Failed to fetch users. Please try again later.");
+  }
+};
+
+export const addFavoriteMeal = async (
+  userId: string,
+  mealId: string,
+): Promise<void> => {
+  const userPrefsRef = ref(db, `users/${userId}/favoriteRecipes`);
+
+  try {
+    const snapshot = await get(userPrefsRef);
+    let favorites: string[] = [];
+
+    if (snapshot.exists()) {
+      favorites = snapshot.val();
+    }
+
+    if (!favorites.includes(mealId)) {
+      favorites.push(mealId);
+      await set(userPrefsRef, favorites);
+    }
+  } catch (error) {
+    console.error("Error adding favorite meal:", error);
+    throw new Error("Failed to add favorite meal.");
+  }
+};
+
+export const removeFavoriteMeal = async (
+  userId: string,
+  mealId: string,
+): Promise<void> => {
+  const userPrefsRef = ref(db, `users/${userId}/favoriteRecipes`);
+
+  try {
+    const snapshot = await get(userPrefsRef);
+    if (!snapshot.exists()) {
+      return;
+    }
+
+    const favorites: string[] = snapshot.val();
+    const updatedFavorites = favorites.filter((id) => id !== mealId);
+
+    await set(userPrefsRef, updatedFavorites);
+  } catch (error) {
+    console.error("Error removing favorite meal:", error);
+    throw new Error("Failed to remove favorite meal.");
+  }
+};
+
+export const useAuth = () => {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setLoading(true);
+      try {
+        if (firebaseUser) {
+          // Check if user exists in database, if not create a basic entry
+          let userData = await getUser(firebaseUser.uid);
+
+          if (!userData) {
+            userData = {
+              uid: firebaseUser.uid,
+              email: firebaseUser.email as string,
+              displayName: firebaseUser.displayName || "User",
+              isAdmin: false,
+              createdAt: new Date().toISOString(),
+              lastLogin: new Date().toISOString(),
+              favoriteRecipes: [],
+            };
+
+            const userRef = ref(db, `users/${firebaseUser.uid}`);
+            await set(userRef, userData);
+          } else {
+            // Update last login time
+            const userRef = ref(db, `users/${firebaseUser.uid}`);
+            await update(userRef, { lastLogin: new Date().toISOString() });
+          }
+
+          setCurrentUser(userData);
+        } else {
+          setCurrentUser(null);
+        }
+      } catch (err) {
+        console.error("Auth error:", err);
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Unknown authentication error");
+        }
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  return { user: currentUser, loading, error };
 };

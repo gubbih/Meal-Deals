@@ -12,12 +12,27 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
+import { useAuth } from "../services/firebase";
+import useFavoriteMeals from "../hooks/useFavoriteMeals";
+import Toast from "../components/Toast";
 
 function MealPage() {
   const { id } = useParams<{ id: string }>();
   const [meal, setMeal] = useState<Meal | null>(null);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const {
+    addToFavorites,
+    removeFromFavorites,
+    favorites,
+    loading: favLoading,
+  } = useFavoriteMeals();
+  const [toast, setToast] = useState<{
+    type: "success" | "error" | "warning";
+    message: string;
+  } | null>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       if (id) {
@@ -63,19 +78,70 @@ function MealPage() {
     });
   }, [meal, offers]);
 
+  const handleToggleFavorite = async () => {
+    if (!user) {
+      setToast({ type: "warning", message: "Please sign in to add favorites" });
+      return;
+    }
+
+    if (!meal || !id) return;
+
+    try {
+      if (favorites.includes(id)) {
+        await removeFromFavorites(id);
+        setToast({ type: "success", message: "Removed from favorites" });
+      } else {
+        await addToFavorites(id);
+        setToast({ type: "success", message: "Added to favorites" });
+      }
+    } catch (error) {
+      setToast({ type: "error", message: "Failed to update favorites" });
+    }
+  };
+
+  const isFavorite = id ? favorites.includes(id) : false;
+
   if (loading || !meal) return <div>Loading...</div>;
 
   return (
     <div className="p-4 dark:text-white dark:bg-gray-900">
+      {toast && <Toast type={toast.type} message={toast.message} />}
       <div className="flex flex-col md:flex-row">
         <div className="md:w-3/4 m-8">
-          <h1 className="text-3xl font-bold mb-4">{meal.name}</h1>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-3xl font-bold">{meal.name}</h1>
+            <button
+              onClick={handleToggleFavorite}
+              disabled={favLoading}
+              className={`flex items-center px-4 py-2 rounded-lg ${
+                isFavorite
+                  ? "bg-red-600 hover:bg-red-700 text-white"
+                  : "bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
+              }`}
+            >
+              <svg
+                className={`w-5 h-5 ${isFavorite ? "text-white" : "text-gray-800 dark:text-white"} mr-2`}
+                fill={isFavorite ? "currentColor" : "none"}
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+              {isFavorite ? "Favorited" : "Add to Favorites"}
+            </button>
+          </div>
           <img
             src={meal.imagePath}
             alt={meal.name}
             className="rounded-lg shadow-md max-w-full h-auto"
           />
-          <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md">
+          <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md mt-4">
             <h1 className="text-2xl font-bold mb-2">Beskrivelse</h1>
             <p className="text-lg mb-2">{meal.description}</p>
           </div>

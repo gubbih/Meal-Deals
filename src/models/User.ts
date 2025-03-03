@@ -1,6 +1,9 @@
 export interface User {
-  id: string;
+  uid: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  displayName?: string;
+  isAdmin?: boolean;
+  createdAt?: string;
+  lastLogin?: string;
+  favoriteRecipes?: string[];
 }
