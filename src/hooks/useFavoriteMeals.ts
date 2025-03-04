@@ -1,11 +1,24 @@
-import { useState } from "react";
-import { addFavoriteMeal, removeFavoriteMeal } from "../services/firebase";
-import { useAuth } from "../services/firebase";
+import { useState, useEffect } from "react";
+import {
+  addFavoriteMeal,
+  removeFavoriteMeal,
+  useAuth,
+} from "../services/firebase";
 
 const useFavoriteMeals = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
+  const [favorites, setFavorites] = useState<string[]>([]);
+
+  // Update favorites when user changes
+  useEffect(() => {
+    if (user?.favoriteRecipes) {
+      setFavorites(user.favoriteRecipes);
+    } else {
+      setFavorites([]);
+    }
+  }, [user?.favoriteRecipes]);
 
   const addToFavorites = async (mealId: string) => {
     if (!user) {
@@ -17,12 +30,16 @@ const useFavoriteMeals = () => {
     setError(null);
     try {
       await addFavoriteMeal(user.uid, mealId);
+      // Optimistically update local state
+      setFavorites((prev) => [...prev, mealId]);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
         setError(String(err));
       }
+      // Revert local state on error
+      setFavorites((prev) => prev.filter((id) => id !== mealId));
     } finally {
       setLoading(false);
     }
@@ -38,12 +55,16 @@ const useFavoriteMeals = () => {
     setError(null);
     try {
       await removeFavoriteMeal(user.uid, mealId);
+      // Optimistically update local state
+      setFavorites((prev) => prev.filter((id) => id !== mealId));
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
         setError(String(err));
       }
+      // Revert local state on error
+      setFavorites((prev) => [...prev, mealId]);
     } finally {
       setLoading(false);
     }
@@ -54,7 +75,7 @@ const useFavoriteMeals = () => {
     removeFromFavorites,
     loading,
     error,
-    favorites: user?.favoriteRecipes || [],
+    favorites,
   };
 };
 
