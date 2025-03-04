@@ -25,7 +25,14 @@ function CreateMealPage() {
     createdBy: user?.uid || "guest",
     createdAt: new Date().toISOString(),
   });
-
+  useEffect(() => {
+    if (user) {
+      setMeal((prevMeal) => ({
+        ...prevMeal,
+        createdBy: user.uid,
+      }));
+    }
+  }, [user]);
   const [toast, setToast] = useState<{
     type: "success" | "error" | "warning";
     message: string;

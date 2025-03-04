@@ -102,6 +102,40 @@ export const getMeal = async (id: string): Promise<Meal> => {
     throw new Error("Failed to fetch meal. Please try again later.");
   }
 };
+export const getMealByUser = async (userId: string): Promise<Meal[]> => {
+  const mealRef = ref(db, `meals/`);
+
+  try {
+    const snapshot = await get(mealRef);
+    if (!snapshot.exists()) {
+      throw new Error(`Meal not found`);
+    }
+    const mealList: Meal[] = [];
+    snapshot.forEach((child) => {
+      const data: Meal = {
+        id: child.key as string,
+        name: child.val().name,
+        description: child.val().description,
+        price: child.val().price,
+        priceCurrency: child.val().priceCurrency,
+        imagePath: child.val().imagePath,
+        foodComponents: child.val().foodComponents,
+        mealCuisine: child.val()?.mealCuisine,
+        mealType: child.val()?.mealType,
+        createdBy: child.val().createdBy,
+        createdAt: child.val().createdAt,
+      };
+      if (data.createdBy === userId) {
+        mealList.push(data);
+      }
+    });
+
+    return mealList;
+  } catch (error) {
+    console.error("Error fetching meal:", error);
+    throw new Error("Failed to fetch meal. Please try again later.");
+  }
+};
 
 export const getFoodComponents = async (): Promise<FoodComponent[]> => {
   const foodRef = ref(db, "/foodComponents");

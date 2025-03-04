@@ -11,12 +11,6 @@ function HomePage() {
   const { meals, loading, error } = useFetchMeals();
   const { user } = useAuth();
 
-  // Check for toast from navigation state
-  const [toast, setToast] = React.useState<{
-    type: "success" | "error" | "warning" | "info";
-    message: string;
-  } | null>(location.state?.toast || null);
-
   // Filter favorite meals if user is logged in
   const favoriteMeals = user
     ? meals.filter((meal) => user.favoriteRecipes?.includes(meal.id))
@@ -39,8 +33,6 @@ function HomePage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {toast && <Toast type={toast.type} message={toast.message} />}
-
       {/* About Section */}
       <section className="mb-12 text-center">
         <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
