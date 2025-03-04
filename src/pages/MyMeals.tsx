@@ -23,7 +23,7 @@ const MyMeals = () => {
 
   useEffect(() => {
     fetchMeals();
-  }, [user]);
+  });
 
   const handleDelete = (mealId: string) => {
     setMealToDelete(mealId);

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import useFetchMeals from "../hooks/useFetchMeals";
 import { useAuth } from "../services/firebase";
 import MealCarousel from "../components/MealCarousel";
-import Toast from "../components/Toast";
 import { useLocation } from "react-router-dom";
 
 function HomePage() {
