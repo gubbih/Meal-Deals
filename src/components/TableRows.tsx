@@ -143,12 +143,12 @@ export function Row({
                           </TableCell>
                           <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs hidden md:table-cell">
                             {DateTime.fromISO(offer.offerStart).toFormat(
-                              "dd-MM-yyyy"
+                              "dd-MM-yyyy",
                             )}
                           </TableCell>
                           <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs hidden md:table-cell">
                             {DateTime.fromISO(offer.offerEnd).toFormat(
-                              "dd-MM-yyyy"
+                              "dd-MM-yyyy",
                             )}
                           </TableCell>
                           <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs">

@@ -41,7 +41,7 @@ const MealCarousel: React.FC<MealCarouselProps> = ({
 
   const handleToggleFavorite = async (
     mealId: string,
-    event: React.MouseEvent
+    event: React.MouseEvent,
   ) => {
     event.preventDefault();
     event.stopPropagation();

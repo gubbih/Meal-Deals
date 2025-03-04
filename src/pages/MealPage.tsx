@@ -56,7 +56,7 @@ function MealPage() {
       const foodItems = Array.isArray(fc.items) ? fc.items : [fc.items];
 
       const matchedOffers = offers.filter((offer) =>
-        (offer.matchedItems ?? []).some((item) => foodItems.includes(item))
+        (offer.matchedItems ?? []).some((item) => foodItems.includes(item)),
       );
 
       matchedOffers.forEach((offer) => {
@@ -65,7 +65,7 @@ function MealPage() {
         }
         if (
           !grouped[offer.name].some(
-            (o) => o.price === offer.price && o.name === offer.name
+            (o) => o.price === offer.price && o.name === offer.name,
           )
         ) {
           grouped[offer.name].push(offer);
@@ -240,12 +240,12 @@ function MealPage() {
                   offers.forEach((offer) => {
                     if (
                       (offer.matchedItems ?? []).some((item) =>
-                        foodItems.includes(item)
+                        foodItems.includes(item),
                       )
                     ) {
                       const key =
                         (offer.matchedItems ?? []).find((item) =>
-                          foodItems.includes(item)
+                          foodItems.includes(item),
                         ) || offer.name;
                       if (!groupedOffers[key]) {
                         groupedOffers[key] = [];
@@ -264,7 +264,7 @@ function MealPage() {
                               offers={groupedOffers[name]}
                               foodComponentName={fc}
                             />
-                          )
+                          ),
                         )
                       ) : (
                         <TableRow>
