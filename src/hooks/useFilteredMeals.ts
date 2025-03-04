@@ -38,8 +38,8 @@ export const useFilteredMeals = (meals: Meal[]) => {
       if (filters.foodComponent) {
         const hasFoodComponent = meal.foodComponents.some((fc) =>
           fc.items.some((item) =>
-            item.toLowerCase().includes(filters.foodComponent!.toLowerCase())
-          )
+            item.toLowerCase().includes(filters.foodComponent!.toLowerCase()),
+          ),
         );
 
         if (!hasFoodComponent) {
