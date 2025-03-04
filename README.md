@@ -8,56 +8,107 @@ This project is a work-in-progress for building a simple meal planning applicati
 
 ## To-Do List
 
-### Website Functionality
+## Development Roadmap
 
-- [x] **Database Management**  
-       Use Firebase or a similar service to manage the database. Test Azure's SQL database as an alternative.
+### High Priority
 
-- [x] **Preloaded Recipes**  
-       Add at least one recipe before implementing the core functionality.
+- [ ] **Authentication refinement**
 
-- [x] **CRUD for Recipes**  
-       - Enable Create, Read, Update, and Delete functionality for recipes.  
-       - Initially, only the admin (myself) will have permissions for Update and Delete.
+  - Fix user login/creation flow
+  - Implement proper validation for authentication forms
+  - Add password reset functionality
 
-- [ ] **Recipe Source**  
-       Decide whether recipes should: - Be added by users.  
-       - Be sourced from another website to prevent modification of certain recipes.
+- [ ] **Meal management**
 
-- [ ] **Ingredient Price Checker**  
-       Implement functionality to send selected recipes to another page that:  
-       - Gathers all ingredients.  
-       - Checks where they can be purchased at the lowest prices.
+  - Complete the CRUD operations for meals
+  - Fix redirect after create/update
+  - Implement loading states on all pages
 
-      add meals to fav
-      fix foodcomponents to have them ALL added or find a better way to do that 80% ish
-      loading on all sites
-      rediirect after create/update meal
-      user login/create
-             -only users can create meals and delete their own (meal with userid unless admin)
-      firebase admin sdk
-      better styling on create/update page
-      better validation, not HTML
-      mealform has some problems, better typecasting
-      fix nav, create should be on the left side
-      test mobil version
+- [ ] **Firebase security**
 
----
+  - Implement proper Firebase security rules
+  - Set up admin SDK correctly
 
-### Design
+- [ ] **Data validation**
+  - Implement proper form validation beyond HTML validation
+  - Fix type casting issues in MealForm
 
-- [x] **One-Page Layout**  
-       - A generic and minimalistic design resembling a webshop.  
-       - One side displays an image, and the other contains all necessary information and options.
+### Medium Priority
 
----
+- [ ] **UX improvements**
 
-## Future Plans
+  - Fix navigation UI issues (create button position)
+  - Improve mobile responsiveness
+  - Add loading indicators for asynchronous operations
 
-- [ ] **Recipe Sharing**  
-       Expand functionality to allow users to:  
-       - Upload their own recipes.  
-       - Share "discount meals" with other users.
+- [ ] **Backend optimization**
+
+  - Fix the duplicate offers issue from ABC stores
+  - Implement a solution for efficiently handling multiple store catalogs
+
+- [ ] **Image handling**
+
+  - Implement image storage with Supabase
+  - Add image upload functionality
+
+- [ ] **User features**
+  - Complete favorites functionality
+  - Add meal ratings/reviews
+
+### Lower Priority
+
+- [ ] **Performance optimization**
+
+  - Implement lazy loading for components and routes
+  - Add caching for frequently accessed data
+  - Optimize Firebase calls
+
+- [ ] **Search & filtering**
+
+  - Enhance search functionality for meals
+  - Add more sophisticated filtering options
+
+- [ ] **Social features**
+
+  - Implement sharing functionality
+  - Allow users to comment on meals
+
+- [ ] **Content management**
+  - Add predefined recipes/meals
+  - Create sample data for new users
+
+## Technical Tasks
+
+- [ ] **Fix the foodComponents system**
+
+  - Complete the implementation for adding all components
+  - Improve the UI for selecting food components
+
+- [ ] **Test coverage**
+
+  - Add comprehensive unit and integration tests
+  - Set up CI/CD pipeline with GitHub Actions
+
+- [ ] **Code refactoring**
+
+  - Address TODOs in the codebase
+  - Consolidate repeated code patterns
+  - Improve type safety in areas using 'any'
+
+- [ ] **Environment setup**
+  - Configure proper environment variables for different stages
+  - Complete Firebase configuration
+
+## Architecture
+
+The project follows a modular structure:
+
+- `/src/components`: Reusable UI components
+- `/src/hooks`: Custom React hooks for Firebase and state management
+- `/src/models`: TypeScript interfaces and types
+- `/src/pages`: Page components accessible through routing
+- `/src/services`: Firebase service functions
+- `/src/assets`: Static assets and configuration
 
 ---
 

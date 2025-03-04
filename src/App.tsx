@@ -15,11 +15,9 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 function App() {
   return (
     <Router>
-      <div className="bg-white dark:bg-gray-900 w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-gray-900 w-full flex flex-col min-h-screen">
         <Navigation />
-        <div className="w-full flex-grow pt-16">
-          {" "}
-          {/* Adjust padding-top as needed */}
+        <div className="w-full flex-grow pt-20 px-4 md:px-6 lg:px-8">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/meal/:id" element={<MealPage />} />

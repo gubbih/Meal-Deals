@@ -82,9 +82,9 @@ function Navigation() {
         <div
           className={`${
             mobileMenuOpen ? "block" : "hidden"
-          } w-full md:block md:w-auto absolute md:relative top-full left-0 md:top-auto md:left-auto bg-white dark:bg-gray-900 md:bg-transparent md:dark:bg-transparent`}
+          } w-full md:block md:w-auto fixed md:relative top-16 left-0 right-0 md:top-auto md:left-auto bg-white dark:bg-gray-900 md:bg-transparent md:dark:bg-transparent z-10 shadow-lg md:shadow-none`}
         >
-          <ul className="flex flex-col p-4 md:p-0 mt-4 md:mt-0 md:flex-row md:space-x-8 font-medium border border-gray-100 md:border-0 dark:border-gray-700">
+          <ul className="flex flex-col p-4 md:p-0 mt-0 md:mt-0 md:flex-row md:space-x-8 font-medium border-t border-gray-200 md:border-0 dark:border-gray-700">
             {/* Home - Always Visible */}
             <li>
               <Link
@@ -155,17 +155,17 @@ function Navigation() {
                 </li>
               </>
             ) : (
-              <li className="flex space-x-2">
+              <li className="flex flex-col sm:flex-row sm:space-x-2">
                 <Link
                   to="/user"
-                  className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                  className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent mb-2 sm:mb-0"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Login
                 </Link>
                 <Link
                   to="/user"
-                  className="block py-2 px-3 text-white bg-blue-700 rounded-lg hover:bg-blue-800 md:p-0 dark:bg-blue-600 dark:hover:bg-blue-700"
+                  className="block py-2 px-3 text-white bg-blue-700 rounded-lg hover:bg-blue-800 md:p-2 dark:bg-blue-600 dark:hover:bg-blue-700 text-center"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Sign Up
