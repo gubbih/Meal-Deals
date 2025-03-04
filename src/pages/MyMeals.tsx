@@ -89,9 +89,9 @@ const MyMeals = () => {
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-all hover:shadow-lg"
               >
                 <div className="p-4 sm:p-6">
-                  <div className="sm:flex sm:justify-between sm:items-start">
+                  <div className=" sm:flex sm:justify-between sm:items-start">
                     {/* Meal details */}
-                    <div className="flex-grow">
+                    <div className="flex-none">
                       <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
                         {meal.name}
                       </h2>
@@ -102,7 +102,7 @@ const MyMeals = () => {
                         Måltid: {meal.mealType}
                       </p>
                     </div>
-                    <div className="flex-grow">
+                    <div className="flex-grow  sm:space-x-0 sm:flex sm:flex-col sm:items-end">
                       <div className="mt-3 flex flex-wrap gap-2">
                         {meal.foodComponents.map((component, index) => (
                           <span
