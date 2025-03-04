@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { IoMoon, IoSunny } from "react-icons/io5";
+import { IoMoon, IoSunny, IoMenu, IoClose } from "react-icons/io5";
 import { useAuth, signOut } from "../services/firebase";
 
 function Navigation() {
-  const [dark, setDark] = React.useState(() => {
+  const [dark, setDark] = useState(() => {
     return localStorage.getItem("darkMode") === "true";
   });
-
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useAuth();
 
   React.useEffect(() => {
@@ -19,32 +19,42 @@ function Navigation() {
   }, [dark]);
 
   const darkModeHandler = () => {
-    setDark(!dark);
-    localStorage.setItem("darkMode", (!dark).toString());
+    const newDarkMode = !dark;
+    setDark(newDarkMode);
+    localStorage.setItem("darkMode", newDarkMode.toString());
   };
 
   const handleSignOut = async () => {
     try {
       await signOut();
+      setMobileMenuOpen(false);
     } catch (error) {
       console.error("Error signing out:", error);
     }
   };
 
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
   return (
-    <nav className="bg-white border-gray-200 dark:bg-gray-900">
-      <div className="flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="/" className="flex items-center space-x-3 ">
+    <nav className="bg-white border-gray-200 dark:bg-gray-900 fixed w-full z-20 top-0 start-0">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        {/* Logo */}
+        <Link to="/" className="flex items-center space-x-3">
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
             Cheap Meals
           </span>
-        </a>
-        <div className="block items-center md:order-2 space-x-1 md:space-x-2">
+        </Link>
+
+        {/* Dark Mode Toggle - Always Visible */}
+        <div className="flex items-center space-x-3">
           <button
             onClick={darkModeHandler}
             className={`relative inline-flex items-center h-6 rounded-full w-11 focus:outline-none ${
               dark ? "bg-blue-600" : "bg-gray-200"
             }`}
+            aria-label="Toggle dark mode"
           >
             <span
               className={`transform transition ease-in-out duration-200 ${
@@ -57,54 +67,112 @@ function Navigation() {
               <IoMoon className="absolute right-1 text-gray-500" />
             )}
           </button>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={toggleMobileMenu}
+            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            aria-label="Open main menu"
+          >
+            {mobileMenuOpen ? <IoClose size={24} /> : <IoMenu size={24} />}
+          </button>
         </div>
-        <div className="flex items-center md:order-3 space-x-1 md:space-x-1 ">
-          <div className="flex items-center md:order-2 space-x-1 md:space-x-2 md:flex hidden">
-            {user ? (
-              <>
-                <span className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">
-                  <a href="/user">{user.displayName}</a>
-                </span>
-                <button
-                  onClick={handleSignOut}
-                  className="block px-3 text-red-600 hover:bg-gray-50 md:hover:bg-transparent md:hover:text-red-600 md:p-0 dark:text-red-500 md:dark:hover:text-red-500 dark:hover:bg-gray-700 dark:hover:text-red-500 md:dark:hover:bg-transparent"
-                >
-                  Sign Out
-                </button>
-              </>
-            ) : (
-              <>
-                <a
-                  href="/user"
-                  className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
-                >
-                  Login
-                </a>
-                <a
-                  href="/user"
-                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                >
-                  Sign up
-                </a>
-              </>
-            )}
-          </div>
-          <div className="flex items-center justify-between w-full md:flex md:w-auto md:order-1 md:space-x-1 ">
-            <ul className="flex flex-row font-medium md:flex-row md:mt-0 md:space-x-8 ">
+
+        {/* Navigation Menu */}
+        <div
+          className={`${
+            mobileMenuOpen ? "block" : "hidden"
+          } w-full md:block md:w-auto absolute md:relative top-full left-0 md:top-auto md:left-auto bg-white dark:bg-gray-900 md:bg-transparent md:dark:bg-transparent`}
+        >
+          <ul className="flex flex-col p-4 md:p-0 mt-4 md:mt-0 md:flex-row md:space-x-8 font-medium border border-gray-100 md:border-0 dark:border-gray-700">
+            {/* Home - Always Visible */}
+            <li>
               <Link
                 to="/"
-                className="block px-3 text-blue-600 hover:bg-gray-50 md:hover:bg-transparent md:hover:text-blue-600 md:p-0 dark:text-blue-500 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent"
+                className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 Home
               </Link>
-              <Link
-                to="/create"
-                className="block px-3 text-blue-600 hover:bg-gray-50 md:hover:bg-transparent md:hover:text-blue-600 md:p-0 dark:text-blue-500 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent"
-              >
-                Create meal
-              </Link>
-            </ul>
-          </div>
+            </li>
+
+            {/* User-specific routes - Only visible when logged in */}
+            {user && (
+              <>
+                <li>
+                  <Link
+                    to="/create"
+                    className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Create Meal
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/MyMeals"
+                    className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    My Meals
+                  </Link>
+                </li>
+              </>
+            )}
+
+            {/* Admin route - Only visible to admin users */}
+            {user && user.isAdmin && (
+              <li>
+                <Link
+                  to="/admin"
+                  className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Admin
+                </Link>
+              </li>
+            )}
+
+            {/* Authentication actions */}
+            {user ? (
+              <>
+                <li>
+                  <Link
+                    to="/user"
+                    className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    onClick={handleSignOut}
+                    className="block py-2 px-3 text-red-600 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-red-700 md:p-0 dark:text-red-500 md:dark:hover:text-red-500 dark:hover:bg-gray-700 dark:hover:text-red-500 md:dark:hover:bg-transparent"
+                  >
+                    Sign Out
+                  </button>
+                </li>
+              </>
+            ) : (
+              <li className="flex space-x-2">
+                <Link
+                  to="/user"
+                  className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/user"
+                  className="block py-2 px-3 text-white bg-blue-700 rounded-lg hover:bg-blue-800 md:p-0 dark:bg-blue-600 dark:hover:bg-blue-700"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sign Up
+                </Link>
+              </li>
+            )}
+          </ul>
         </div>
       </div>
     </nav>

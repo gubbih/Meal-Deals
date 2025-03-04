@@ -10,4 +10,6 @@ export interface Meal {
   foodComponents: FoodComponent[];
   mealCuisine?: string;
   mealType?: string;
+  createdBy: string;
+  createdAt: string;
 }

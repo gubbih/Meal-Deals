@@ -9,14 +9,17 @@ import NotFoundPage from "./pages/NotFoundPage";
 import EditMealPage from "./pages/EditMealPage";
 import FavoritesPage from "./pages/FavoritesPage";
 import Navigation from "./components/Navigation";
+import MyMeals from "./pages/MyMeals";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 function App() {
   return (
     <Router>
-      <div className="bg-white dark:bg-gray-900 w-full flex justify-center">
+      <div className="bg-white dark:bg-gray-900 w-full flex flex-col items-center">
         <Navigation />
-        <div className="w-4/5">
+        <div className="w-full flex-grow pt-16">
+          {" "}
+          {/* Adjust padding-top as needed */}
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/meal/:id" element={<MealPage />} />
@@ -28,6 +31,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <EditMealPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/MyMeals"
+              element={
+                <ProtectedRoute>
+                  <MyMeals />
                 </ProtectedRoute>
               }
             />
