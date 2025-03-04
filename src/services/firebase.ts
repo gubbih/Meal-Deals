@@ -62,6 +62,8 @@ export const getMeals = async (): Promise<Meal[]> => {
         foodComponents: child.val().foodComponents,
         mealCuisine: child.val()?.mealCuisine,
         mealType: child.val()?.mealType,
+        createdBy: child.val().createdBy,
+        createdAt: child.val().createdAt,
       };
       mealList.push(data);
     });
@@ -91,8 +93,44 @@ export const getMeal = async (id: string): Promise<Meal> => {
       foodComponents: snapshot.val().foodComponents,
       mealCuisine: snapshot.val()?.mealCuisine,
       mealType: snapshot.val()?.mealType,
+      createdBy: snapshot.val().createdBy || "Guest",
+      createdAt: snapshot.val().createdAt || new Date().toISOString(),
     };
     return data;
+  } catch (error) {
+    console.error("Error fetching meal:", error);
+    throw new Error("Failed to fetch meal. Please try again later.");
+  }
+};
+export const getMealByUser = async (userId: string): Promise<Meal[]> => {
+  const mealRef = ref(db, `meals/`);
+
+  try {
+    const snapshot = await get(mealRef);
+    if (!snapshot.exists()) {
+      throw new Error(`Meal not found`);
+    }
+    const mealList: Meal[] = [];
+    snapshot.forEach((child) => {
+      const data: Meal = {
+        id: child.key as string,
+        name: child.val().name,
+        description: child.val().description,
+        price: child.val().price,
+        priceCurrency: child.val().priceCurrency,
+        imagePath: child.val().imagePath,
+        foodComponents: child.val().foodComponents,
+        mealCuisine: child.val()?.mealCuisine,
+        mealType: child.val()?.mealType,
+        createdBy: child.val().createdBy,
+        createdAt: child.val().createdAt,
+      };
+      if (data.createdBy === userId) {
+        mealList.push(data);
+      }
+    });
+
+    return mealList;
   } catch (error) {
     console.error("Error fetching meal:", error);
     throw new Error("Failed to fetch meal. Please try again later.");
@@ -171,6 +209,8 @@ export const addMeal = async (meal: Meal): Promise<void> => {
     foodComponents: meal.foodComponents,
     mealCuisine: meal.mealCuisine,
     mealType: meal.mealType,
+    createdBy: meal.createdBy,
+    createdAt: new Date().toISOString(),
   };
   await update(newMealRef, data);
 };
@@ -200,6 +240,8 @@ export const updateMeal = async (meal: Meal, image?: File): Promise<void> => {
     foodComponents: meal.foodComponents,
     mealCuisine: meal.mealCuisine,
     mealType: meal.mealType,
+    createdBy: meal.createdBy,
+    createdAt: meal.createdAt,
   };
   //check if image is the same:
   if (!image) {

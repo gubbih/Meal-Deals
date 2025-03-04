@@ -6,9 +6,11 @@ import useFetchFoodComponents from "../hooks/useFetchFoodComponents";
 import MealForm from "../components/MealForm";
 import Toast from "../components/Toast";
 import Modal from "../components/Modal";
+import { useAuth } from "../services/firebase";
 
 function CreateMealPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { foodComponents, loading, error } = useFetchFoodComponents();
   const [meal, setMeal] = useState<Meal>({
     id: "",
@@ -20,7 +22,17 @@ function CreateMealPage() {
     foodComponents: [],
     mealType: "",
     mealCuisine: "",
+    createdBy: user?.uid || "guest",
+    createdAt: new Date().toISOString(),
   });
+  useEffect(() => {
+    if (user) {
+      setMeal((prevMeal) => ({
+        ...prevMeal,
+        createdBy: user.uid,
+      }));
+    }
+  }, [user]);
   const [toast, setToast] = useState<{
     type: "success" | "error" | "warning";
     message: string;
