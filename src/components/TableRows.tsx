@@ -19,24 +19,44 @@ export function Row({
   foodComponentName,
 }: {
   offers: Offer[];
-  foodComponentName: FoodComponent;
+  foodComponentName: FoodComponent | { category: string; items: string };
 }) {
   const [open, setOpen] = useState(false);
+
+  // Make sure we have at least one offer
+  if (!offers || offers.length === 0) {
+    return null;
+  }
+
   const firstOffer = offers[0];
-  const remainingOffers = offers;
+  const remainingOffers = offers.slice(1); // Get all offers except the first one
+
+  // Get the item name to display
+  const itemName =
+    typeof foodComponentName.items === "string"
+      ? foodComponentName.items
+      : Array.isArray(foodComponentName.items) &&
+          foodComponentName.items.length > 0
+        ? foodComponentName.items[0]
+        : "Unknown item";
 
   return (
     <React.Fragment>
       {/* Main row (first occurrence) */}
       <TableRow className="hover:bg-gray-100 dark:hover:bg-gray-800 border-b dark:border-gray-700">
         <TableCell className="p-2">
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
+          {/* Only show expand button if there are remaining offers */}
+          {remainingOffers.length > 0 ? (
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          ) : (
+            <span className="w-10 inline-block"></span>
+          )}
         </TableCell>
         <TableCell
           component="th"
@@ -49,8 +69,11 @@ export function Row({
             target="_blank"
             rel="noopener noreferrer"
           >
-            {foodComponentName.items}
+            {itemName}
           </a>
+          <div className="text-xs text-gray-500 dark:text-gray-400">
+            {foodComponentName.category}
+          </div>
         </TableCell>
         <TableCell
           align="left"
@@ -96,7 +119,7 @@ export function Row({
                   component="div"
                   className="text-gray-900 dark:text-gray-200 text-sm font-medium"
                 >
-                  More Offers for {firstOffer.name}
+                  More Offers for {itemName}
                 </Typography>
                 <div className="overflow-x-auto">
                   <Table size="small" aria-label="additional offers">
@@ -132,7 +155,7 @@ export function Row({
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              {offer.name ?? "Unknown"}
+                              {offer.name ?? itemName}
                             </a>
                           </TableCell>
                           <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs">
@@ -143,12 +166,12 @@ export function Row({
                           </TableCell>
                           <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs hidden md:table-cell">
                             {DateTime.fromISO(offer.offerStart).toFormat(
-                              "dd-MM-yyyy",
+                              "dd-MM-yyyy"
                             )}
                           </TableCell>
                           <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs hidden md:table-cell">
                             {DateTime.fromISO(offer.offerEnd).toFormat(
-                              "dd-MM-yyyy",
+                              "dd-MM-yyyy"
                             )}
                           </TableCell>
                           <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs">

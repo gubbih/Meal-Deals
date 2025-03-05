@@ -4,7 +4,7 @@ import makeAnimated from "react-select/animated";
 import { Meal } from "../models/Meal";
 import { FoodComponent } from "../models/FoodComponent";
 import { cuisines, mealsTypes } from "../assets/Arrays";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { mealFormSchema, MealFormValues } from "../schemas/mealSchemas";
 
@@ -42,8 +42,10 @@ const MealForm: React.FC<MealFormProps> = ({
   const {
     register,
     handleSubmit,
-    control,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm<MealFormValues>({
     resolver: zodResolver(mealFormSchema),
     defaultValues: {
@@ -54,19 +56,70 @@ const MealForm: React.FC<MealFormProps> = ({
       mealType: defaultMeal.mealType,
       foodComponents: defaultMeal.foodComponents,
     },
-    mode: "onBlur",
+    mode: "onChange",
   });
 
-  const filteredFoodComponentOptions = React.useMemo(() => {
-    return foodComponentOptions.map((option) => ({
-      ...option,
-      value: option.value,
-      label: `${option.category}: ${option.value[0]}`,
-      isDisabled: defaultMeal.foodComponents.some((component) =>
-        component.items.includes(option.value[0]),
-      ),
+  // Get current food components value for the Select component
+  const foodComponents = watch("foodComponents") || [];
+
+  // Convert the current form value to the format expected by Select
+  const selectedFoodComponents = foodComponents.flatMap((component) =>
+    component.items.map((item) => ({
+      label: `${component.category}: ${item}`,
+      value: [item],
+      category: component.category,
+    }))
+  );
+
+  // Handle food component selection change
+  const handleFoodComponentChange = (selectedOptions: any) => {
+    const formattedComponents = selectedOptions.map((option: any) => ({
+      category: option.category,
+      items: option.value,
     }));
-  }, [foodComponentOptions, defaultMeal.foodComponents]);
+    setValue("foodComponents", formattedComponents, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
+
+  // Handle cuisine selection
+  const handleCuisineChange = (option: any) => {
+    setValue("mealCuisine", option ? option.value : "", {
+      shouldValidate: true,
+    });
+  };
+
+  // Handle meal type selection
+  const handleMealTypeChange = (option: any) => {
+    setValue("mealType", option ? option.value : "", {
+      shouldValidate: true,
+    });
+  };
+
+  const filteredFoodComponentOptions = React.useMemo(() => {
+    // Create a map of existing components for easier lookup
+    const existingComponents = new Map();
+    foodComponents.forEach((component) => {
+      component.items.forEach((item) => {
+        existingComponents.set(`${component.category}:${item}`, true);
+      });
+    });
+
+    // Map all food component options and mark those already selected as disabled
+    return foodComponentOptions.map((option) => {
+      const isSelected = existingComponents.has(
+        `${option.category}:${option.value[0]}`
+      );
+      return {
+        ...option,
+        value: option.value,
+        label: `${option.category}: ${option.value[0]}`,
+        isDisabled: isSelected,
+      };
+    });
+  }, [foodComponentOptions, foodComponents]);
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -79,7 +132,10 @@ const MealForm: React.FC<MealFormProps> = ({
           <input
             type="text"
             {...register("name")}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className={`bg-gray-50 border ${
+              errors.name ? "border-red-500" : "border-gray-300"
+            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+            placeholder="Enter meal name"
           />
           {errors.name && (
             <p className="mt-1 text-sm text-red-600 dark:text-red-400">
@@ -96,7 +152,10 @@ const MealForm: React.FC<MealFormProps> = ({
           <textarea
             {...register("description")}
             rows={4}
-            className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Enter meal description"
+            className={`block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border ${
+              errors.description ? "border-red-500" : "border-gray-300"
+            } focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
           />
           {errors.description && (
             <p className="mt-1 text-sm text-red-600 dark:text-red-400">
@@ -113,7 +172,10 @@ const MealForm: React.FC<MealFormProps> = ({
           <input
             type="text"
             {...register("imagePath")}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="https://example.com/image.jpg"
+            className={`bg-gray-50 border ${
+              errors.imagePath ? "border-red-500" : "border-gray-300"
+            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
           />
           {errors.imagePath && (
             <p className="mt-1 text-sm text-red-600 dark:text-red-400">
@@ -127,25 +189,18 @@ const MealForm: React.FC<MealFormProps> = ({
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Køkkenstil
             </label>
-            <Controller
-              name="mealCuisine"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  className="my-react-select-container"
-                  classNamePrefix="my-react-select"
-                  options={cuisineOptions}
-                  value={
-                    cuisineOptions.find(
-                      (option) => option.value === field.value,
-                    ) || null
-                  }
-                  onChange={(option) =>
-                    field.onChange(option ? option.value : "")
-                  }
-                  onBlur={field.onBlur}
-                />
-              )}
+            <Select
+              className="my-react-select-container"
+              classNamePrefix="my-react-select"
+              options={cuisineOptions}
+              value={
+                cuisineOptions.find(
+                  (option) => option.value === watch("mealCuisine")
+                ) || null
+              }
+              onChange={handleCuisineChange}
+              placeholder="Select cuisine style"
+              isSearchable={true}
             />
             {errors.mealCuisine && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">
@@ -159,25 +214,18 @@ const MealForm: React.FC<MealFormProps> = ({
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Måltid
             </label>
-            <Controller
-              name="mealType"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  className="my-react-select-container"
-                  classNamePrefix="my-react-select"
-                  options={mealTypeOptions}
-                  value={
-                    mealTypeOptions.find(
-                      (option) => option.value === field.value,
-                    ) || null
-                  }
-                  onChange={(option) =>
-                    field.onChange(option ? option.value : "")
-                  }
-                  onBlur={field.onBlur}
-                />
-              )}
+            <Select
+              className="my-react-select-container"
+              classNamePrefix="my-react-select"
+              options={mealTypeOptions}
+              value={
+                mealTypeOptions.find(
+                  (option) => option.value === watch("mealType")
+                ) || null
+              }
+              onChange={handleMealTypeChange}
+              placeholder="Select meal type"
+              isSearchable={true}
             />
             {errors.mealType && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">
@@ -192,54 +240,23 @@ const MealForm: React.FC<MealFormProps> = ({
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
             Madkomponenter
           </label>
-          <Controller
-            name="foodComponents"
-            control={control}
-            render={({ field }) => (
-              <Select
-                className="my-react-select-container"
-                classNamePrefix="my-react-select"
-                closeMenuOnSelect={false}
-                components={animatedComponents}
-                options={filteredFoodComponentOptions}
-                isMulti
-                value={field.value?.flatMap((component: FoodComponent) =>
-                  component.items.map((item) => ({
-                    label: `${component.category}: ${item}`,
-                    value: [item],
-                    category: component.category,
-                  })),
-                )}
-                onChange={(selectedOptions) => {
-                  const formattedComponents = selectedOptions.map(
-                    (option: any) => ({
-                      category: option.category,
-                      items: option.value,
-                    }),
-                  );
-                  field.onChange(formattedComponents);
-                }}
-                onBlur={field.onBlur}
-                placeholder="Vælg madkomponenter..."
-                styles={{
-                  control: (base) => ({
-                    ...base,
-                    borderRadius: "8px",
-                    padding: "5px",
-                  }),
-                  option: (styles, { isDisabled, isFocused, isSelected }) => ({
-                    ...styles,
-                    backgroundColor: isDisabled
-                      ? undefined
-                      : isSelected
-                        ? "#ccc"
-                        : isFocused
-                          ? "#eee"
-                          : undefined,
-                    cursor: isDisabled ? "not-allowed" : "default",
-                  }),
-                }}
-              />
+          <Select
+            className="my-react-select-container"
+            classNamePrefix="my-react-select"
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            options={filteredFoodComponentOptions}
+            isMulti
+            value={selectedFoodComponents}
+            onChange={handleFoodComponentChange}
+            placeholder="Vælg madkomponenter..."
+            noOptionsMessage={() => "No matching food components"}
+            formatOptionLabel={(option) => (
+              <div className="flex items-center justify-between w-full">
+                <div>
+                  <span>{option.label}</span>
+                </div>
+              </div>
             )}
           />
           {errors.foodComponents && (

@@ -15,12 +15,17 @@ import Paper from "@mui/material/Paper";
 import { useAuth } from "../services/firebase";
 import useFavoriteMeals from "../hooks/useFavoriteMeals";
 import Toast from "../components/Toast";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 function MealPage() {
   const { id } = useParams<{ id: string }>();
   const [meal, setMeal] = useState<Meal | null>(null);
   const [offers, setOffers] = useState<Offer[]>([]);
+  const [groupedOffers, setGroupedOffers] = useState<Record<string, Offer[]>>(
+    {}
+  );
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
   const {
     addToFavorites,
@@ -29,53 +34,95 @@ function MealPage() {
     loading: favLoading,
   } = useFavoriteMeals();
   const [toast, setToast] = useState<{
-    type: "success" | "error" | "warning";
+    type: "success" | "error" | "warning" | "info";
     message: string;
   } | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (id) {
+      if (!id) {
+        setError("No meal ID provided");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+
+        // Fetch meal data
         const mealData = await getMeal(id);
         setMeal(mealData);
+
+        // Fetch offers data
         const offersData = await getOffers();
         setOffers(offersData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(error instanceof Error ? error.message : "An error occurred");
+      } finally {
         setLoading(false);
       }
     };
+
     fetchData();
   }, [id]);
 
+  // Process food components and match with offers
   useEffect(() => {
     if (!meal?.foodComponents || offers.length === 0) return;
 
-    const grouped: Record<string, Offer[]> = {};
+    try {
+      const grouped: Record<string, Offer[]> = {};
 
-    meal.foodComponents.forEach((fc) => {
-      if (!fc?.category || !fc?.items) return;
-      const foodItems = Array.isArray(fc.items) ? fc.items : [fc.items];
-
-      const matchedOffers = offers.filter((offer) =>
-        (offer.matchedItems ?? []).some((item) => foodItems.includes(item)),
-      );
-
-      matchedOffers.forEach((offer) => {
-        if (!grouped[offer.name]) {
-          grouped[offer.name] = [];
+      // Process each food component
+      meal.foodComponents.forEach((fc) => {
+        if (!fc?.category || !fc?.items || !Array.isArray(fc.items)) {
+          console.warn("Invalid food component format:", fc);
+          return;
         }
-        if (
-          !grouped[offer.name].some(
-            (o) => o.price === offer.price && o.name === offer.name,
-          )
-        ) {
-          grouped[offer.name].push(offer);
-        }
+
+        // Process each item in the food component
+        fc.items.forEach((item) => {
+          // Find offers that match this specific item
+          const matchedOffers = offers.filter((offer) => {
+            if (!offer.matchedItems || !Array.isArray(offer.matchedItems))
+              return false;
+            return offer.matchedItems.some(
+              (matchItem) =>
+                // Case-insensitive match
+                matchItem.toLowerCase() === item.toLowerCase()
+            );
+          });
+
+          // Add matched offers to the grouped object
+          if (matchedOffers.length > 0) {
+            if (!grouped[item]) {
+              grouped[item] = [];
+            }
+
+            // Add only unique offers
+            matchedOffers.forEach((offer) => {
+              const isDuplicate = grouped[item].some(
+                (existingOffer) => existingOffer.id === offer.id
+              );
+
+              if (!isDuplicate) {
+                grouped[item].push(offer);
+              }
+            });
+
+            // Sort offers by price (lowest first)
+            grouped[item].sort((a, b) => a.price - b.price);
+          }
+        });
       });
-    });
-    // Sort each group by price (lowest to highest)
-    Object.keys(grouped).forEach((key) => {
-      grouped[key].sort((a, b) => a.price - b.price);
-    });
+
+      // Store the grouped offers in state for rendering
+      setGroupedOffers(grouped);
+    } catch (error) {
+      console.error("Error processing offers:", error);
+      setError("Error processing offers");
+    }
   }, [meal, offers]);
 
   const handleToggleFavorite = async () => {
@@ -95,20 +142,49 @@ function MealPage() {
         setToast({ type: "success", message: "Added to favorites" });
       }
     } catch (error) {
+      console.error("Error toggling favorite:", error);
       setToast({ type: "error", message: "Failed to update favorites" });
     }
   };
 
   const isFavorite = id ? favorites.includes(id) : false;
 
-  if (loading || !meal)
+  if (loading) {
     return (
-      <div className="flex justify-center items-center p-8 h-screen">
-        <div className="animate-pulse text-gray-600 dark:text-gray-300">
-          Loading...
-        </div>
+      <div className="flex justify-center items-center p-8 h-64">
+        <LoadingSpinner />
       </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="p-4 text-red-600 dark:text-red-400 flex flex-col items-center justify-center min-h-64">
+        <p className="text-lg font-medium mb-2">Error</p>
+        <p>{error}</p>
+        <button
+          onClick={() => (window.location.href = "/")}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        >
+          Return to Home
+        </button>
+      </div>
+    );
+  }
+
+  if (!meal) {
+    return (
+      <div className="p-4 text-gray-600 dark:text-gray-400 flex flex-col items-center justify-center min-h-64">
+        <p className="text-lg font-medium mb-2">Meal not found</p>
+        <button
+          onClick={() => (window.location.href = "/")}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        >
+          Return to Home
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 dark:text-white dark:bg-gray-900">
@@ -231,50 +307,39 @@ function MealPage() {
                 </TableRow>
               </TableHead>
               <TableBody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                {meal.foodComponents.map((fc, index) => {
+                {meal.foodComponents.flatMap((fc, fcIndex) => {
+                  // Handle each item in the food component
                   const foodItems = Array.isArray(fc.items)
                     ? fc.items
                     : [fc.items];
 
-                  const groupedOffers: Record<string, Offer[]> = {};
-                  offers.forEach((offer) => {
-                    if (
-                      (offer.matchedItems ?? []).some((item) =>
-                        foodItems.includes(item),
-                      )
-                    ) {
-                      const key =
-                        (offer.matchedItems ?? []).find((item) =>
-                          foodItems.includes(item),
-                        ) || offer.name;
-                      if (!groupedOffers[key]) {
-                        groupedOffers[key] = [];
-                      }
-                      groupedOffers[key].push(offer);
-                    }
-                  });
+                  return foodItems.map((item, itemIndex) => {
+                    // Check if we have offers for this item
+                    const offersForItem = groupedOffers[item] || [];
 
-                  return (
-                    <React.Fragment key={index}>
-                      {Object.keys(groupedOffers).length > 0 ? (
-                        Object.entries(groupedOffers).map(
-                          ([name, meal], idx) => (
-                            <Row
-                              key={`${index}-${idx}`}
-                              offers={groupedOffers[name]}
-                              foodComponentName={fc}
-                            />
-                          ),
-                        )
-                      ) : (
-                        <TableRow>
+                    if (offersForItem.length > 0) {
+                      // Render the row with offers
+                      return (
+                        <Row
+                          key={`${fcIndex}-${itemIndex}`}
+                          offers={offersForItem}
+                          foodComponentName={{
+                            category: fc.category,
+                            items: item,
+                          }}
+                        />
+                      );
+                    } else {
+                      // Render a row showing no offers
+                      return (
+                        <TableRow key={`${fcIndex}-${itemIndex}-no-offer`}>
                           <TableCell className="px-2 py-4 whitespace-nowrap" />
                           <TableCell
                             component="th"
                             scope="row"
                             className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-200"
                           >
-                            {foodItems.join(", ")}
+                            {item}
                           </TableCell>
                           <TableCell
                             colSpan={5}
@@ -286,9 +351,9 @@ function MealPage() {
                             </Typography>
                           </TableCell>
                         </TableRow>
-                      )}
-                    </React.Fragment>
-                  );
+                      );
+                    }
+                  });
                 })}
               </TableBody>
             </Table>
