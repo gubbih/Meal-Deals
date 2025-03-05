@@ -1,30 +1,32 @@
 import React, { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Meal } from "../models/Meal";
-import useFetchFoodComponents from "../hooks/useFetchFoodComponents";
+import useCachedFoodComponents from "../hooks/useCachedFoodComponents";
 import MealForm from "../components/MealForm";
-import { useFetchMeal } from "../hooks/useFetchMeal";
+import { useCachedMeal } from "../hooks/useCachedMeal";
 import useUpdateMeal from "../hooks/useUpdateMeal";
 import Modal from "../components/Modal";
 import { MealFormValues } from "../schemas/mealSchemas";
 import { useToast } from "../contexts/ToastContext";
+import { useCache } from "../contexts/CacheContext";
 
 function EditMealPage() {
   const { id } = useParams<{ id: string }>() || { id: "" };
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { invalidate } = useCache();
 
   const {
     foodComponents,
     loading: foodComponentsLoading,
     error: foodComponentsError,
-  } = useFetchFoodComponents();
+  } = useCachedFoodComponents();
 
   const {
     meal: fetchedMeal,
     loading: mealLoading,
     error: mealError,
-  } = useFetchMeal(id || "");
+  } = useCachedMeal(id || "");
 
   const {
     updateMealData,
@@ -61,6 +63,11 @@ function EditMealPage() {
         };
 
         await updateMealData(updatedMeal);
+
+        // Invalidate both the all-meals cache and this specific meal's cache
+        invalidate("all-meals");
+        invalidate(`meal-${id}`);
+
         showToast("success", "Meal successfully updated!");
         navigate("/");
       } catch (error) {

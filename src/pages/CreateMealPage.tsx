@@ -2,18 +2,20 @@ import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { addMeal } from "../services/firebase";
 import { Meal } from "../models/Meal";
-import useFetchFoodComponents from "../hooks/useFetchFoodComponents";
+import useCachedFoodComponents from "../hooks/useCachedFoodComponents";
 import MealForm from "../components/MealForm";
 import Modal from "../components/Modal";
 import { useAuth } from "../services/firebase";
 import { MealFormValues } from "../schemas/mealSchemas";
 import { useToast } from "../contexts/ToastContext";
+import { useCache } from "../contexts/CacheContext";
 
 function CreateMealPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { foodComponents, loading, error } = useFetchFoodComponents();
+  const { foodComponents, loading, error } = useCachedFoodComponents();
   const { showToast } = useToast();
+  const { invalidate } = useCache();
 
   const initialMeal: Meal = {
     id: "",
@@ -43,6 +45,10 @@ function CreateMealPage() {
       };
 
       await addMeal(mealData);
+
+      // Invalidate meals cache since we've added a new meal
+      invalidate("all-meals");
+
       showToast("success", "Meal successfully added!");
       navigate("/");
     } catch (error) {
