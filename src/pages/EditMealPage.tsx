@@ -141,7 +141,7 @@ function EditMealPage() {
       />
       <div className="p-6">
         {toast && <Toast type={toast.type} message={toast.message} />}
-        <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+        <h1 className="text-xl justify-center flex font-semibold tracking-tight text-gray-900 dark:text-white">
           Edit Meal
         </h1>
         {meal && (

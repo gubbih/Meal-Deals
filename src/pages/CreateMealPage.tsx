@@ -133,7 +133,7 @@ function CreateMealPage() {
         message="Er du sikker på at gå væk fra denne side, tingene er ikke gemt?"
       />
       {toast && <Toast type={toast.type} message={toast.message} />}
-      <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+      <h1 className="text-xl justify-center flex font-semibold tracking-tight text-gray-900 dark:text-white">
         Create New Meal
       </h1>
       <MealForm
