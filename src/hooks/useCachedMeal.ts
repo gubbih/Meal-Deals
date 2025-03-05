@@ -17,7 +17,6 @@ export function useCachedMeal(id: string) {
       enabled: !!id, // Only fetch if an ID is provided
     },
   );
-
   return {
     meal: data,
     loading,

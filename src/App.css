@@ -6,7 +6,15 @@
 @layer components {
   /* changes every select color*/
   .my-react-select-container .my-react-select__control {
-    @apply bg-white dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500;
+    @apply bg-white dark:bg-gray-900 border-2 border-gray-300  dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 text-gray-400 dark:text-gray-200;
+  }
+  /*Changes the color of the placeholder*/
+  .my-react-select-container .my-react-select__placeholder {
+    @apply text-gray-400 dark:text-gray-200;
+  }
+  /*Changes the color of the selected value*/
+  .my-react-select-container .my-react-select__single-value {
+    @apply text-gray-600 dark:text-gray-200;
   }
   /*Changes outline when selecting an option, only when is in focus*/
   .my-react-select-container .my-react-select__control--is-focused {
@@ -14,11 +22,11 @@
   }
   /*outline of menu when dropdown is open*/
   .my-react-select-container .my-react-select__menu {
-    @apply bg-gray-100 dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-900;
+    @apply bg-gray-100 dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-900;
   }
   /*Changes the whole dropdown menu*/
   .my-react-select-container .my-react-select__option {
-    @apply text-gray-600 dark:text-gray-200 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-900;
+    @apply text-gray-600 dark:text-gray-200 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800;
   }
   .my-react-select-container .my-react-select__option--is-disabled {
     @apply text-green-400 dark:text-green-500;
@@ -32,40 +40,19 @@
   .my-react-select-container .my-react-select__multi-value {
     @apply bg-gray-400 dark:bg-gray-600 rounded-md;
   }
-  /* Changes font*/
+  /* Changes font outline tags*/
   .my-react-select-container .my-react-select__multi-value__label {
-    @apply text-green-800 dark:text-green-100;
+    @apply text-gray-800 dark:text-gray-100;
   }
 
   /* Multi-value remove button and SVG */
   .my-react-select-container .my-react-select__multi-value__remove {
     @apply bg-gray-500 dark:bg-gray-700 hover:bg-gray-600 dark:hover:bg-gray-800 m-1 p-1 rounded-full;
   }
-
   .my-react-select-container
     .my-react-select__multi-value__remove
     .css-tj5bde-Svg {
     @apply text-gray-200 dark:text-gray-400;
-  }
-
-  .MuiBox-root {
-    @apply bg-green-100 dark:bg-green-900;
-  }
-  .MuiDataGrid-columnsContainer {
-    @apply bg-green-100 dark:bg-green-800,
-    @apply border-b-2 border-green-300 dark:border-green-700;
-  }
-  .MuiTypography-root {
-    @apply text-green-900 dark:text-green-200;
-
-    @apply border-b-2 border-green-300 dark:border-green-700;
-  }
-  .MuiDataGrid,
-  .MuiDataGrid-columnsContainer,
-  .MuiDataGrid-cell {
-    @apply bg-green-100 dark:bg-green-800;
-
-    @apply border-b-2 border-green-300 dark:border-green-700;
   }
 
   .Toastify__toast {
@@ -91,39 +78,30 @@
       @apply text-red-900 bg-red-100;
     }
   }
-
   .Toastify__toast-container {
     @apply z-50 fixed top-0 left-1/2 transform -translate-x-1/2;
   }
-
   .Toastify__toast-icon {
     @apply flex items-center justify-center;
   }
-
   .Toastify__toast--close-on-click {
     @apply cursor-pointer;
   }
-
   .Toastify__close-button {
     @apply text-gray-600 dark:text-gray-200;
   }
-
   .Toastify__close-button--light {
     @apply text-gray-900;
   }
-
   .Toastify__progress-bar--wrp {
     @apply relative;
   }
-
   .Toastify__progress-bar--bg {
     @apply absolute inset-0;
   }
-
   .Toastify__progress-bar--animated {
     @apply animate-progress;
   }
-
   .Toastify__progress-bar {
     &-theme--light {
       @apply bg-gray-300;
@@ -150,68 +128,52 @@
       @apply bg-transparent;
     }
   }
-
   .Toastify__toast-theme--light.Toastify__toast--success {
     @apply bg-green-100 text-green-900 dark:bg-gray-700;
   }
-
   .Toastify__toast-theme--light.Toastify__toast--error {
     @apply bg-red-100 text-red-900 dark:bg-gray-700;
   }
-
   .Toastify__toast-theme--light.Toastify__toast--warning {
     @apply bg-yellow-100 text-yellow-900 dark:bg-gray-700;
   }
-
   .Toastify__toast-theme--light.Toastify__toast--info {
     @apply bg-blue-100 text-blue-900 dark:bg-gray-700;
   }
-
   .Toastify__toast-theme--dark.Toastify__toast--success {
     @apply bg-green-900 text-green-100 dark:bg-gray-700;
   }
-
   .Toastify__toast-theme--dark.Toastify__toast--error {
     @apply bg-red-900 text-red-100 dark:bg-gray-700;
   }
-
   .Toastify__toast-theme--dark.Toastify__toast--warning {
     @apply bg-yellow-900 text-yellow-100 dark:bg-gray-700;
   }
-
   .Toastify__toast-theme--dark.Toastify__toast--info {
     @apply bg-blue-900 text-blue-100 dark:bg-gray-700;
   }
-
   /* Dark mode styles with hover effects */
   .dark .Toastify__toast-theme--light.Toastify__toast--success {
     @apply bg-green-900 text-green-100 hover:bg-green-800 dark:bg-gray-700;
   }
-
   .dark .Toastify__toast-theme--light.Toastify__toast--error {
     @apply bg-red-900 text-red-100 hover:bg-red-200 dark:bg-gray-700;
   }
-
   .dark .Toastify__toast-theme--light.Toastify__toast--warning {
     @apply bg-yellow-900 text-yellow-100 hover:bg-yellow-800 dark:bg-gray-700;
   }
-
   .dark .Toastify__toast-theme--light.Toastify__toast--info {
     @apply bg-blue-900 text-blue-100 hover:bg-blue-800 dark:bg-gray-700;
   }
-
   .dark .Toastify__toast-theme--dark.Toastify__toast--success {
     @apply bg-green-100 text-green-900 hover:bg-green-200 dark:bg-gray-700;
   }
-
   .dark .Toastify__toast-theme--dark.Toastify__toast--error {
     @apply bg-red-100 text-red-900 hover:bg-red-200 dark:bg-gray-700;
   }
-
   .dark .Toastify__toast-theme--dark.Toastify__toast--warning {
     @apply bg-yellow-100 text-yellow-900 hover:bg-yellow-200 dark:bg-gray-700;
   }
-
   .dark .Toastify__toast-theme--dark.Toastify__toast--info {
     @apply bg-blue-100 text-blue-900 hover:bg-blue-200 dark:bg-gray-700;
   }

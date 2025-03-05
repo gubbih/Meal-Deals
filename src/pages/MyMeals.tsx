@@ -4,9 +4,11 @@ import { Meal } from "../models/Meal";
 import { Link } from "react-router-dom";
 import Modal from "../components/Modal";
 import Toast from "../components/Toast";
+import { useCache } from "../contexts/CacheContext";
 
 const MyMeals = () => {
   const { user } = useAuth();
+  const { invalidate } = useCache();
   const [meals, setMeals] = useState<Meal[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [mealToDelete, setMealToDelete] = useState<string | null>(null);
@@ -17,13 +19,18 @@ const MyMeals = () => {
 
   const fetchMeals = async () => {
     if (!user) return;
-    const usersMeal = await getMealByUser(user.uid);
-    setMeals(usersMeal);
+    try {
+      const usersMeal = await getMealByUser(user.uid);
+      setMeals(usersMeal);
+    } catch (error) {
+      console.error("Error fetching meals:", error);
+      setToast({ type: "error", message: "Failed to fetch meals." });
+    }
   };
 
   useEffect(() => {
     fetchMeals();
-  });
+  }, [user]); // Only re-run when user changes
 
   const handleDelete = (mealId: string) => {
     setMealToDelete(mealId);
@@ -34,9 +41,16 @@ const MyMeals = () => {
     if (mealToDelete) {
       try {
         await deleteMeal(mealToDelete);
+        // Invalidate all-meals cache after deletion
+        invalidate("all-meals");
+        // Also invalidate the specific meal's cache
+        invalidate(`meal-${mealToDelete}`);
+
         setToast({ type: "success", message: "Meal deleted successfully!" });
-        fetchMeals();
+        // Ensure we fetch meals after successful deletion
+        await fetchMeals();
       } catch (error) {
+        console.error("Error deleting meal:", error);
         setToast({ type: "error", message: "Failed to delete meal." });
       } finally {
         setIsModalVisible(false);
