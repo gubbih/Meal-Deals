@@ -54,23 +54,7 @@
     .css-tj5bde-Svg {
     @apply text-gray-200 dark:text-gray-400;
   }
-  .MuiBox-root {
-    @apply bg-green-100 dark:bg-green-900;
-  }
-  .MuiDataGrid-columnsContainer {
-    @apply bg-green-100 dark:bg-green-800,
-    @apply border-b-2 border-green-300 dark:border-green-700;
-  }
-  .MuiTypography-root {
-    @apply text-green-900 dark:text-green-200;
-    @apply border-b-2 border-green-300 dark:border-green-700;
-  }
-  .MuiDataGrid,
-  .MuiDataGrid-columnsContainer,
-  .MuiDataGrid-cell {
-    @apply bg-green-100 dark:bg-green-800;
-    @apply border-b-2 border-green-300 dark:border-green-700;
-  }
+
   .Toastify__toast {
     &-theme--dark {
       @apply bg-gray-900 text-gray-200;

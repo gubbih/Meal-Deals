@@ -44,8 +44,11 @@ export function Row({
   return (
     <React.Fragment>
       {/* Main row - Two column layout from Design 8 */}
-      <TableRow className="border-b dark:border-gray-700">
-        <TableCell colSpan={7} className="p-0">
+      <TableRow className="border-x dark:border-gray-700">
+        <TableCell
+          colSpan={7}
+          className="p-0 border border-gray-200 dark:border-gray-700"
+        >
           <div className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/70 transition-colors">
             <div className="grid grid-cols-1 sm:grid-cols-6 gap-3 p-3 min-h-[4.5rem]">
               {/* Left side (ingredient info) - Takes more space */}
@@ -157,7 +160,7 @@ export function Row({
         <TableRow>
           <TableCell
             colSpan={7}
-            className="p-0 border-b border-gray-200 dark:border-gray-700"
+            className="p-0 border border-gray-200 dark:border-gray-700"
           >
             <Collapse in={open} timeout="auto" unmountOnExit>
               <div className="py-4 px-6 bg-gray-50 dark:bg-gray-800/50">
@@ -168,7 +171,7 @@ export function Row({
                       className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 flex flex-col"
                     >
                       {/* Header with store */}
-                      <div className="px-3 py-2 bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                      <div className="px-3 py-2 bg-gray-50 dark:bg-gray-700/50 border-x border-gray-200 dark:border-gray-700 flex justify-between items-center">
                         <span
                           className="font-medium text-gray-700 dark:text-gray-200 truncate max-w-[200px]"
                           title={offer.store}
@@ -190,7 +193,7 @@ export function Row({
                           </svg>
                           <span>
                             {DateTime.fromISO(offer.offerStart).toFormat(
-                              "d MMM",
+                              "d MMM"
                             )}{" "}
                             til{" "}
                             {DateTime.fromISO(offer.offerEnd).toFormat("d MMM")}

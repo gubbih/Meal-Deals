@@ -19,7 +19,7 @@ function MealPage() {
   const [meal, setMeal] = useState<Meal | null>(null);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [groupedOffers, setGroupedOffers] = useState<Record<string, Offer[]>>(
-    {},
+    {}
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -87,7 +87,7 @@ function MealPage() {
             return offer.matchedItems.some(
               (matchItem) =>
                 // Case-insensitive match
-                matchItem.toLowerCase() === item.toLowerCase(),
+                matchItem.toLowerCase() === item.toLowerCase()
             );
           });
 
@@ -100,7 +100,7 @@ function MealPage() {
             // Add only unique offers
             matchedOffers.forEach((offer) => {
               const isDuplicate = grouped[item].some(
-                (existingOffer) => existingOffer.id === offer.id,
+                (existingOffer) => existingOffer.id === offer.id
               );
 
               if (!isDuplicate) {
@@ -338,7 +338,7 @@ function MealPage() {
                           hasOffers: Boolean(groupedOffers[item]?.length > 0),
                           offers: groupedOffers[item] || [],
                         }));
-                      },
+                      }
                     );
 
                     // Sort: items with offers first, then alphabetically by name
@@ -372,7 +372,10 @@ function MealPage() {
                             key={`sorted-${index}-no-offer`}
                             className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b dark:border-gray-700"
                           >
-                            <TableCell colSpan={7} className="p-0">
+                            <TableCell
+                              colSpan={7}
+                              className="p-0 border border-gray-200 dark:border-gray-700"
+                            >
                               <div className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/70 transition-colors min-h-[4.5rem]">
                                 <div className="grid grid-cols-1 sm:grid-cols-6 gap-3 p-3">
                                   {/* Left side - ingredient info */}
