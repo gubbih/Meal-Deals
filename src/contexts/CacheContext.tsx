@@ -56,7 +56,7 @@ export const CacheProvider: React.FC<CacheProviderProps> = ({
 
       return item.data;
     },
-    [cache, defaultMaxAge]
+    [cache, defaultMaxAge],
   );
 
   // Store an item in cache
@@ -110,7 +110,7 @@ export const useCachedFetch = <T,>(
     enabled?: boolean;
     onSuccess?: (data: T) => void;
     onError?: (error: Error) => void;
-  }
+  },
 ) => {
   const { get, set } = useCache();
   const [data, setData] = useState<T | null>(null);
@@ -153,7 +153,7 @@ export const useCachedFetch = <T,>(
         setLoading(false);
       }
     },
-    [fetchFunction, get, key, maxAge, options, set]
+    [fetchFunction, get, key, maxAge, options, set],
   );
 
   // Automatically fetch on mount if enabled

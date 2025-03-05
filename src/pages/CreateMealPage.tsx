@@ -78,7 +78,7 @@ function CreateMealPage() {
         label: `${fc.category}: ${item}`,
         value: [item],
         category: fc.category,
-      }))
+      })),
     );
   }, [foodComponents]);
 

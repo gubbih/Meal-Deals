@@ -63,7 +63,7 @@ const MealForm: React.FC<MealFormProps> = ({
       value: option.value,
       label: `${option.category}: ${option.value[0]}`,
       isDisabled: defaultMeal.foodComponents.some((component) =>
-        component.items.includes(option.value[0])
+        component.items.includes(option.value[0]),
       ),
     }));
   }, [foodComponentOptions, defaultMeal.foodComponents]);
@@ -137,7 +137,7 @@ const MealForm: React.FC<MealFormProps> = ({
                   options={cuisineOptions}
                   value={
                     cuisineOptions.find(
-                      (option) => option.value === field.value
+                      (option) => option.value === field.value,
                     ) || null
                   }
                   onChange={(option) =>
@@ -169,7 +169,7 @@ const MealForm: React.FC<MealFormProps> = ({
                   options={mealTypeOptions}
                   value={
                     mealTypeOptions.find(
-                      (option) => option.value === field.value
+                      (option) => option.value === field.value,
                     ) || null
                   }
                   onChange={(option) =>
@@ -208,14 +208,14 @@ const MealForm: React.FC<MealFormProps> = ({
                     label: `${component.category}: ${item}`,
                     value: [item],
                     category: component.category,
-                  }))
+                  })),
                 )}
                 onChange={(selectedOptions) => {
                   const formattedComponents = selectedOptions.map(
                     (option: any) => ({
                       category: option.category,
                       items: option.value,
-                    })
+                    }),
                   );
                   field.onChange(formattedComponents);
                 }}
