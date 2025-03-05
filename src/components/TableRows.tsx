@@ -29,7 +29,7 @@ export function Row({
   }
 
   const firstOffer = offers[0];
-  const remainingOffers = offers.slice(1); // Get all offers except the first one
+  const remainingOffers = offers.slice(0); // Get all offers except the first one
 
   // Get the item name to display
   const itemName =
@@ -119,29 +119,29 @@ export function Row({
                   component="div"
                   className="text-gray-900 dark:text-gray-200 text-sm font-medium"
                 >
-                  More Offers for {itemName}
+                  Flere tilbud på {itemName}
                 </Typography>
                 <div className="overflow-x-auto">
                   <Table size="small" aria-label="additional offers">
                     <TableHead>
                       <TableRow>
                         <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs">
-                          Name
+                          Navn
                         </TableCell>
                         <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs">
-                          Price
+                          Pris
                         </TableCell>
                         <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs hidden sm:table-cell">
-                          Weight
+                          Vægt
                         </TableCell>
                         <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs hidden md:table-cell">
-                          Offer Start
+                          Tilbud Start
                         </TableCell>
                         <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs hidden md:table-cell">
-                          Offer End
+                          Tilbud Slut
                         </TableCell>
                         <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs">
-                          Store
+                          Butik
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -158,23 +158,23 @@ export function Row({
                               {offer.name ?? itemName}
                             </a>
                           </TableCell>
-                          <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs">
+                          <TableCell className="text-gray-900 dark:text-gray-200 text-xs">
                             {offer.price} {offer.priceCurrency}
                           </TableCell>
-                          <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs hidden sm:table-cell">
+                          <TableCell className="text-gray-900 dark:text-gray-200  text-xs hidden sm:table-cell">
                             {offer.weight} {offer.weightUnit}
                           </TableCell>
-                          <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs hidden md:table-cell">
+                          <TableCell className="text-gray-900 dark:text-gray-200  text-xs hidden md:table-cell">
                             {DateTime.fromISO(offer.offerStart).toFormat(
                               "dd-MM-yyyy"
                             )}
                           </TableCell>
-                          <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs hidden md:table-cell">
+                          <TableCell className="text-gray-900 dark:text-gray-200  text-xs hidden md:table-cell">
                             {DateTime.fromISO(offer.offerEnd).toFormat(
                               "dd-MM-yyyy"
                             )}
                           </TableCell>
-                          <TableCell className="text-gray-900 dark:text-gray-200 p-1 text-xs">
+                          <TableCell className="text-gray-900 dark:text-gray-200  text-xs">
                             {offer.store}
                           </TableCell>
                         </TableRow>
