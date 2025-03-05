@@ -15,7 +15,7 @@ This project is a work-in-progress for building a simple meal planning applicati
 - [ ] **Authentication refinement**
 
   - Fix user login/creation flow
-  - Implement proper validation for authentication forms
+  - [x] Implement proper validation for authentication forms
   - Add password reset functionality
 
 - [ ] **Meal management**

@@ -1,19 +1,12 @@
 ToDo:
-Link to each offer (etilbudsavis.dk/{butik}/tilbudsaviser/{catalogid}) remember to open in a new link
 add image storage (https://supabase.com/storage)
-better design
-delete/edit meals
-user functions
-a like/favorit
-show all meals limmited to x
+
 show all meals in a category
 show all meals with a food foodcomponent
 show all meals in a crusine
-make all of meal component clickable from home page
-move big html components into another folder so it can be called instead of copy pasta (homepage meal cards)
-write rules for firebase DB
+
 find some stuck images... ai?
-validation on create and user when that has been created
+
 fool proof the site
 add blacklist items for DK-Supermarket-offers
 
