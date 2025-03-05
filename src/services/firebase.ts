@@ -76,7 +76,7 @@ export const getMeals = async (): Promise<Meal[]> => {
 };
 
 export const getMeal = async (id: string): Promise<Meal> => {
-  const mealRef = ref(db, `/meals/${id}`);
+  const mealRef = ref(db, `meals/${id}`);
 
   try {
     const snapshot = await get(mealRef);
@@ -93,15 +93,17 @@ export const getMeal = async (id: string): Promise<Meal> => {
       foodComponents: snapshot.val().foodComponents,
       mealCuisine: snapshot.val()?.mealCuisine,
       mealType: snapshot.val()?.mealType,
-      createdBy: snapshot.val().createdBy || "Guest",
-      createdAt: snapshot.val().createdAt || new Date().toISOString(),
+      createdBy: snapshot.val().createdBy,
+      createdAt: snapshot.val().createdAt,
     };
     return data;
   } catch (error) {
     console.error("Error fetching meal:", error);
+    console.log("Error fetching meal:", error);
     throw new Error("Failed to fetch meal. Please try again later.");
   }
 };
+
 export const getMealByUser = async (userId: string): Promise<Meal[]> => {
   const mealRef = ref(db, `meals/`);
 
@@ -134,6 +136,30 @@ export const getMealByUser = async (userId: string): Promise<Meal[]> => {
   } catch (error) {
     console.error("Error fetching meal:", error);
     throw new Error("Failed to fetch meal. Please try again later.");
+  }
+};
+
+export const addFavoriteMeal = async (
+  userId: string,
+  mealId: string
+): Promise<void> => {
+  const userPrefsRef = ref(db, `users/${userId}/favoriteRecipes`);
+
+  try {
+    const snapshot = await get(userPrefsRef);
+    let favorites: string[] = [];
+
+    if (snapshot.exists()) {
+      favorites = snapshot.val();
+    }
+
+    if (!favorites.includes(mealId)) {
+      favorites.push(mealId);
+      await set(userPrefsRef, favorites);
+    }
+  } catch (error) {
+    console.error("Error adding favorite meal:", error);
+    throw new Error("Failed to add favorite meal.");
   }
 };
 
@@ -221,7 +247,7 @@ export const addMeal = async (meal: Meal): Promise<void> => {
 export const updateMealImage = async (
   mealId: string,
   imagepath: string,
-  image: File,
+  image: File
 ): Promise<string> => {
   //upload image to storage
 
@@ -262,10 +288,37 @@ export const deleteMeal = async (id: string): Promise<void> => {
   const mealRef = ref(db, `/meals/${id}`);
   try {
     await remove(mealRef);
+    const users = await getAllUsers();
+    users.forEach(async (user) => {
+      await removeFavoriteMeal(user.uid, id);
+    });
+
     console.log(`Meal with ID ${id} has been deleted successfully.`);
   } catch (error) {
     console.error("Error deleting meal:", error);
     throw new Error("Failed to delete meal. Please try again later.");
+  }
+};
+
+export const removeFavoriteMeal = async (
+  userId: string,
+  mealId: string
+): Promise<void> => {
+  const userPrefsRef = ref(db, `users/${userId}/favoriteRecipes`);
+
+  try {
+    const snapshot = await get(userPrefsRef);
+    if (!snapshot.exists()) {
+      return;
+    }
+
+    const favorites: string[] = snapshot.val();
+    const updatedFavorites = favorites.filter((id) => id !== mealId);
+
+    await set(userPrefsRef, updatedFavorites);
+  } catch (error) {
+    console.error("Error removing favorite meal:", error);
+    throw new Error("Failed to remove favorite meal.");
   }
 };
 
@@ -276,13 +329,13 @@ export const deleteMeal = async (id: string): Promise<void> => {
 export const signUp = async (
   email: string,
   password: string,
-  displayName: string,
+  displayName: string
 ): Promise<User> => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
-      password,
+      password
     );
     await updateProfile(userCredential.user, { displayName });
 
@@ -394,52 +447,6 @@ export const getAllUsers = async (): Promise<User[]> => {
   } catch (error) {
     console.error("Error fetching users:", error);
     throw new Error("Failed to fetch users. Please try again later.");
-  }
-};
-
-export const addFavoriteMeal = async (
-  userId: string,
-  mealId: string,
-): Promise<void> => {
-  const userPrefsRef = ref(db, `users/${userId}/favoriteRecipes`);
-
-  try {
-    const snapshot = await get(userPrefsRef);
-    let favorites: string[] = [];
-
-    if (snapshot.exists()) {
-      favorites = snapshot.val();
-    }
-
-    if (!favorites.includes(mealId)) {
-      favorites.push(mealId);
-      await set(userPrefsRef, favorites);
-    }
-  } catch (error) {
-    console.error("Error adding favorite meal:", error);
-    throw new Error("Failed to add favorite meal.");
-  }
-};
-
-export const removeFavoriteMeal = async (
-  userId: string,
-  mealId: string,
-): Promise<void> => {
-  const userPrefsRef = ref(db, `users/${userId}/favoriteRecipes`);
-
-  try {
-    const snapshot = await get(userPrefsRef);
-    if (!snapshot.exists()) {
-      return;
-    }
-
-    const favorites: string[] = snapshot.val();
-    const updatedFavorites = favorites.filter((id) => id !== mealId);
-
-    await set(userPrefsRef, updatedFavorites);
-  } catch (error) {
-    console.error("Error removing favorite meal:", error);
-    throw new Error("Failed to remove favorite meal.");
   }
 };
 
