@@ -117,6 +117,15 @@ function Navigation() {
                     My Meals
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    to="/favorites"
+                    className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Favorites
+                  </Link>
+                </li>
               </>
             )}
 
@@ -155,17 +164,17 @@ function Navigation() {
                 </li>
               </>
             ) : (
-              <li className="flex flex-col sm:flex-row sm:space-x-2">
+              <li className="flex flex-col sm:flex-row sm:space-x-6">
                 <Link
-                  to="/user"
-                  className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent mb-2 sm:mb-0"
+                  to="/auth"
+                  className="block py-2 px-5 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent mb-2 sm:mb-0"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Login
                 </Link>
                 <Link
-                  to="/user"
-                  className="block py-2 px-3 text-white bg-blue-700 rounded-lg hover:bg-blue-800 md:p-2 dark:bg-blue-600 dark:hover:bg-blue-700 text-center"
+                  to="/auth?signup=true"
+                  className="block py-2 px-5 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent mb-2 sm:mb-0"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Sign Up

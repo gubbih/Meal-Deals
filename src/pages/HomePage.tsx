@@ -1,14 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import useFetchMeals from "../hooks/useFetchMeals";
+import useCachedMeals from "../hooks/useCachedMeals";
 import { useAuth } from "../services/firebase";
 import MealCarousel from "../components/MealCarousel";
 import { useLocation } from "react-router-dom";
+import { useCache } from "../contexts/CacheContext";
 
 function HomePage() {
   const location = useLocation();
-  const { meals, loading, error } = useFetchMeals();
+  const { meals, loading, error, refetch } = useCachedMeals();
   const { user } = useAuth();
+  const { invalidateAll } = useCache();
 
   // Filter favorite meals if user is logged in
   const favoriteMeals = user
@@ -34,12 +36,35 @@ function HomePage() {
 
   if (error) {
     return (
-      <div className="p-4 text-red-600 dark:text-red-400">Error: {error}</div>
+      <div className="p-4 text-red-600 dark:text-red-400">
+        <p>Error: {error}</p>
+        <button
+          onClick={() => refetch()}
+          className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Try Again
+        </button>
+      </div>
     );
   }
 
   return (
     <div className="w-full px-4 py-6">
+      {/* Dev Tool - Clear Cache (only visible in development) */}
+      {process.env.NODE_ENV === "development" && (
+        <div className="mb-4 p-2 bg-yellow-100 dark:bg-yellow-900 rounded">
+          <button
+            onClick={() => {
+              invalidateAll();
+              refetch();
+            }}
+            className="text-xs text-yellow-800 dark:text-yellow-200 underline"
+          >
+            Clear Cache & Refresh Data (Dev Only)
+          </button>
+        </div>
+      )}
+
       {/* About Section */}
       <section className="mb-8 sm:mb-12 text-center max-w-4xl mx-auto">
         <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white">

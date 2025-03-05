@@ -23,8 +23,10 @@ const FavoritesPage: React.FC = () => {
       const meals = await Promise.all(favorites.map((id) => getMeal(id)));
       setFavoriteMeals(meals);
     } catch (error) {
-      console.error("Error fetching favorite meals:", error);
-      setToast({ type: "error", message: "Failed to fetch favorite meals." });
+      setToast({
+        type: "error",
+        message: "Failed to fetch favorite meals.",
+      });
     }
   };
 

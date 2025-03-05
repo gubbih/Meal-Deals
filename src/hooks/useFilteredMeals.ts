@@ -7,6 +7,7 @@ export const useFilteredMeals = (meals: Meal[]) => {
     mealType?: string;
     searchTerm?: string;
     foodComponent?: string;
+    limit?: number;
   }>({});
 
   const filteredMeals = useMemo(() => {
@@ -33,7 +34,10 @@ export const useFilteredMeals = (meals: Meal[]) => {
           return false;
         }
       }
-
+      // Filter by limit
+      if (filters.limit && filters.limit > 0) {
+        return meals.slice(0, filters.limit);
+      }
       // Filter by food component
       if (filters.foodComponent) {
         const hasFoodComponent = meal.foodComponents.some((fc) =>

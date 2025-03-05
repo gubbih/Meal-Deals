@@ -16,7 +16,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
-    return <Navigate to="/user" />; // Changed from /login to /user since that's your auth page
+    return <Navigate to="/auth" />;
   }
 
   return <>{children}</>;
