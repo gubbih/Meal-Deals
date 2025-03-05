@@ -10,6 +10,7 @@ import EditMealPage from "./pages/EditMealPage";
 import FavoritesPage from "./pages/FavoritesPage";
 import Navigation from "./components/Navigation";
 import MyMeals from "./pages/MyMeals";
+import AuthPage from "./pages/AuthPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path="/meal/:id" element={<MealPage />} />
             <Route path="/create" element={<CreateMealPage />} />
             <Route path="/user" element={<UserPage />} />
+            <Route path="/auth" element={<AuthPage />} />
             <Route path="*" element={<NotFoundPage />} />
             <Route
               path="/meal/:id/edit"

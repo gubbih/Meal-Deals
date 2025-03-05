@@ -7,12 +7,14 @@ import MealForm from "../components/MealForm";
 import Toast from "../components/Toast";
 import Modal from "../components/Modal";
 import { useAuth } from "../services/firebase";
+import { MealFormValues } from "../schemas/mealSchemas";
 
 function CreateMealPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { foodComponents, loading, error } = useFetchFoodComponents();
-  const [meal, setMeal] = useState<Meal>({
+
+  const initialMeal: Meal = {
     id: "",
     name: "",
     description: "",
@@ -24,15 +26,8 @@ function CreateMealPage() {
     mealCuisine: "",
     createdBy: user?.uid || "guest",
     createdAt: new Date().toISOString(),
-  });
-  useEffect(() => {
-    if (user) {
-      setMeal((prevMeal) => ({
-        ...prevMeal,
-        createdBy: user.uid,
-      }));
-    }
-  }, [user]);
+  };
+
   const [toast, setToast] = useState<{
     type: "success" | "error" | "warning";
     message: string;
@@ -40,35 +35,17 @@ function CreateMealPage() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [navigateAway, setNavigateAway] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) => {
-    const { name, value } = e.target;
-    setMeal({ ...meal, [name]: value });
-  };
-
-  const handleFoodComponentChange = (selectedOptions: any) => {
-    const formattedComponents = selectedOptions.map((option: any) => {
-      const { label, value, ...rest } = option;
-      return { ...rest, items: value };
-    });
-    setMeal({ ...meal, foodComponents: formattedComponents });
-  };
-
-  const handleCuisineChange = (selectedOption: any) => {
-    setMeal({ ...meal, mealCuisine: selectedOption.value });
-  };
-
-  const handleMealTypeChange = (selectedOption: any) => {
-    setMeal({ ...meal, mealType: selectedOption.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (formData: MealFormValues) => {
     try {
-      await addMeal(meal);
+      // Combine form data with additional meal properties
+      const mealData: Meal = {
+        ...initialMeal,
+        ...formData,
+        createdBy: user?.uid || "guest",
+        createdAt: new Date().toISOString(),
+      };
+
+      await addMeal(mealData);
       setToast({ type: "success", message: "Meal successfully added!" });
       navigate("/", {
         state: {
@@ -102,7 +79,7 @@ function CreateMealPage() {
         label: `${fc.category}: ${item}`,
         value: [item],
         category: fc.category,
-      })),
+      }))
     );
   }, [foodComponents]);
 
@@ -137,12 +114,8 @@ function CreateMealPage() {
         Create New Meal
       </h1>
       <MealForm
-        meal={meal}
+        meal={initialMeal}
         foodComponentOptions={categoryOptions}
-        onInputChange={handleChange}
-        onFoodComponentChange={handleFoodComponentChange}
-        onCuisineChange={handleCuisineChange}
-        onMealTypeChange={handleMealTypeChange}
         onSubmit={handleSubmit}
         onCancel={handleCancel}
       />
