@@ -7,10 +7,7 @@ import { Row } from "../components/TableRows";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import { useAuth } from "../services/firebase";
 import useFavoriteMeals from "../hooks/useFavoriteMeals";
 import Toast from "../components/Toast";
@@ -314,103 +311,106 @@ function MealPage() {
             </div>
           </div>
           {/* Ingredients & Offers Table */}
-          // Part of MealPage.tsx - Improved Table Section
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-            <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-white">
               Tilbud på Ingredienser
             </h2>
 
-            <div className="overflow-hidden rounded-lg shadow-md">
-              <div className="overflow-x-auto">
-                <Table
-                  aria-label="tilbudstabel"
-                  className="min-w-full divide-y divide-gray-200"
-                  size="small"
-                >
-                  <TableHead className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/40 dark:to-blue-800/40">
-                    <TableRow>
-                      <TableCell />
-                      <TableCell className="px-3 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider dark:text-gray-200">
-                        Ingrediens
-                      </TableCell>
-                      <TableCell className="px-3 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider dark:text-gray-200">
-                        Pris
-                      </TableCell>
-                      <TableCell className="px-3 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider dark:text-gray-200 hidden sm:table-cell">
-                        Mængde
-                      </TableCell>
-                      <TableCell className="px-3 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider dark:text-gray-200 hidden md:table-cell">
-                        Tilbud Start
-                      </TableCell>
-                      <TableCell className="px-3 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider dark:text-gray-200 hidden md:table-cell">
-                        Tilbud Slut
-                      </TableCell>
-                      <TableCell className="px-3 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider dark:text-gray-200">
-                        Butik
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                    {meal.foodComponents.flatMap((fc, fcIndex) => {
-                      // Handle each item in the food component
-                      const foodItems = Array.isArray(fc.items)
-                        ? fc.items
-                        : [fc.items];
+            <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
+              <Table
+                aria-label="tilbudstabel"
+                className="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+                size="small"
+              >
+                <TableBody>
+                  {/* Pre-process and sort food components - Those with offers first */}
+                  {(() => {
+                    // Prepare the data with info about whether items have offers
+                    const sortedComponents = meal.foodComponents.flatMap(
+                      (fc) => {
+                        const foodItems = Array.isArray(fc.items)
+                          ? fc.items
+                          : [fc.items];
 
-                      return foodItems.map((item, itemIndex) => {
-                        // Check if we have offers for this item
-                        const offersForItem = groupedOffers[item] || [];
+                        return foodItems.map((item) => ({
+                          category: fc.category,
+                          item,
+                          hasOffers: Boolean(groupedOffers[item]?.length > 0),
+                          offers: groupedOffers[item] || [],
+                        }));
+                      }
+                    );
 
-                        if (offersForItem.length > 0) {
-                          // Render the row with offers
-                          return (
-                            <Row
-                              key={`${fcIndex}-${itemIndex}`}
-                              offers={offersForItem}
-                              foodComponentName={{
-                                category: fc.category,
-                                items: item,
-                              }}
-                            />
-                          );
-                        } else {
-                          // Render a row showing no offers
-                          return (
-                            <TableRow
-                              key={`${fcIndex}-${itemIndex}-no-offer`}
-                              className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                            >
-                              <TableCell className="px-3 py-4 whitespace-nowrap" />
-                              <TableCell
-                                component="th"
-                                scope="row"
-                                className="px-3 py-4 text-sm font-medium text-gray-900 dark:text-gray-200"
-                              >
-                                <div>
-                                  <span className="font-medium">{item}</span>
-                                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                                    {fc.category}
+                    // Sort: items with offers first, then alphabetically by name
+                    sortedComponents.sort((a, b) => {
+                      // First sort by whether it has offers
+                      if (a.hasOffers && !b.hasOffers) return -1;
+                      if (!a.hasOffers && b.hasOffers) return 1;
+
+                      // Then sort alphabetically by item name
+                      return a.item.localeCompare(b.item);
+                    });
+
+                    // Render the sorted components
+                    return sortedComponents.map((component, index) => {
+                      if (component.hasOffers) {
+                        // Render row with offers
+                        return (
+                          <Row
+                            key={`sorted-${index}`}
+                            offers={component.offers}
+                            foodComponentName={{
+                              category: component.category,
+                              items: component.item,
+                            }}
+                          />
+                        );
+                      } else {
+                        // Render row showing no offers
+                        return (
+                          <TableRow
+                            key={`sorted-${index}-no-offer`}
+                            className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b dark:border-gray-700"
+                          >
+                            <TableCell colSpan={7} className="p-0">
+                              <div className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/70 transition-colors min-h-[4.5rem]">
+                                <div className="grid grid-cols-1 sm:grid-cols-6 gap-3 p-3">
+                                  {/* Left side - ingredient info */}
+                                  <div className="sm:col-span-4 flex">
+                                    <div className="pr-3 pt-1">
+                                      <div className="w-8"></div>
+                                    </div>
+
+                                    <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                      <div className="flex items-start mb-1">
+                                        <div className="flex-1">
+                                          <span className="text-gray-700 dark:text-gray-300 font-medium line-clamp-2">
+                                            {component.item}
+                                          </span>
+                                        </div>
+                                      </div>
+                                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                                        {component.category}
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Right side - no offers message */}
+                                  <div className="sm:col-span-2 flex items-center justify-center">
+                                    <span className="inline-block px-3 py-1.5 bg-gray-100 dark:bg-gray-700 rounded-full text-xs text-gray-500 dark:text-gray-400">
+                                      Ingen aktuelle tilbud
+                                    </span>
                                   </div>
                                 </div>
-                              </TableCell>
-                              <TableCell
-                                colSpan={4}
-                                align="center"
-                                className="px-3 py-4 text-sm text-gray-500 dark:text-gray-400"
-                              >
-                                <span className="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">
-                                  Ingen aktuelle tilbud
-                                </span>
-                              </TableCell>
-                              <TableCell className="px-3 py-4 whitespace-nowrap" />
-                            </TableRow>
-                          );
-                        }
-                      });
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      }
+                    });
+                  })()}
+                </TableBody>
+              </Table>
             </div>
           </div>
         </div>
