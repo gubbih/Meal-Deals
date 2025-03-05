@@ -4,15 +4,18 @@ import { addMeal } from "../services/firebase";
 import { Meal } from "../models/Meal";
 import useFetchFoodComponents from "../hooks/useFetchFoodComponents";
 import MealForm from "../components/MealForm";
-import Toast from "../components/Toast";
 import Modal from "../components/Modal";
 import { useAuth } from "../services/firebase";
+import { MealFormValues } from "../schemas/mealSchemas";
+import { useToast } from "../contexts/ToastContext";
 
 function CreateMealPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { foodComponents, loading, error } = useFetchFoodComponents();
-  const [meal, setMeal] = useState<Meal>({
+  const { showToast } = useToast();
+
+  const initialMeal: Meal = {
     id: "",
     name: "",
     description: "",
@@ -24,59 +27,26 @@ function CreateMealPage() {
     mealCuisine: "",
     createdBy: user?.uid || "guest",
     createdAt: new Date().toISOString(),
-  });
-  useEffect(() => {
-    if (user) {
-      setMeal((prevMeal) => ({
-        ...prevMeal,
-        createdBy: user.uid,
-      }));
-    }
-  }, [user]);
-  const [toast, setToast] = useState<{
-    type: "success" | "error" | "warning";
-    message: string;
-  } | null>(null);
+  };
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [navigateAway, setNavigateAway] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setMeal({ ...meal, [name]: value });
-  };
-
-  const handleFoodComponentChange = (selectedOptions: any) => {
-    const formattedComponents = selectedOptions.map((option: any) => {
-      const { label, value, ...rest } = option;
-      return { ...rest, items: value };
-    });
-    setMeal({ ...meal, foodComponents: formattedComponents });
-  };
-
-  const handleCuisineChange = (selectedOption: any) => {
-    setMeal({ ...meal, mealCuisine: selectedOption.value });
-  };
-
-  const handleMealTypeChange = (selectedOption: any) => {
-    setMeal({ ...meal, mealType: selectedOption.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (formData: MealFormValues) => {
     try {
-      await addMeal(meal);
-      setToast({ type: "success", message: "Meal successfully added!" });
-      navigate("/", {
-        state: {
-          toast: { type: "success", message: "Meal successfully added!" },
-        },
-      });
+      // Combine form data with additional meal properties
+      const mealData: Meal = {
+        ...initialMeal,
+        ...formData,
+        createdBy: user?.uid || "guest",
+        createdAt: new Date().toISOString(),
+      };
+
+      await addMeal(mealData);
+      showToast("success", "Meal successfully added!");
+      navigate("/");
     } catch (error) {
-      setToast({ type: "error", message: "Failed to add meal!" });
+      showToast("error", "Failed to add meal!");
     }
   };
 
@@ -132,17 +102,12 @@ function CreateMealPage() {
         onConfirm={confirmNavigateAway}
         message="Er du sikker på at gå væk fra denne side, tingene er ikke gemt?"
       />
-      {toast && <Toast type={toast.type} message={toast.message} />}
-      <h1 className="text-xl justify-center flex font-semibold tracking-tight text-gray-900 dark:text-white">
+      <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
         Create New Meal
       </h1>
       <MealForm
-        meal={meal}
+        meal={initialMeal}
         foodComponentOptions={categoryOptions}
-        onInputChange={handleChange}
-        onFoodComponentChange={handleFoodComponentChange}
-        onCuisineChange={handleCuisineChange}
-        onMealTypeChange={handleMealTypeChange}
         onSubmit={handleSubmit}
         onCancel={handleCancel}
       />

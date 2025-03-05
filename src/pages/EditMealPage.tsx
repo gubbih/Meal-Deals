@@ -1,16 +1,19 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Meal } from "../models/Meal";
 import useFetchFoodComponents from "../hooks/useFetchFoodComponents";
 import MealForm from "../components/MealForm";
 import { useFetchMeal } from "../hooks/useFetchMeal";
 import useUpdateMeal from "../hooks/useUpdateMeal";
-import Toast from "../components/Toast";
 import Modal from "../components/Modal";
+import { MealFormValues } from "../schemas/mealSchemas";
+import { useToast } from "../contexts/ToastContext";
 
 function EditMealPage() {
   const { id } = useParams<{ id: string }>() || { id: "" };
   const navigate = useNavigate();
+  const { showToast } = useToast();
+
   const {
     foodComponents,
     loading: foodComponentsLoading,
@@ -29,12 +32,6 @@ function EditMealPage() {
     error: updateError,
   } = useUpdateMeal();
 
-  const [meal, setMeal] = useState<Meal | null>(null);
-  const [toast, setToast] = useState<{
-    type: "success" | "error" | "warning";
-    message: string;
-  } | null>(null);
-
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [navigateAway, setNavigateAway] = useState(false);
 
@@ -48,65 +45,26 @@ function EditMealPage() {
     setNavigateAway(true);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (navigateAway) {
       navigate("/");
     }
   }, [navigateAway, navigate]);
 
-  useEffect(() => {
+  const handleSubmit = async (data: MealFormValues) => {
     if (fetchedMeal) {
-      setMeal({
-        ...fetchedMeal,
-        mealCuisine: fetchedMeal.mealCuisine || "",
-        mealType: fetchedMeal.mealType || "",
-        foodComponents: fetchedMeal.foodComponents
-          ? fetchedMeal.foodComponents
-          : [],
-      });
-    }
-  }, [fetchedMeal]);
-
-  const onInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    if (meal) {
-      const { name, value } = e.target;
-      setMeal({ ...meal, [name]: value });
-    }
-  };
-
-  const onFoodComponentChange = (selectedOptions: any) => {
-    if (meal) {
-      const formattedComponents = selectedOptions.map((option: any) => ({
-        category: option.category,
-        items: option.value,
-      }));
-      setMeal({ ...meal, foodComponents: formattedComponents });
-    }
-  };
-
-  const handleSelectChange = (key: keyof Meal) => (selectedOption: any) => {
-    if (meal) {
-      setMeal({ ...meal, [key]: selectedOption.value });
-    }
-  };
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (meal) {
       try {
-        await updateMealData(meal);
-        setToast({ type: "success", message: "Meal successfully updated!" });
-        navigate("/", {
-          state: {
-            toast: { type: "success", message: "Meal successfully updated!" },
-          },
-        });
+        // Combine existing meal data with form updates
+        const updatedMeal: Meal = {
+          ...fetchedMeal,
+          ...data,
+        };
+
+        await updateMealData(updatedMeal);
+        showToast("success", "Meal successfully updated!");
+        navigate("/");
       } catch (error) {
-        setToast({ type: "error", message: "Failed to update meal!" });
+        showToast("error", "Failed to update meal!");
       }
     }
   };
@@ -129,7 +87,15 @@ function EditMealPage() {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-  if (!id) return <div>No meal found</div>;
+  if (!id || !fetchedMeal) return <div>No meal found</div>;
+
+  // Ensure meal has complete data for the form
+  const mealWithDefaults: Meal = {
+    ...fetchedMeal,
+    mealCuisine: fetchedMeal.mealCuisine || "",
+    mealType: fetchedMeal.mealType || "",
+    foodComponents: fetchedMeal.foodComponents || [],
+  };
 
   return (
     <div className="">
@@ -140,22 +106,15 @@ function EditMealPage() {
         message="Er du sikker på at gå væk fra denne side, tingene er ikke gemt?"
       />
       <div className="p-6">
-        {toast && <Toast type={toast.type} message={toast.message} />}
-        <h1 className="text-xl justify-center flex font-semibold tracking-tight text-gray-900 dark:text-white">
+        <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
           Edit Meal
         </h1>
-        {meal && (
-          <MealForm
-            meal={meal}
-            foodComponentOptions={categoryOptions}
-            onInputChange={onInputChange}
-            onFoodComponentChange={onFoodComponentChange}
-            onCuisineChange={handleSelectChange("mealCuisine")}
-            onMealTypeChange={handleSelectChange("mealType")}
-            onSubmit={onSubmit}
-            onCancel={handleCancel}
-          />
-        )}
+        <MealForm
+          meal={mealWithDefaults}
+          foodComponentOptions={categoryOptions}
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+        />
       </div>
     </div>
   );

@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 import useSignIn from "../hooks/useSignIn";
 import useSignUp from "../hooks/useSignUp";
-import Toast from "./Toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  loginSchema,
-  signupSchema,
-  LoginFormValues,
-  SignupFormValues,
-} from "../schemas/authSchemas";
+import { loginSchema, signupSchema } from "../schemas/authSchemas";
+import { useToast } from "../contexts/ToastContext";
 
 interface AuthFormProps {
   onSuccess?: () => void;
@@ -32,22 +27,21 @@ const AuthForm: React.FC<AuthFormProps> = ({
   } = useSignUp();
 
   const [isSignUp, setIsSignUp] = useState(initialIsSignUp);
-  const [toast, setToast] = useState<{
-    type: "success" | "error" | "warning";
-    message: string;
-  } | null>(null);
+  const { showToast } = useToast();
 
   // Login form
-  const loginForm = useForm<LoginFormValues>({
+  const loginForm = useForm({
     resolver: zodResolver(loginSchema),
     mode: "onBlur",
   });
 
   // Signup form
-  const signupForm = useForm<SignupFormValues>({
+  const signupForm = useForm({
     resolver: zodResolver(signupSchema),
     mode: "onBlur",
   });
+
+  // We use separate forms for login and signup
 
   // Switch between login and signup forms
   const toggleFormType = (newType: boolean) => {
@@ -57,39 +51,37 @@ const AuthForm: React.FC<AuthFormProps> = ({
   };
 
   // Handle login form submission
-  const handleLoginSubmit = async (data: LoginFormValues) => {
+  const handleLoginSubmit = async (data: any) => {
     try {
       await handleSignIn(data.email, data.password);
-      setToast({ type: "success", message: "Signed in successfully!" });
+      showToast("success", "Signed in successfully!");
       loginForm.reset();
 
       if (onSuccess) {
         onSuccess();
       }
     } catch (error) {
-      setToast({ type: "error", message: "Authentication failed." });
+      showToast("error", "Authentication failed.");
     }
   };
 
   // Handle signup form submission
-  const handleSignupSubmit = async (data: SignupFormValues) => {
+  const handleSignupSubmit = async (data: any) => {
     try {
       await handleSignUp(data.email, data.password, data.displayName);
-      setToast({ type: "success", message: "Account created successfully!" });
+      showToast("success", "Account created successfully!");
       signupForm.reset();
 
       if (onSuccess) {
         onSuccess();
       }
     } catch (error) {
-      setToast({ type: "error", message: "Authentication failed." });
+      showToast("error", "Authentication failed.");
     }
   };
 
   return (
     <div className="max-w-md mx-auto bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-      {toast && <Toast type={toast.type} message={toast.message} />}
-
       <div className="flex flex-col sm:flex-row sm:justify-between mb-6 gap-2">
         <button
           onClick={() => toggleFormType(false)}
