@@ -19,7 +19,6 @@ function UserPage() {
     await handleSignOut();
     setToast({ type: "success", message: "Signed out successfully!" });
   };
-
   // Filter favorite meals
   const favoriteMeals = user?.favoriteRecipes
     ? meals.filter((meal) => user.favoriteRecipes?.includes(meal.id))
