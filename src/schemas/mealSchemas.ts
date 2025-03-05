@@ -43,13 +43,13 @@ export const mealFormSchema = z.object({
       (components) => {
         // Check for duplicate categories and items
         const categoryItemPairs = components.map(
-          (c) => `${c.category}:${c.items.join(",")}`
+          (c) => `${c.category}:${c.items.join(",")}`,
         );
         return new Set(categoryItemPairs).size === categoryItemPairs.length;
       },
       {
         message: "Duplicate food components detected",
-      }
+      },
     ),
 });
 

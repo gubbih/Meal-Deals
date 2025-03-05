@@ -15,7 +15,7 @@ export function useCachedMeal(id: string) {
     {
       maxAge: CACHE_MAX_AGE,
       enabled: !!id, // Only fetch if an ID is provided
-    }
+    },
   );
   return {
     meal: data,
