@@ -19,7 +19,7 @@ function MealPage() {
   const [meal, setMeal] = useState<Meal | null>(null);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [groupedOffers, setGroupedOffers] = useState<Record<string, Offer[]>>(
-    {}
+    {},
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -101,7 +101,7 @@ function MealPage() {
             // Add only unique offers
             matchedOffers.forEach((offer) => {
               const isDuplicate = grouped[item].some(
-                (existingOffer) => existingOffer.id === offer.id
+                (existingOffer) => existingOffer.id === offer.id,
               );
 
               if (!isDuplicate) {
@@ -340,7 +340,7 @@ function MealPage() {
                           hasOffers: Boolean(groupedOffers[item]?.length > 0),
                           offers: groupedOffers[item] || [],
                         }));
-                      }
+                      },
                     );
 
                     // Sort: items with offers first, then alphabetically by name
