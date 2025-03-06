@@ -1,3 +1,9 @@
+export interface MatchedItem {
+  accuracy: number;
+  category: string;
+  name: string;
+}
+
 export interface Offer {
   id: string;
   name: string;
@@ -8,7 +14,7 @@ export interface Offer {
   offerStart: string;
   offerEnd: string;
   category: string[];
-  matchedItems: string[];
+  matchedItems: MatchedItem[];
   store: string;
   catelogid: string;
 }
