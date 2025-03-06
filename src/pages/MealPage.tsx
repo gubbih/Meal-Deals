@@ -19,7 +19,7 @@ function MealPage() {
   const [meal, setMeal] = useState<Meal | null>(null);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [groupedOffers, setGroupedOffers] = useState<Record<string, Offer[]>>(
-    {},
+    {}
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -84,11 +84,12 @@ function MealPage() {
           const matchedOffers = offers.filter((offer) => {
             if (!offer.matchedItems || !Array.isArray(offer.matchedItems))
               return false;
-            return offer.matchedItems.some(
-              (matchItem) =>
-                // Case-insensitive match
-                matchItem.toLowerCase() === item.toLowerCase(),
-            );
+
+            return offer.matchedItems.some((matchItem) => {
+              const matchItemName = matchItem?.name?.toString().toLowerCase();
+              const itemName = item?.toString().toLowerCase();
+              return matchItemName && itemName && matchItemName === itemName;
+            });
           });
 
           // Add matched offers to the grouped object
@@ -100,7 +101,7 @@ function MealPage() {
             // Add only unique offers
             matchedOffers.forEach((offer) => {
               const isDuplicate = grouped[item].some(
-                (existingOffer) => existingOffer.id === offer.id,
+                (existingOffer) => existingOffer.id === offer.id
               );
 
               if (!isDuplicate) {
@@ -115,6 +116,7 @@ function MealPage() {
       });
 
       // Store the grouped offers in state for rendering
+      console.log("grouped", grouped);
       setGroupedOffers(grouped);
     } catch (error) {
       console.error("Error processing offers:", error);
@@ -338,7 +340,7 @@ function MealPage() {
                           hasOffers: Boolean(groupedOffers[item]?.length > 0),
                           offers: groupedOffers[item] || [],
                         }));
-                      },
+                      }
                     );
 
                     // Sort: items with offers first, then alphabetically by name
