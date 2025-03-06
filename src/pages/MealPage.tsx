@@ -84,11 +84,12 @@ function MealPage() {
           const matchedOffers = offers.filter((offer) => {
             if (!offer.matchedItems || !Array.isArray(offer.matchedItems))
               return false;
-            return offer.matchedItems.some(
-              (matchItem) =>
-                // Case-insensitive match
-                matchItem.toLowerCase() === item.toLowerCase(),
-            );
+
+            return offer.matchedItems.some((matchItem) => {
+              const matchItemName = matchItem?.name?.toString().toLowerCase();
+              const itemName = item?.toString().toLowerCase();
+              return matchItemName && itemName && matchItemName === itemName;
+            });
           });
 
           // Add matched offers to the grouped object
@@ -115,6 +116,7 @@ function MealPage() {
       });
 
       // Store the grouped offers in state for rendering
+      console.log("grouped", grouped);
       setGroupedOffers(grouped);
     } catch (error) {
       console.error("Error processing offers:", error);
