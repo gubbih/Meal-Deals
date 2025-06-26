@@ -14,7 +14,7 @@
     "@testing-library/react": "^16.2.0",
     "@types/jest": "^29.5.14",
     "@types/react-router-dom": "^5.3.3",
-    "axios": "^1.7.9",
+    "axios": "^1.8.2",
     "babel-plugin-react-css-modules": "^5.2.6",
     "cra-template-typescript": "1.2.0",
     "dotenv": "^16.4.7",
