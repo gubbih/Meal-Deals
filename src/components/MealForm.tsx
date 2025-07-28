@@ -68,7 +68,7 @@ const MealForm: React.FC<MealFormProps> = ({
       label: `${component.category}: ${item}`,
       value: [item],
       category: component.category,
-    })),
+    }))
   );
 
   // Handle food component selection change
@@ -110,7 +110,7 @@ const MealForm: React.FC<MealFormProps> = ({
     // Map all food component options and mark those already selected as disabled
     return foodComponentOptions.map((option) => {
       const isSelected = existingComponents.has(
-        `${option.category}:${option.value[0]}`,
+        `${option.category}:${option.value[0]}`
       );
       return {
         ...option,
@@ -195,7 +195,7 @@ const MealForm: React.FC<MealFormProps> = ({
               options={cuisineOptions}
               value={
                 cuisineOptions.find(
-                  (option) => option.value === watch("mealCuisine"),
+                  (option) => option.value === watch("mealCuisine")
                 ) || null
               }
               onChange={handleCuisineChange}
@@ -220,7 +220,7 @@ const MealForm: React.FC<MealFormProps> = ({
               options={mealTypeOptions}
               value={
                 mealTypeOptions.find(
-                  (option) => option.value === watch("mealType"),
+                  (option) => option.value === watch("mealType")
                 ) || null
               }
               onChange={handleMealTypeChange}
@@ -251,6 +251,32 @@ const MealForm: React.FC<MealFormProps> = ({
             onChange={handleFoodComponentChange}
             placeholder="Vælg madkomponenter..."
             noOptionsMessage={() => "No matching food components"}
+            menuPortalTarget={document.body}
+            menuPosition="fixed"
+            styles={{
+              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+              menu: (base) => ({
+                ...base,
+                backgroundColor:
+                  "var(--tw-bg-opacity, 1) rgb(55 65 81 / var(--tw-bg-opacity))",
+              }),
+              menuList: (base) => ({
+                ...base,
+                backgroundColor: "transparent",
+              }),
+              option: (base, state) => ({
+                ...base,
+                backgroundColor: state.isSelected
+                  ? "rgb(75 85 99)"
+                  : state.isFocused
+                    ? "rgb(55 65 81)"
+                    : "transparent",
+                color: "rgb(229 231 235)",
+                "&:hover": {
+                  backgroundColor: "rgb(75 85 99)",
+                },
+              }),
+            }}
             formatOptionLabel={(option) => (
               <div className="flex items-center justify-between w-full">
                 <div>

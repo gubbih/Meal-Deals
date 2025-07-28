@@ -16,6 +16,13 @@
   .my-react-select-container .my-react-select__single-value {
     @apply text-gray-600 dark:text-gray-200;
   }
+  /*Changes the color of the input text when typing/searching*/
+  .my-react-select-container .my-react-select__input-container {
+    @apply text-gray-600 dark:text-gray-200;
+  }
+  .my-react-select-container .my-react-select__input input {
+    @apply text-gray-600 dark:text-gray-200 !important;
+  }
   /*Changes outline when selecting an option, only when is in focus*/
   .my-react-select-container .my-react-select__control--is-focused {
     @apply border-gray-500 hover:border-gray-500 dark:border-gray-400 dark:hover:border-gray-400 shadow-none;
@@ -24,9 +31,39 @@
   .my-react-select-container .my-react-select__menu {
     @apply bg-gray-100 dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-900;
   }
+  /*Ensures the menu list has the correct background*/
+  .my-react-select-container .my-react-select__menu-list {
+    @apply bg-gray-100 dark:bg-gray-700;
+  }
+  /*Ensures menu portal has correct background if used*/
+  .my-react-select-container .my-react-select__menu-portal {
+    @apply bg-gray-100 dark:bg-gray-700;
+  }
+  /*Force override any white backgrounds in the dropdown*/
+  .my-react-select-container .my-react-select__menu,
+  .my-react-select-container .my-react-select__menu-list,
+  .my-react-select-container .my-react-select__menu-portal {
+    @apply bg-gray-100 dark:bg-gray-700 !important;
+  }
+  /*Additional fix for portal background*/
+  .my-react-select__menu-portal > div {
+    @apply bg-gray-100 dark:bg-gray-700 !important;
+  }
+  /*Global fix for any react-select menu portal*/
+  [class*="react-select__menu-portal"] {
+    @apply bg-gray-100 dark:bg-gray-700 !important;
+  }
+  [class*="react-select__menu-portal"] > div {
+    @apply bg-gray-100 dark:bg-gray-700 !important;
+  }
+  /*Additional fix for any nested menu containers*/
+  .my-react-select-container .my-react-select__menu > div,
+  .my-react-select-container .my-react-select__menu-list > div {
+    @apply bg-transparent !important;
+  }
   /*Changes the whole dropdown menu*/
   .my-react-select-container .my-react-select__option {
-    @apply text-gray-600 dark:text-gray-200 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800;
+    @apply text-gray-600 dark:text-gray-200 bg-transparent hover:bg-gray-200 dark:hover:bg-gray-800 !important;
   }
   .my-react-select-container .my-react-select__option--is-disabled {
     @apply text-green-400 dark:text-green-500;
