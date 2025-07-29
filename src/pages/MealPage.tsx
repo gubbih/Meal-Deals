@@ -222,7 +222,7 @@ function MealPage() {
           onClick={() => navigate("/")}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
-          Hjem
+          Home
         </button>
       </div>
     );
@@ -236,7 +236,7 @@ function MealPage() {
           onClick={() => navigate("/")}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
-          Hjem
+          Home
         </button>
       </div>
     );
@@ -264,7 +264,7 @@ function MealPage() {
             <div>
               <div className="flex flex-wrap gap-2 mb-3">
                 {meal.mealType && (
-                  <Link to={`/mealType/${meal.mealType}`}>
+                  <Link to={`/meal-type/${meal.mealType}`}>
                     <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                       {meal.mealType}
                     </span>

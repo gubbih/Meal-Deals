@@ -4,16 +4,16 @@ import { useParams } from "react-router-dom";
 import MealCarousel from "../components/MealCarousel";
 import Toast from "../components/Toast";
 
-const CuisinePage: React.FC = () => {
-  const { cuisine } = useParams<{ cuisine: string }>();
-  const [toast, setToast] = useState<{
+const MealTypePage: React.FC = () => {
+  const { mealType } = useParams<{ mealType: string }>();
+  const [toast] = useState<{
     type: "success" | "error" | "warning";
     message: string;
   } | null>(null);
   const { meals, loading, error, refetch } = useCachedMeals();
 
-  const mealsByCuisine = meals
-    ? meals.filter((meal) => meal.mealCuisine === cuisine)
+  const mealsByType = meals
+    ? meals.filter((meal) => meal.mealType === mealType)
     : [];
 
   if (loading) {
@@ -25,6 +25,7 @@ const CuisinePage: React.FC = () => {
       </div>
     );
   }
+
   if (error) {
     return (
       <div className="p-4 text-red-600 dark:text-red-400">
@@ -38,10 +39,11 @@ const CuisinePage: React.FC = () => {
       </div>
     );
   }
-  if (cuisine === undefined) {
+
+  if (mealType === undefined) {
     return (
       <div className="p-4">
-        <p>No cuisine selected.</p>
+        <p>No meal type selected.</p>
       </div>
     );
   }
@@ -49,13 +51,13 @@ const CuisinePage: React.FC = () => {
   return (
     <div className="p-4">
       {toast && <Toast type={toast.type} message={toast.message} />}
-      {meals.filter((meal) => meal.mealCuisine === cuisine).length === 0 ? (
-        <p>No meals in this cuisine were found.</p>
+      {meals.filter((meal) => meal.mealType === mealType).length === 0 ? (
+        <p>No meals of this type were found.</p>
       ) : (
         <MealCarousel
-          meals={mealsByCuisine}
+          meals={mealsByType}
           title={
-            cuisine.charAt(0).toUpperCase() + cuisine.slice(1) + " Cuisine"
+            mealType.charAt(0).toUpperCase() + mealType.slice(1) + " Meals"
           }
         />
       )}
@@ -63,4 +65,4 @@ const CuisinePage: React.FC = () => {
   );
 };
 
-export default CuisinePage;
+export default MealTypePage;

@@ -14,6 +14,8 @@ import MyMeals from "./pages/MyMeals";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ToastProvider } from "./contexts/ToastContext";
 import { CacheProvider } from "./contexts/CacheContext";
+import CuisinePage from "./pages/CuisinePage";
+import MealTypePage from "./pages/MealTypePage";
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
                 <Route path="/create" element={<CreateMealPage />} />
                 <Route path="/user" element={<UserPage />} />
                 <Route path="/auth" element={<AuthPage />} />
+                <Route path="/cuisine/:cuisine" element={<CuisinePage />} />
+                <Route path="/meal-type/:mealType" element={<MealTypePage />} />
                 <Route path="*" element={<NotFoundPage />} />
                 <Route
                   path="/meal/:id/edit"

@@ -38,7 +38,7 @@ function Navigation() {
   };
 
   return (
-    <nav className="bg-white border-gray-200 dark:bg-gray-900 fixed w-full z-20 top-0 start-0">
+    <nav className="bg-white border-gray-200 dark:bg-gray-900 fixed w-full z-30 top-0 start-0">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-3">
