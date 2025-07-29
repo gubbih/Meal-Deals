@@ -98,7 +98,11 @@ function MealPage() {
   // Save selected stores to localStorage when they change
   useEffect(() => {
     if (selectedStores.length > 0) {
-      localStorage.setItem("selectedStores", JSON.stringify(selectedStores));
+      try {
+        localStorage.setItem("selectedStores", JSON.stringify(selectedStores));
+      } catch (error) {
+        console.error("Failed to save selected stores to localStorage:", error);
+      }
     }
   }, [selectedStores]);
 
