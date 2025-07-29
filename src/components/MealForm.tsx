@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { Meal } from "../models/Meal";
-import { FoodComponent } from "../models/FoodComponent";
 import { cuisines, mealsTypes } from "../assets/Arrays";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -45,7 +44,6 @@ const MealForm: React.FC<MealFormProps> = ({
     watch,
     setValue,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<MealFormValues>({
     resolver: zodResolver(mealFormSchema),
     defaultValues: {
@@ -60,7 +58,7 @@ const MealForm: React.FC<MealFormProps> = ({
   });
 
   // Get current food components value for the Select component
-  const foodComponents = watch("foodComponents") || [];
+  const foodComponents = useMemo(() => watch("foodComponents") || [], [watch]);
 
   // Convert the current form value to the format expected by Select
   const selectedFoodComponents = foodComponents.flatMap((component) =>
@@ -68,7 +66,7 @@ const MealForm: React.FC<MealFormProps> = ({
       label: `${component.category}: ${item}`,
       value: [item],
       category: component.category,
-    })),
+    }))
   );
 
   // Handle food component selection change
@@ -110,7 +108,7 @@ const MealForm: React.FC<MealFormProps> = ({
     // Map all food component options and mark those already selected as disabled
     return foodComponentOptions.map((option) => {
       const isSelected = existingComponents.has(
-        `${option.category}:${option.value[0]}`,
+        `${option.category}:${option.value[0]}`
       );
       return {
         ...option,
@@ -195,7 +193,7 @@ const MealForm: React.FC<MealFormProps> = ({
               options={cuisineOptions}
               value={
                 cuisineOptions.find(
-                  (option) => option.value === watch("mealCuisine"),
+                  (option) => option.value === watch("mealCuisine")
                 ) || null
               }
               onChange={handleCuisineChange}
@@ -220,7 +218,7 @@ const MealForm: React.FC<MealFormProps> = ({
               options={mealTypeOptions}
               value={
                 mealTypeOptions.find(
-                  (option) => option.value === watch("mealType"),
+                  (option) => option.value === watch("mealType")
                 ) || null
               }
               onChange={handleMealTypeChange}

@@ -1,0 +1,42 @@
+{
+  "navigation": {
+    "brand": "Meal Deals",
+    "home": "Home",
+    "cuisines": "Cuisines",
+    "mealTypes": "Meal Types",
+    "createMeal": "Create Meal",
+    "myMeals": "My Meals",
+    "favorites": "Favorites",
+    "admin": "Admin",
+    "profile": "Profile",
+    "profileSettings": "Profile Settings",
+    "signOut": "Sign Out",
+    "login": "Login",
+    "signUp": "Sign Up"
+  },
+  "myMeals": {
+    "title": "My Meals",
+    "addMeal": "Add Meal",
+    "noMealsFound": "No meals found.",
+    "addFirstMeal": "Add Your First Meal",
+    "waitingForUser": "Waiting for user...",
+    "deleteConfirm": "Are you sure you want to delete this meal?",
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "messages": {
+      "fetchError": "Failed to fetch meals.",
+      "deleteSuccess": "Meal deleted successfully!",
+      "deleteError": "Failed to delete meal."
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  }
+}

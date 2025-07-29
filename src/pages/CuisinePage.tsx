@@ -1,15 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import useCachedMeals from "../hooks/useCachedMeals";
 import { Link, useParams } from "react-router-dom";
 import MealCarousel from "../components/MealCarousel";
-import Toast from "../components/Toast";
 
 const CuisinePage: React.FC = () => {
   const { cuisine } = useParams<{ cuisine: string }>();
-  const [toast, setToast] = useState<{
-    type: "success" | "error" | "warning";
-    message: string;
-  } | null>(null);
   const { meals, loading, error, refetch } = useCachedMeals();
 
   const mealsByCuisine = meals
@@ -48,7 +43,6 @@ const CuisinePage: React.FC = () => {
 
   return (
     <div className="p-4">
-      {toast && <Toast type={toast.type} message={toast.message} />}
       {meals.filter((meal) => meal.mealCuisine === cuisine).length === 0 ? (
         <div className="text-center py-12">
           <h2 className="text-xl text-gray-600 dark:text-gray-400 mb-4">

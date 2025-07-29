@@ -16,10 +16,15 @@ import { ToastProvider } from "./contexts/ToastContext";
 import { CacheProvider } from "./contexts/CacheContext";
 import CuisinePage from "./pages/CuisinePage";
 import MealTypePage from "./pages/MealTypePage";
+import CacheDebugPanel from "./components/CacheDebugPanel";
 
 function App() {
   return (
-    <CacheProvider>
+    <CacheProvider
+      defaultMaxAge={5 * 60 * 1000} // 5 minutes
+      maxCacheSize={150} // Allow more cache items for better UX
+      persistToStorage={true} // Enable localStorage persistence
+    >
       <ToastProvider>
         <Router>
           <div className="bg-white dark:bg-gray-900 w-full flex flex-col min-h-screen">
@@ -60,6 +65,7 @@ function App() {
                 />
               </Routes>
             </div>
+            <CacheDebugPanel />
           </div>
         </Router>
       </ToastProvider>

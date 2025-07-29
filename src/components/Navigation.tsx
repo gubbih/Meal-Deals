@@ -9,18 +9,25 @@ import {
 } from "react-icons/io5";
 import { useAuth, signOut } from "../services/firebase";
 import { cuisines, mealsTypes } from "../assets/Arrays";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 function Navigation() {
+  const { t } = useTranslation();
   const [dark, setDark] = useState(() => {
     return localStorage.getItem("darkMode") === "true";
   });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cuisineDropdownOpen, setCuisineDropdownOpen] = useState(false);
   const [mealTypeDropdownOpen, setMealTypeDropdownOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [cuisineTimeout, setCuisineTimeout] = useState<NodeJS.Timeout | null>(
     null,
   );
   const [mealTypeTimeout, setMealTypeTimeout] = useState<NodeJS.Timeout | null>(
+    null,
+  );
+  const [profileTimeout, setProfileTimeout] = useState<NodeJS.Timeout | null>(
     null,
   );
   const { user } = useAuth();
@@ -82,18 +89,34 @@ function Navigation() {
     setMealTypeTimeout(timeout);
   };
 
+  const handleProfileMouseEnter = () => {
+    if (profileTimeout) {
+      clearTimeout(profileTimeout);
+      setProfileTimeout(null);
+    }
+    setProfileDropdownOpen(true);
+  };
+
+  const handleProfileMouseLeave = () => {
+    const timeout = setTimeout(() => {
+      setProfileDropdownOpen(false);
+    }, 100); // 100ms delay
+    setProfileTimeout(timeout);
+  };
+
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 fixed w-full z-30 top-0 start-0">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-3">
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-            Cheap Meals
+            {t('navigation.brand')}
           </span>
         </Link>
 
-        {/* Dark Mode Toggle - Always Visible */}
+        {/* Dark Mode Toggle and Language Switcher - Always Visible */}
         <div className="flex items-center space-x-3">
+          <LanguageSwitcher />
           <button
             onClick={darkModeHandler}
             className={`relative inline-flex items-center h-6 rounded-full w-11 focus:outline-none ${
@@ -137,7 +160,7 @@ function Navigation() {
                 className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Home
+                {t('navigation.home')}
               </Link>
             </li>
 
@@ -149,7 +172,7 @@ function Navigation() {
                 onClick={() => setCuisineDropdownOpen(!cuisineDropdownOpen)}
                 className="flex items-center py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
-                Cuisines
+                {t('navigation.cuisines')}
                 <IoChevronDown className="ml-1 h-4 w-4" />
               </button>
               <div
@@ -183,7 +206,7 @@ function Navigation() {
                 onClick={() => setMealTypeDropdownOpen(!mealTypeDropdownOpen)}
                 className="flex items-center py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
-                Meal Types
+                {t('navigation.mealTypes')}
                 <IoChevronDown className="ml-1 h-4 w-4" />
               </button>
               <div
@@ -209,88 +232,109 @@ function Navigation() {
               </div>
             </li>
 
-            {/* User-specific routes - Only visible when logged in */}
+            {/* Create Meal - Always visible when logged in */}
             {user && (
-              <>
-                <li>
-                  <Link
-                    to="/create"
-                    className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Create Meal
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/MyMeals"
-                    className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    My Meals
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/favorites"
-                    className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Favorites
-                  </Link>
-                </li>
-              </>
-            )}
-
-            {/* Admin route - Only visible to admin users */}
-            {user && user.isAdmin && (
               <li>
                 <Link
-                  to="/admin"
+                  to="/create"
                   className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Admin
+                  {t('navigation.createMeal')}
                 </Link>
               </li>
             )}
 
-            {/* Authentication actions */}
-            {user ? (
-              <>
-                <li>
+            {/* Profile Dropdown - Only visible when logged in */}
+            {user && (
+              <li className="relative group">
+                <button
+                  onMouseEnter={handleProfileMouseEnter}
+                  onMouseLeave={handleProfileMouseLeave}
+                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                  className="flex items-center py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                >
+                  {t('navigation.profile')}
+                  <IoChevronDown className="ml-1 h-4 w-4" />
+                </button>
+                <div
+                  className={`${
+                    profileDropdownOpen ? "block" : "hidden"
+                  } absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-20`}
+                  onMouseEnter={handleProfileMouseEnter}
+                  onMouseLeave={handleProfileMouseLeave}
+                >
                   <Link
                     to="/user"
-                    className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setProfileDropdownOpen(false);
+                    }}
                   >
-                    Profile
+                    {t('navigation.profileSettings')}
                   </Link>
-                </li>
-                <li>
-                  <button
-                    onClick={handleSignOut}
-                    className="block py-2 px-3 text-red-600 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-red-700 md:p-0 dark:text-red-500 md:dark:hover:text-red-500 dark:hover:bg-gray-700 dark:hover:text-red-500 md:dark:hover:bg-transparent"
+                  <Link
+                    to="/MyMeals"
+                    className="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setProfileDropdownOpen(false);
+                    }}
                   >
-                    Sign Out
+                    {t('navigation.myMeals')}
+                  </Link>
+                  <Link
+                    to="/favorites"
+                    className="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setProfileDropdownOpen(false);
+                    }}
+                  >
+                    {t('navigation.favorites')}
+                  </Link>
+                  {user.isAdmin && (
+                    <Link
+                      to="/admin"
+                      className="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-t border-gray-200 dark:border-gray-600"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        setProfileDropdownOpen(false);
+                      }}
+                    >
+                      {t('navigation.admin')}
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => {
+                      handleSignOut();
+                      setProfileDropdownOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-red-600 dark:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700 border-t border-gray-200 dark:border-gray-600"
+                  >
+                    {t('navigation.signOut')}
                   </button>
-                </li>
-              </>
-            ) : (
+                </div>
+              </li>
+            )}
+
+            {/* Authentication actions - Only show login/signup when not logged in */}
+            {!user && (
               <li className="flex flex-col sm:flex-row sm:space-x-6">
                 <Link
                   to="/auth"
                   className="block py-2 px-5 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent mb-2 sm:mb-0"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Login
+                  {t('navigation.login')}
                 </Link>
                 <Link
                   to="/auth?signup=true"
                   className="block py-2 px-5 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent mb-2 sm:mb-0"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Sign Up
+                  {t('navigation.signUp')}
                 </Link>
               </li>
             )}

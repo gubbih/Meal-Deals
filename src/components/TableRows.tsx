@@ -35,12 +35,6 @@ export function Row({
         ? foodComponentName.items[0]
         : "Unknown item";
 
-  // Calculate price per unit (if possible)
-  const pricePerUnit =
-    firstOffer.weight > 0
-      ? (firstOffer.price / firstOffer.weight).toFixed(2)
-      : null;
-
   return (
     <React.Fragment>
       {/* Main row - Two column layout from Design 8 */}
@@ -193,7 +187,7 @@ export function Row({
                           </svg>
                           <span>
                             {DateTime.fromISO(offer.offerStart).toFormat(
-                              "d MMM",
+                              "d MMM"
                             )}{" "}
                             til{" "}
                             {DateTime.fromISO(offer.offerEnd).toFormat("d MMM")}
