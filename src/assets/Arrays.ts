@@ -8,7 +8,6 @@ export const cuisines = [
   "French",
   "Japanese",
   "Mexican",
-  "None",
 ];
 
 export const mealsTypes = [

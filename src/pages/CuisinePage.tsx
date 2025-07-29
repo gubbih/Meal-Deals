@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import useCachedMeals from "../hooks/useCachedMeals";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import MealCarousel from "../components/MealCarousel";
 import Toast from "../components/Toast";
 
@@ -50,7 +50,22 @@ const CuisinePage: React.FC = () => {
     <div className="p-4">
       {toast && <Toast type={toast.type} message={toast.message} />}
       {meals.filter((meal) => meal.mealCuisine === cuisine).length === 0 ? (
-        <p>No meals in this cuisine were found.</p>
+        <div className="text-center py-12">
+          <h2 className="text-xl text-gray-600 dark:text-gray-400 mb-4">
+            No {cuisine} meals yet, sadly. :(
+          </h2>
+          <p className="text-gray-500 dark:text-gray-500">
+            Start exploring meals and add some to your favorites!
+          </p>
+          <div className="text-center mt-8 sm:mt-12">
+            <Link
+              to="/create"
+              className="inline-block bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition"
+            >
+              Create Your Own Meal
+            </Link>
+          </div>
+        </div>
       ) : (
         <MealCarousel
           meals={mealsByCuisine}
