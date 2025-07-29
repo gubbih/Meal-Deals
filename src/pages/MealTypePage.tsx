@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import useCachedMeals from "../hooks/useCachedMeals";
-import { Link, useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import MealCarousel from "../components/MealCarousel";
 import Toast from "../components/Toast";
 
-const CuisinePage: React.FC = () => {
-  const { cuisine } = useParams<{ cuisine: string }>();
-  const [toast, setToast] = useState<{
+const MealTypePage: React.FC = () => {
+  const { mealType } = useParams<{ mealType: string }>();
+  const [toast] = useState<{
     type: "success" | "error" | "warning";
     message: string;
   } | null>(null);
   const { meals, loading, error, refetch } = useCachedMeals();
 
-  const mealsByCuisine = meals
-    ? meals.filter((meal) => meal.mealCuisine === cuisine)
+  const mealsByType = meals
+    ? meals.filter((meal) => meal.mealType === mealType)
     : [];
 
   if (loading) {
@@ -25,6 +25,7 @@ const CuisinePage: React.FC = () => {
       </div>
     );
   }
+
   if (error) {
     return (
       <div className="p-4 text-red-600 dark:text-red-400">
@@ -38,10 +39,11 @@ const CuisinePage: React.FC = () => {
       </div>
     );
   }
-  if (cuisine === undefined) {
+
+  if (mealType === undefined) {
     return (
       <div className="p-4">
-        <p>No cuisine selected.</p>
+        <p>No meal type selected.</p>
       </div>
     );
   }
@@ -49,10 +51,10 @@ const CuisinePage: React.FC = () => {
   return (
     <div className="p-4">
       {toast && <Toast type={toast.type} message={toast.message} />}
-      {meals.filter((meal) => meal.mealCuisine === cuisine).length === 0 ? (
+      {meals.filter((meal) => meal.mealType === mealType).length === 0 ? (
         <div className="text-center py-12">
           <h2 className="text-xl text-gray-600 dark:text-gray-400 mb-4">
-            No {cuisine} meals yet, sadly. :(
+            No {mealType} meals yet, sadly. :(
           </h2>
           <p className="text-gray-500 dark:text-gray-500">
             Start exploring meals and add some to your favorites!
@@ -68,9 +70,9 @@ const CuisinePage: React.FC = () => {
         </div>
       ) : (
         <MealCarousel
-          meals={mealsByCuisine}
+          meals={mealsByType}
           title={
-            cuisine.charAt(0).toUpperCase() + cuisine.slice(1) + " Cuisine"
+            mealType.charAt(0).toUpperCase() + mealType.slice(1) + " Meals"
           }
         />
       )}
@@ -78,4 +80,4 @@ const CuisinePage: React.FC = () => {
   );
 };
 
-export default CuisinePage;
+export default MealTypePage;

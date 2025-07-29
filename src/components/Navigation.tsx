@@ -1,13 +1,28 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { IoMoon, IoSunny, IoMenu, IoClose } from "react-icons/io5";
+import {
+  IoMoon,
+  IoSunny,
+  IoMenu,
+  IoClose,
+  IoChevronDown,
+} from "react-icons/io5";
 import { useAuth, signOut } from "../services/firebase";
+import { cuisines, mealsTypes } from "../assets/Arrays";
 
 function Navigation() {
   const [dark, setDark] = useState(() => {
     return localStorage.getItem("darkMode") === "true";
   });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [cuisineDropdownOpen, setCuisineDropdownOpen] = useState(false);
+  const [mealTypeDropdownOpen, setMealTypeDropdownOpen] = useState(false);
+  const [cuisineTimeout, setCuisineTimeout] = useState<NodeJS.Timeout | null>(
+    null,
+  );
+  const [mealTypeTimeout, setMealTypeTimeout] = useState<NodeJS.Timeout | null>(
+    null,
+  );
   const { user } = useAuth();
 
   React.useEffect(() => {
@@ -37,8 +52,38 @@ function Navigation() {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
+  const handleCuisineMouseEnter = () => {
+    if (cuisineTimeout) {
+      clearTimeout(cuisineTimeout);
+      setCuisineTimeout(null);
+    }
+    setCuisineDropdownOpen(true);
+  };
+
+  const handleCuisineMouseLeave = () => {
+    const timeout = setTimeout(() => {
+      setCuisineDropdownOpen(false);
+    }, 100); // 100ms delay
+    setCuisineTimeout(timeout);
+  };
+
+  const handleMealTypeMouseEnter = () => {
+    if (mealTypeTimeout) {
+      clearTimeout(mealTypeTimeout);
+      setMealTypeTimeout(null);
+    }
+    setMealTypeDropdownOpen(true);
+  };
+
+  const handleMealTypeMouseLeave = () => {
+    const timeout = setTimeout(() => {
+      setMealTypeDropdownOpen(false);
+    }, 100); // 100ms delay
+    setMealTypeTimeout(timeout);
+  };
+
   return (
-    <nav className="bg-white border-gray-200 dark:bg-gray-900 fixed w-full z-20 top-0 start-0">
+    <nav className="bg-white border-gray-200 dark:bg-gray-900 fixed w-full z-30 top-0 start-0">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-3">
@@ -94,6 +139,74 @@ function Navigation() {
               >
                 Home
               </Link>
+            </li>
+
+            {/* Cuisines Dropdown - Always Visible */}
+            <li className="relative group">
+              <button
+                onMouseEnter={handleCuisineMouseEnter}
+                onMouseLeave={handleCuisineMouseLeave}
+                onClick={() => setCuisineDropdownOpen(!cuisineDropdownOpen)}
+                className="flex items-center py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+              >
+                Cuisines
+                <IoChevronDown className="ml-1 h-4 w-4" />
+              </button>
+              <div
+                className={`${
+                  cuisineDropdownOpen ? "block" : "hidden"
+                } absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-20`}
+                onMouseEnter={handleCuisineMouseEnter}
+                onMouseLeave={handleCuisineMouseLeave}
+              >
+                {cuisines.map((cuisine) => (
+                  <Link
+                    key={cuisine}
+                    to={`/cuisine/${cuisine}`}
+                    className="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setCuisineDropdownOpen(false);
+                    }}
+                  >
+                    {cuisine}
+                  </Link>
+                ))}
+              </div>
+            </li>
+
+            {/* Meal Types Dropdown - Always Visible */}
+            <li className="relative group">
+              <button
+                onMouseEnter={handleMealTypeMouseEnter}
+                onMouseLeave={handleMealTypeMouseLeave}
+                onClick={() => setMealTypeDropdownOpen(!mealTypeDropdownOpen)}
+                className="flex items-center py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+              >
+                Meal Types
+                <IoChevronDown className="ml-1 h-4 w-4" />
+              </button>
+              <div
+                className={`${
+                  mealTypeDropdownOpen ? "block" : "hidden"
+                } absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-20`}
+                onMouseEnter={handleMealTypeMouseEnter}
+                onMouseLeave={handleMealTypeMouseLeave}
+              >
+                {mealsTypes.map((mealType) => (
+                  <Link
+                    key={mealType}
+                    to={`/meal-type/${mealType}`}
+                    className="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setMealTypeDropdownOpen(false);
+                    }}
+                  >
+                    {mealType}
+                  </Link>
+                ))}
+              </div>
             </li>
 
             {/* User-specific routes - Only visible when logged in */}

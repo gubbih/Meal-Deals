@@ -1,66 +1,89 @@
 import React, { useEffect, useState } from "react";
-import { getMeal } from "../services/firebase";
 import { Meal } from "../models/Meal";
 import useFavoriteMeals from "../hooks/useFavoriteMeals";
 import Toast from "../components/Toast";
+import MealCard from "../components/MealCard";
+import useCachedMeals from "../hooks/useCachedMeals";
+import { useAuth } from "../services/firebase";
 
 const FavoritesPage: React.FC = () => {
-  const { favorites } = useFavoriteMeals();
+  const { user, loading: authLoading } = useAuth();
+  const { error } = useFavoriteMeals();
+  const { meals, loading: mealsLoading } = useCachedMeals();
   const [favoriteMeals, setFavoriteMeals] = useState<Meal[]>([]);
-  const [toast, setToast] = useState<{
-    type: "success" | "error" | "warning";
-    message: string;
-  } | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (favorites.length > 0) {
-      fetchFavoriteMeals();
+    if (authLoading) {
+      // Still checking auth state, keep loading
+      return;
     }
-  });
 
-  const fetchFavoriteMeals = async () => {
-    try {
-      const meals = await Promise.all(favorites.map((id) => getMeal(id)));
-      setFavoriteMeals(meals);
-    } catch (error) {
-      setToast({
-        type: "error",
-        message: "Failed to fetch favorite meals.",
-      });
+    if (user && meals.length > 0) {
+      // Filter meals to only include those in user's favoriteRecipes
+      const favoriteIds = user.favoriteRecipes || [];
+      const filteredFavoriteMeals = meals.filter((meal) =>
+        favoriteIds.includes(meal.id),
+      );
+      setFavoriteMeals(filteredFavoriteMeals);
+      setLoading(false);
+    } else if (!user) {
+      setFavoriteMeals([]);
+      setLoading(false);
+    } else if (!mealsLoading && meals.length === 0) {
+      setLoading(false);
     }
-  };
+  }, [user, meals, mealsLoading, authLoading]);
+
+  if (!user && !authLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            My Favorite Meals
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Please log in to view your favorite meals.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading || mealsLoading || authLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+          My Favorite Meals
+        </h1>
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 dark:border-white"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-4">
-      {toast && <Toast type={toast.type} message={toast.message} />}
-      <h1 className="text-2xl font-bold mb-4">Favorite Meals</h1>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+        My Favorite Meals
+      </h1>
+
+      {error && <Toast message={error} type="error" />}
+
       {favoriteMeals.length === 0 ? (
-        <p>No favorite meals found.</p>
+        <div className="text-center py-12">
+          <h2 className="text-xl text-gray-600 dark:text-gray-400 mb-4">
+            No favorite meals yet
+          </h2>
+          <p className="text-gray-500 dark:text-gray-500">
+            Start exploring meals and add some to your favorites!
+          </p>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {favoriteMeals.map((meal) => (
-            <div key={meal.id} className="flex justify-center">
-              <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                <img
-                  src={meal.imagePath}
-                  alt={meal.name}
-                  className="rounded-t-md h-64 w-full object-cover"
-                />
-                <div className="p-4">
-                  <h2 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                    {meal.name}
-                  </h2>
-                </div>
-                <div className="flex items-center justify-between px-2 m-2">
-                  <a
-                    href={`/meal/${meal.id}`}
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                  >
-                    View Meal
-                  </a>
-                </div>
-              </div>
-            </div>
+            <MealCard key={meal.id} meal={meal} user={user} />
           ))}
         </div>
       )}

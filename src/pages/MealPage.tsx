@@ -34,6 +34,8 @@ function MealPage() {
     type: "success" | "error" | "warning" | "info";
     message: string;
   } | null>(null);
+  const [selectedStores, setSelectedStores] = useState<string[]>([]);
+  const [availableStores, setAvailableStores] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,12 +66,63 @@ function MealPage() {
     fetchData();
   }, [id]);
 
+  // Extract unique stores from offers
+  useEffect(() => {
+    if (offers.length > 0) {
+      const uniqueStores = [
+        ...new Set(offers.map((offer) => offer.store)),
+      ].sort();
+      setAvailableStores(uniqueStores);
+
+      // Try to load saved store preferences, otherwise select all
+      let savedStores: string | null = null;
+      try {
+        savedStores = localStorage.getItem("selectedStores");
+      } catch (error) {
+        console.error("Error accessing localStorage:", error);
+      }
+      if (savedStores) {
+        try {
+          const parsed = JSON.parse(savedStores);
+          // Only include stores that exist in current offers
+          const validStores = parsed.filter((store: string) =>
+            uniqueStores.includes(store),
+          );
+          setSelectedStores(
+            validStores.length > 0 ? validStores : uniqueStores,
+          );
+        } catch {
+          setSelectedStores(uniqueStores);
+        }
+      } else {
+        setSelectedStores(uniqueStores);
+      }
+    }
+  }, [offers]);
+
+  // Save selected stores to localStorage when they change
+  useEffect(() => {
+    if (selectedStores.length > 0) {
+      try {
+        localStorage.setItem("selectedStores", JSON.stringify(selectedStores));
+      } catch (error) {
+        console.error("Failed to save selected stores to localStorage:", error);
+      }
+    }
+  }, [selectedStores]);
+
   // Process food components and match with offers
   useEffect(() => {
     if (!meal?.foodComponents || offers.length === 0) return;
 
     try {
       const grouped: Record<string, Offer[]> = {};
+
+      // Filter offers by selected stores
+      const filteredOffers =
+        selectedStores.length > 0
+          ? offers.filter((offer) => selectedStores.includes(offer.store))
+          : offers;
 
       // Process each food component
       meal.foodComponents.forEach((fc) => {
@@ -80,8 +133,8 @@ function MealPage() {
 
         // Process each item in the food component
         fc.items.forEach((item) => {
-          // Find offers that match this specific item
-          const matchedOffers = offers.filter((offer) => {
+          // Find offers that match this specific item from filtered offers
+          const matchedOffers = filteredOffers.filter((offer) => {
             if (!offer.matchedItems || !Array.isArray(offer.matchedItems))
               return false;
 
@@ -122,7 +175,7 @@ function MealPage() {
       console.error("Error processing offers:", error);
       setError("Error processing offers");
     }
-  }, [meal, offers]);
+  }, [meal, offers, selectedStores]);
 
   const handleToggleFavorite = async () => {
     if (!user) {
@@ -178,7 +231,7 @@ function MealPage() {
           onClick={() => navigate("/")}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
-          Hjem
+          Home
         </button>
       </div>
     );
@@ -192,7 +245,7 @@ function MealPage() {
           onClick={() => navigate("/")}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
-          Hjem
+          Home
         </button>
       </div>
     );
@@ -220,7 +273,7 @@ function MealPage() {
             <div>
               <div className="flex flex-wrap gap-2 mb-3">
                 {meal.mealType && (
-                  <Link to={`/mealType/${meal.mealType}`}>
+                  <Link to={`/meal-type/${meal.mealType}`}>
                     <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                       {meal.mealType}
                     </span>
@@ -294,6 +347,63 @@ function MealPage() {
           </div>
         </div>
       </div>
+
+      {/* Store Filter Section */}
+      {availableStores.length > 0 && (
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-6 mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            Filter by Supermarket
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setSelectedStores(availableStores)}
+              className="px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-800 dark:text-blue-200 rounded-md transition-colors"
+            >
+              Select All
+            </button>
+            <button
+              onClick={() => setSelectedStores([])}
+              className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-md transition-colors"
+            >
+              Clear All
+            </button>
+            <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
+              {availableStores.map((store) => {
+                const storeOfferCount = offers.filter(
+                  (offer) => offer.store === store,
+                ).length;
+                return (
+                  <button
+                    key={store}
+                    onClick={() => {
+                      if (selectedStores.includes(store)) {
+                        setSelectedStores(
+                          selectedStores.filter((s) => s !== store),
+                        );
+                      } else {
+                        setSelectedStores([...selectedStores, store]);
+                      }
+                    }}
+                    className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                      selectedStores.includes(store)
+                        ? "bg-green-100 hover:bg-green-200 dark:bg-green-900 dark:hover:bg-green-800 text-green-800 dark:text-green-200 border-2 border-green-300 dark:border-green-700"
+                        : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border-2 border-transparent"
+                    }`}
+                    title={`${storeOfferCount} offers available`}
+                  >
+                    {store} ({storeOfferCount})
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+            {selectedStores.length === 0
+              ? "No stores selected - showing all offers"
+              : `Showing offers from ${selectedStores.length} of ${availableStores.length} stores`}
+          </div>
+        </div>
+      )}
 
       {/* Main content grid */}
 
@@ -422,35 +532,48 @@ function MealPage() {
 
         {/* Right column - meal details */}
         <div>
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 sticky top-20">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
             <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white border-b pb-2 border-gray-200 dark:border-gray-700">
               Ingredients
             </h2>
 
             <div className="space-y-5">
-              {meal.foodComponents.map((fc, index) => (
-                <div key={index} className="mb-4">
-                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-                    {fc.category}
-                  </h3>
-                  <ul className="list-disc list-inside space-y-1 pl-2">
-                    {Array.isArray(fc.items) ? (
-                      fc.items.map((item, itemIndex) => (
-                        <li
-                          key={itemIndex}
-                          className="text-gray-700 dark:text-gray-300"
-                        >
-                          {item}
-                        </li>
-                      ))
-                    ) : (
-                      <li className="text-gray-700 dark:text-gray-300">
-                        {fc.items}
-                      </li>
-                    )}
-                  </ul>
-                </div>
-              ))}
+              {(() => {
+                // Group items by category
+                const groupedByCategory: Record<string, string[]> = {};
+
+                meal.foodComponents.forEach((fc) => {
+                  if (!groupedByCategory[fc.category]) {
+                    groupedByCategory[fc.category] = [];
+                  }
+
+                  if (Array.isArray(fc.items)) {
+                    groupedByCategory[fc.category].push(...fc.items);
+                  } else {
+                    groupedByCategory[fc.category].push(fc.items);
+                  }
+                });
+
+                return Object.entries(groupedByCategory).map(
+                  ([category, items]) => (
+                    <div key={category} className="mb-4">
+                      <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                        {category}
+                      </h3>
+                      <ul className="list-disc list-inside space-y-1 pl-2">
+                        {items.map((item, itemIndex) => (
+                          <li
+                            key={itemIndex}
+                            className="text-gray-700 dark:text-gray-300"
+                          >
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ),
+                );
+              })()}
             </div>
 
             <div className="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
