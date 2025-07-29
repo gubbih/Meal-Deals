@@ -75,7 +75,12 @@ function MealPage() {
       setAvailableStores(uniqueStores);
 
       // Try to load saved store preferences, otherwise select all
-      const savedStores = localStorage.getItem("selectedStores");
+      let savedStores: string | null = null;
+      try {
+        savedStores = localStorage.getItem("selectedStores");
+      } catch (error) {
+        console.error("Error accessing localStorage:", error);
+      }
       if (savedStores) {
         try {
           const parsed = JSON.parse(savedStores);
