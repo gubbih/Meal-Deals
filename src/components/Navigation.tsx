@@ -18,10 +18,10 @@ function Navigation() {
   const [cuisineDropdownOpen, setCuisineDropdownOpen] = useState(false);
   const [mealTypeDropdownOpen, setMealTypeDropdownOpen] = useState(false);
   const [cuisineTimeout, setCuisineTimeout] = useState<NodeJS.Timeout | null>(
-    null
+    null,
   );
   const [mealTypeTimeout, setMealTypeTimeout] = useState<NodeJS.Timeout | null>(
-    null
+    null,
   );
   const { user } = useAuth();
 

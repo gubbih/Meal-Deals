@@ -23,7 +23,7 @@ const FavoritesPage: React.FC = () => {
       // Filter meals to only include those in user's favoriteRecipes
       const favoriteIds = user.favoriteRecipes || [];
       const filteredFavoriteMeals = meals.filter((meal) =>
-        favoriteIds.includes(meal.id)
+        favoriteIds.includes(meal.id),
       );
       setFavoriteMeals(filteredFavoriteMeals);
       setLoading(false);

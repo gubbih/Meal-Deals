@@ -13,7 +13,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
   const { addToFavorites, removeFromFavorites, favorites } = useFavoriteMeals();
   const handleToggleFavorite = async (
     mealId: string,
-    event: React.MouseEvent
+    event: React.MouseEvent,
   ) => {
     event.preventDefault();
     event.stopPropagation();

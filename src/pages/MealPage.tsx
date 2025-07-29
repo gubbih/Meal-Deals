@@ -19,7 +19,7 @@ function MealPage() {
   const [meal, setMeal] = useState<Meal | null>(null);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [groupedOffers, setGroupedOffers] = useState<Record<string, Offer[]>>(
-    {}
+    {},
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -81,10 +81,10 @@ function MealPage() {
           const parsed = JSON.parse(savedStores);
           // Only include stores that exist in current offers
           const validStores = parsed.filter((store: string) =>
-            uniqueStores.includes(store)
+            uniqueStores.includes(store),
           );
           setSelectedStores(
-            validStores.length > 0 ? validStores : uniqueStores
+            validStores.length > 0 ? validStores : uniqueStores,
           );
         } catch {
           setSelectedStores(uniqueStores);
@@ -145,7 +145,7 @@ function MealPage() {
             // Add only unique offers
             matchedOffers.forEach((offer) => {
               const isDuplicate = grouped[item].some(
-                (existingOffer) => existingOffer.id === offer.id
+                (existingOffer) => existingOffer.id === offer.id,
               );
 
               if (!isDuplicate) {
@@ -361,7 +361,7 @@ function MealPage() {
             <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
               {availableStores.map((store) => {
                 const storeOfferCount = offers.filter(
-                  (offer) => offer.store === store
+                  (offer) => offer.store === store,
                 ).length;
                 return (
                   <button
@@ -369,7 +369,7 @@ function MealPage() {
                     onClick={() => {
                       if (selectedStores.includes(store)) {
                         setSelectedStores(
-                          selectedStores.filter((s) => s !== store)
+                          selectedStores.filter((s) => s !== store),
                         );
                       } else {
                         setSelectedStores([...selectedStores, store]);
@@ -441,7 +441,7 @@ function MealPage() {
                           hasOffers: Boolean(groupedOffers[item]?.length > 0),
                           offers: groupedOffers[item] || [],
                         }));
-                      }
+                      },
                     );
 
                     // Sort: items with offers first, then alphabetically by name
@@ -562,7 +562,7 @@ function MealPage() {
                         ))}
                       </ul>
                     </div>
-                  )
+                  ),
                 );
               })()}
             </div>
