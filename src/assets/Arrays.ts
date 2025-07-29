@@ -1,5 +1,4 @@
 export const cuisines = [
-  "Ukendt",
   "Danish",
   "Italian",
   "Chinese",
@@ -8,6 +7,25 @@ export const cuisines = [
   "French",
   "Japanese",
   "Mexican",
+  "Greek",
+  "Spanish",
+  "American",
+  "Korean",
+  "Turkish",
+  "Lebanese",
+  "British",
+  "German",
+  "Portuguese",
+  "Swedish",
+  "Norwegian",
+  "Irish",
+  "Scottish",
+  "Welsh",
+  "Brazilian",
+  "Argentinian",
+  "Colombian",
+  "Jamaican",
+  "Andet",
 ];
 
 export const mealsTypes = [

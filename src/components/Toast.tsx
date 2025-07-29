@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { ToastContainer, toast, Slide, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -8,7 +8,7 @@ interface ToastProps {
 }
 
 const Toast: React.FC<ToastProps> = ({ type, message }) => {
-  const showToast = () => {
+  const showToast = useCallback(() => {
     switch (type) {
       case "success":
         toast.success(message, {
@@ -71,11 +71,11 @@ const Toast: React.FC<ToastProps> = ({ type, message }) => {
         });
         break;
     }
-  };
+  }, [type, message]);
 
   React.useEffect(() => {
     showToast();
-  }, [type, message]);
+  }, [type, message, showToast]);
 
   return <ToastContainer />;
 };

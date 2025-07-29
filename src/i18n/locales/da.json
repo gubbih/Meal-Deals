@@ -1,0 +1,42 @@
+{
+  "navigation": {
+    "brand": "Meal Deals",
+    "home": "Hjem",
+    "cuisines": "Køkkener",
+    "mealTypes": "Måltidstyper",
+    "createMeal": "Opret Måltid",
+    "myMeals": "Mine Måltider",
+    "favorites": "Favoritter",
+    "admin": "Administrator",
+    "profile": "Profil",
+    "profileSettings": "Profil Indstillinger",
+    "signOut": "Log Ud",
+    "login": "Log Ind",
+    "signUp": "Tilmeld"
+  },
+  "myMeals": {
+    "title": "Mine Måltider",
+    "addMeal": "Tilføj Måltid",
+    "noMealsFound": "Ingen måltider fundet.",
+    "addFirstMeal": "Tilføj Dit Første Måltid",
+    "waitingForUser": "Venter på bruger...",
+    "deleteConfirm": "Er du sikker på, at du vil slette dette måltid?",
+    "actions": {
+      "view": "Se",
+      "edit": "Rediger",
+      "delete": "Slet"
+    },
+    "messages": {
+      "fetchError": "Kunne ikke hente måltider.",
+      "deleteSuccess": "Måltid slettet med succes!",
+      "deleteError": "Kunne ikke slette måltid."
+    }
+  },
+  "common": {
+    "loading": "Indlæser...",
+    "error": "Fejl",
+    "success": "Succes",
+    "cancel": "Annuller",
+    "confirm": "Bekræft"
+  }
+}

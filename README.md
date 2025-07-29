@@ -18,13 +18,13 @@ This project is a work-in-progress for building a simple meal planning applicati
   - [x] Implement proper validation for authentication forms
   - Add password reset functionality
 
-- [ ] **Meal management**
+- [x] **Meal management**
 
   - Complete the CRUD operations for meals
   - Fix redirect after create/update
   - Implement loading states on all pages
 
-- [ ] **Firebase security**
+- [x] **Firebase security**
 
   - Implement proper Firebase security rules
   - Set up admin SDK correctly
@@ -35,13 +35,13 @@ This project is a work-in-progress for building a simple meal planning applicati
 
 ### Medium Priority
 
-- [ ] **UX improvements**
+- [x] **UX improvements**
 
   - Fix navigation UI issues (create button position)
   - Improve mobile responsiveness
   - Add loading indicators for asynchronous operations
 
-- [ ] **Backend optimization**
+- [x] **Backend optimization**
 
   - Fix the duplicate offers issue from ABC stores
   - Implement a solution for efficiently handling multiple store catalogs
@@ -67,11 +67,6 @@ This project is a work-in-progress for building a simple meal planning applicati
 
   - Enhance search functionality for meals
   - Add more sophisticated filtering options
-
-- [ ] **Social features**
-
-  - Implement sharing functionality
-  - Allow users to comment on meals
 
 - [ ] **Content management**
   - Add predefined recipes/meals

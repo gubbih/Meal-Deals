@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useAuth, getMealByUser, deleteMeal } from "../services/firebase";
 import { Meal } from "../models/Meal";
 import { Link } from "react-router-dom";
 import Modal from "../components/Modal";
 import Toast from "../components/Toast";
 import { useCache } from "../contexts/CacheContext";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 
 const MyMeals = () => {
   const { user } = useAuth();
   const { invalidate } = useCache();
+  const { t } = useTranslation();
   const [meals, setMeals] = useState<Meal[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [mealToDelete, setMealToDelete] = useState<string | null>(null);
@@ -17,20 +20,20 @@ const MyMeals = () => {
     message: string;
   } | null>(null);
 
-  const fetchMeals = async () => {
+  const fetchMeals = useCallback(async () => {
     if (!user) return;
     try {
       const usersMeal = await getMealByUser(user.uid);
       setMeals(usersMeal);
     } catch (error) {
       console.error("Error fetching meals:", error);
-      setToast({ type: "error", message: "Failed to fetch meals." });
+      setToast({ type: "error", message: t('myMeals.messages.fetchError') });
     }
-  };
+  }, [user, t]);
 
   useEffect(() => {
     fetchMeals();
-  }, [user]); // Only re-run when user changes
+  }, [fetchMeals]);
 
   const handleDelete = (mealId: string) => {
     setMealToDelete(mealId);
@@ -46,12 +49,12 @@ const MyMeals = () => {
         // Also invalidate the specific meal's cache
         invalidate(`meal-${mealToDelete}`);
 
-        setToast({ type: "success", message: "Meal deleted successfully!" });
+        setToast({ type: "success", message: t('myMeals.messages.deleteSuccess') });
         // Ensure we fetch meals after successful deletion
         await fetchMeals();
       } catch (error) {
         console.error("Error deleting meal:", error);
-        setToast({ type: "error", message: "Failed to delete meal." });
+        setToast({ type: "error", message: t('myMeals.messages.deleteError') });
       } finally {
         setIsModalVisible(false);
         setMealToDelete(null);
@@ -68,7 +71,7 @@ const MyMeals = () => {
     return (
       <div className="flex items-center justify-center h-64 bg-gray-50 dark:bg-gray-900">
         <div className="animate-pulse text-gray-600 dark:text-gray-300">
-          Waiting for user...
+          {t('myMeals.waitingForUser')}
         </div>
       </div>
     );
@@ -80,25 +83,28 @@ const MyMeals = () => {
 
       <div className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-            My Meals
-          </h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+              {t('myMeals.title')}
+            </h1>
+            <LanguageSwitcher />
+          </div>
           <Link
             to="/create"
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700"
           >
-            Add Meal
+            {t('myMeals.addMeal')}
           </Link>
         </div>
 
         {meals.length === 0 ? (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center">
-            <p className="text-gray-600 dark:text-gray-300">No meals found.</p>
+            <p className="text-gray-600 dark:text-gray-300">{t('myMeals.noMealsFound')}</p>
             <Link
               to="/create"
               className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
             >
-              Add Your First Meal
+              {t('myMeals.addFirstMeal')}
             </Link>
           </div>
         ) : (
@@ -138,19 +144,19 @@ const MyMeals = () => {
                       to={`/meal/${meal.id}`}
                       className="flex-1 text-center px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700"
                     >
-                      View
+                      {t('myMeals.actions.view')}
                     </Link>
                     <Link
                       to={`/meal/${meal.id}/edit`}
                       className="flex-1 text-center px-3 py-2 bg-amber-600 text-white text-sm font-medium rounded-md hover:bg-amber-700"
                     >
-                      Edit
+                      {t('myMeals.actions.edit')}
                     </Link>
                     <button
                       onClick={() => handleDelete(meal.id)}
                       className="flex-1 px-3 py-2 text-white text-sm font-medium rounded-md bg-red-600 hover:bg-red-700"
                     >
-                      Delete
+                      {t('myMeals.actions.delete')}
                     </button>
                   </div>
                 </div>
@@ -164,7 +170,7 @@ const MyMeals = () => {
         isVisible={isModalVisible}
         onClose={cancelDelete}
         onConfirm={confirmDelete}
-        message="Are you sure you want to delete this meal?"
+        message={t('myMeals.deleteConfirm')}
       />
     </div>
   );
