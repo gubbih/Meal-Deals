@@ -57,7 +57,7 @@ export const getMeals = async (): Promise<Meal[]> => {
         name: child.val().name,
         description: child.val().description,
         price: child.val().price,
-        priceCurrency: child.val().priceCurrency,
+        priceCurrency: child.val().valuta,
         imagePath: child.val().imagePath,
         foodComponents: child.val().foodComponents,
         mealCuisine: child.val()?.mealCuisine,
@@ -88,7 +88,7 @@ export const getMeal = async (id: string): Promise<Meal> => {
       name: snapshot.val().name,
       description: snapshot.val().description,
       price: snapshot.val().price,
-      priceCurrency: snapshot.val().priceCurrency,
+      priceCurrency: snapshot.val().valuta,
       imagePath: snapshot.val().imagePath,
       foodComponents: snapshot.val().foodComponents,
       mealCuisine: snapshot.val()?.mealCuisine,
@@ -119,7 +119,7 @@ export const getMealByUser = async (userId: string): Promise<Meal[]> => {
         name: child.val().name,
         description: child.val().description,
         price: child.val().price,
-        priceCurrency: child.val().priceCurrency,
+        priceCurrency: child.val().valuta,
         imagePath: child.val().imagePath,
         foodComponents: child.val().foodComponents,
         mealCuisine: child.val()?.mealCuisine,
@@ -141,7 +141,7 @@ export const getMealByUser = async (userId: string): Promise<Meal[]> => {
 
 export const addFavoriteMeal = async (
   userId: string,
-  mealId: string,
+  mealId: string
 ): Promise<void> => {
   const userPrefsRef = ref(db, `users/${userId}/favoriteRecipes`);
 
@@ -199,7 +199,7 @@ export const getOffers = async (): Promise<Offer[]> => {
     snapshot.forEach((child) => {
       const data: Offer = {
         id: child.key as string,
-        name: child.val().name,
+        name: child.val().original_name,
         store: child.val().store,
         price: child.val().price,
         priceCurrency: child.val().valuta,
@@ -207,12 +207,16 @@ export const getOffers = async (): Promise<Offer[]> => {
         weightUnit: child.val().weight_unit,
         offerStart: child.val().run_from,
         offerEnd: child.val().run_till,
-        category: child.val().categories,
-        matchedItems: child.val().matchedItems,
-        catelogid: child.val().catelog_id,
+        category: child.val().category,
+        matchedItems: child.val().original_matched_text,
+        catelogid: child.val().catalog_id,
+        productId: child.val().product_id,
+        isOrganic: child.val().is_organic,
+        confidence: child.val().confidence,
       };
       offerList.push(data);
     });
+    console.log("Fetched offers:", offerList);
     return Object.values(offerList) as Offer[];
   } catch (error) {
     console.error("Error fetching offers:", error);
@@ -230,7 +234,7 @@ export const addMeal = async (meal: Meal): Promise<void> => {
     name: meal.name,
     description: meal.description,
     price: meal.price,
-    priceCurrency: meal.priceCurrency,
+    valuta: meal.priceCurrency,
     imagePath: meal.imagePath,
     foodComponents: meal.foodComponents,
     mealCuisine: meal.mealCuisine,
@@ -247,7 +251,7 @@ export const addMeal = async (meal: Meal): Promise<void> => {
 export const updateMealImage = async (
   mealId: string,
   imagepath: string,
-  image: File,
+  image: File
 ): Promise<string> => {
   //upload image to storage
 
@@ -261,7 +265,7 @@ export const updateMeal = async (meal: Meal, image?: File): Promise<void> => {
     name: meal.name,
     description: meal.description,
     price: meal.price,
-    priceCurrency: meal.priceCurrency,
+    valuta: meal.priceCurrency,
     imagePath: meal.imagePath,
     foodComponents: meal.foodComponents,
     mealCuisine: meal.mealCuisine,
@@ -302,7 +306,7 @@ export const deleteMeal = async (id: string): Promise<void> => {
 
 export const removeFavoriteMeal = async (
   userId: string,
-  mealId: string,
+  mealId: string
 ): Promise<void> => {
   const userPrefsRef = ref(db, `users/${userId}/favoriteRecipes`);
 
@@ -329,13 +333,13 @@ export const removeFavoriteMeal = async (
 export const signUp = async (
   email: string,
   password: string,
-  displayName: string,
+  displayName: string
 ): Promise<User> => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
-      password,
+      password
     );
     await updateProfile(userCredential.user, { displayName });
 

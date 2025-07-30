@@ -17,4 +17,7 @@ export interface Offer {
   matchedItems: MatchedItem[];
   store: string;
   catelogid: string;
+  productId: string;
+  isOrganic: boolean;
+  confidence: number;
 }
