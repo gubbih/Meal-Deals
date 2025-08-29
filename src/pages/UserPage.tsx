@@ -5,8 +5,11 @@ import useFetchMeals from "../hooks/useFetchMeals";
 import { Link } from "react-router-dom";
 import Toast from "../components/Toast";
 import AuthForm from "../components/AuthForm";
+import { useTranslation } from "react-i18next";
+import { translateMealType } from "../utils/translationHelpers";
 
 function UserPage() {
+  const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
   const { handleSignOut, loading: signOutLoading } = useSignOut();
   const { meals } = useFetchMeals();
@@ -17,7 +20,7 @@ function UserPage() {
 
   const handleUserSignOut = async () => {
     await handleSignOut();
-    setToast({ type: "success", message: "Signed out successfully!" });
+    setToast({ type: "success", message:  t("mealPage.toast.signedOut") });
   };
   // Filter favorite meals
   const favoriteMeals = user?.favoriteRecipes
@@ -35,23 +38,23 @@ function UserPage() {
   }
 
   return (
-    <div className="w-full max-w-4xl1 mx-auto p-4">
+    <div className="w-full max-w-4xl mx-auto p-4">
       {toast && <Toast type={toast.type} message={toast.message} />}
 
       <h1 className="text-2xl sm:text-3xl font-semibold mb-6 text-center dark:text-white">
-        User Profile
+        {t("userPage.userProfile")}
       </h1>
 
       {user ? (
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 sm:p-6 lg:col-span-2">
             <h2 className="text-xl font-semibold mb-4 dark:text-white">
-              Profile Information
+              {t("userPage.profileInformation")}
             </h2>
             <div className="space-y-4">
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Display Name
+                  {t("userPage.displayName")}
                 </p>
                 <p className="font-medium dark:text-white">
                   {user.displayName || "Not set"}
@@ -59,44 +62,44 @@ function UserPage() {
               </div>
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Email
+                  {t("userPage.email")}
                 </p>
                 <p className="font-medium dark:text-white">{user.email}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Account Created
+                  {t("userPage.accountCreated")}
                 </p>
                 <p className="font-medium dark:text-white">
                   {user.createdAt
                     ? new Date(user.createdAt).toLocaleDateString()
-                    : "Unknown"}
+                    : t("userPage.unknown")}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Last Login
+                  {t("userPage.lastLogin")}
                 </p>
                 <p className="font-medium dark:text-white">
                   {user.lastLogin
                     ? new Date(user.lastLogin).toLocaleDateString()
-                    : "Unknown"}
+                    : t("userPage.unknown")}
                 </p>
               </div>
-
-              <button
-                onClick={handleUserSignOut}
-                disabled={signOutLoading}
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
-              >
-                {signOutLoading ? "Signing Out..." : "Sign Out"}
-              </button>
             </div>
+
+            <button
+              onClick={handleUserSignOut}
+              disabled={signOutLoading}
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
+            >
+              {signOutLoading ? t("userPage.signingOut") : t("userPage.signOut")}
+            </button>
           </div>
 
           <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 sm:p-6 lg:col-span-3">
             <h2 className="text-xl font-semibold mb-4 dark:text-white">
-              Favorite Meals
+              {t("userPage.favoriteMeals")}
             </h2>
             {favoriteMeals.length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-h-[600px] overflow-y-auto pr-2">
@@ -110,15 +113,14 @@ function UserPage() {
                       <img
                         src={meal.imagePath}
                         alt={meal.name}
-                        className="h-full w-full object-cover"
-                      />
+                        className="h-full w-full object-cover" />
                     </div>
                     <div className="flex-1">
                       <h3 className="font-medium text-base text-gray-900 dark:text-white line-clamp-2">
                         {meal.name}
                       </h3>
                       <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        {meal.mealType}
+                        {translateMealType(meal.mealType, t)}
                       </p>
                     </div>
                   </Link>
@@ -126,12 +128,12 @@ function UserPage() {
               </div>
             ) : (
               <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                <p>You haven't added any favorites yet.</p>
+                <p>{t("favoritesPage.noFavoritesYet")}</p>
                 <Link
                   to="/"
                   className="inline-block mt-4 text-blue-600 dark:text-blue-400 hover:underline"
                 >
-                  Browse meals to add favorites
+                  {t("favoritesPage.startExploring")}
                 </Link>
               </div>
             )}

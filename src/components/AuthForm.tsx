@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import useSignIn from "../hooks/useSignIn";
 import useSignUp from "../hooks/useSignUp";
 import { useForm } from "react-hook-form";
@@ -15,6 +16,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
   onSuccess,
   initialIsSignUp = false,
 }) => {
+  const { t } = useTranslation();
   const {
     handleSignIn,
     loading: signInLoading,
@@ -54,14 +56,14 @@ const AuthForm: React.FC<AuthFormProps> = ({
   const handleLoginSubmit = async (data: any) => {
     try {
       await handleSignIn(data.email, data.password);
-      showToast("success", "Signed in successfully!");
+      showToast("success", t("authForm.toast.signInSuccess"));
       loginForm.reset();
 
       if (onSuccess) {
         onSuccess();
       }
     } catch (error) {
-      showToast("error", "Authentication failed.");
+      showToast("error", t("authForm.toast.authFailed"));
     }
   };
 
@@ -69,14 +71,14 @@ const AuthForm: React.FC<AuthFormProps> = ({
   const handleSignupSubmit = async (data: any) => {
     try {
       await handleSignUp(data.email, data.password, data.displayName);
-      showToast("success", "Account created successfully!");
+      showToast("success", t("authForm.toast.signUpSuccess"));
       signupForm.reset();
 
       if (onSuccess) {
         onSuccess();
       }
     } catch (error) {
-      showToast("error", "Authentication failed.");
+      showToast("error", t("authForm.toast.authFailed"));
     }
   };
 
@@ -92,7 +94,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
           }`}
           type="button"
         >
-          Sign In
+          {t("authForm.signIn")}
         </button>
         <button
           onClick={() => toggleFormType(true)}
@@ -103,7 +105,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
           }`}
           type="button"
         >
-          Create Account
+          {t("authForm.createAccount")}
         </button>
       </div>
 
@@ -118,7 +120,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
               htmlFor="displayName"
               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
-              Display Name
+              {t("authForm.displayName")}
             </label>
             <input
               id="displayName"
@@ -138,7 +140,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
               htmlFor="signup-email"
               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
-              Email
+              {t("authForm.email")}
             </label>
             <input
               id="signup-email"
@@ -158,7 +160,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
               htmlFor="signup-password"
               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
-              Password
+              {t("authForm.password")}
             </label>
             <input
               id="signup-password"
@@ -178,7 +180,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
             disabled={signUpLoading}
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mt-6"
           >
-            {signUpLoading ? "Creating Account..." : "Create Account"}
+            {signUpLoading ? t("authForm.creatingAccount") : t("authForm.createAccount")}
           </button>
 
           {signUpError && (
@@ -198,7 +200,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
               htmlFor="login-email"
               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
-              Email
+              {t("authForm.email")}
             </label>
             <input
               id="login-email"
@@ -218,7 +220,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
               htmlFor="login-password"
               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
-              Password
+              {t("authForm.password")}
             </label>
             <input
               id="login-password"
@@ -238,7 +240,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
             disabled={signInLoading}
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mt-6"
           >
-            {signInLoading ? "Signing In..." : "Sign In"}
+            {signInLoading ? t("authForm.signingIn") : t("authForm.signIn")}
           </button>
 
           {signInError && (

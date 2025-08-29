@@ -38,5 +38,193 @@
     "success": "Success",
     "cancel": "Cancel",
     "confirm": "Confirm"
+  },
+  "mealPage": {
+    "description": "Description",
+    "ingredients": "Ingredients",
+    "details": "Details",
+    "mealType": "Meal Type:",
+    "mealCuisine": "Cuisine:",
+    "editMeal": "Edit Meal",
+    "filterBySupermarket": "Filter by Supermarket",
+    "selectAll": "Select All",
+    "clearAll": "Clear All",
+    "noStoresSelected": "No stores selected - showing all offers",
+    "showingOffers": "Showing offers from {{selected}} of {{total}} stores",
+    "offersOnIngredients": "Offers on Ingredients",
+    "offersAvailable": "{{count}} offers available",
+    "favorite": {
+      "add": "Add to Favorites",
+      "remove": "Remove Favorite"
+    },
+    "toast": {
+      "signInToFavorite": "Please sign in to add favorites",
+      "addedFavorite": "Added to favorites",
+      "removedFavorite": "Removed from favorites",
+      "failedFavorite": "Failed to update favorites",
+      "noEditPermission": "You don't have permission to edit this meal",
+      "signedIn": "You are signed in",
+      "signedOut": "You are signed out"
+    },
+    "errors": {
+      "noMealId": "No meal ID provided",
+      "fetchingData": "Error fetching data",
+      "localStorage": "Error accessing localStorage",
+      "saveStores": "Failed to save selected stores to localStorage",
+      "processingOffers": "Error processing offers",
+      "mealNotFound": "Meal not found"
+    }
+  },
+  "authForm": {
+    "signIn": "Sign In",
+    "createAccount": "Create Account",
+    "displayName": "Display Name",
+    "email": "Email",
+    "password": "Password",
+    "creatingAccount": "Creating Account...",
+    "signingIn": "Signing In...",
+    "toast": {
+      "signInSuccess": "Signed in successfully!",
+      "signUpSuccess": "Account created successfully!",
+      "authFailed": "Authentication failed."
+    }
+  },
+  "cuisines": {
+    "Danish": "Danish",
+    "Italian": "Italian", 
+    "Chinese": "Chinese",
+    "Thai": "Thai",
+    "Indian": "Indian",
+    "French": "French",
+    "Japanese": "Japanese",
+    "Mexican": "Mexican",
+    "Greek": "Greek",
+    "Spanish": "Spanish",
+    "American": "American",
+    "Korean": "Korean",
+    "Turkish": "Turkish",
+    "Lebanese": "Lebanese",
+    "British": "British",
+    "German": "German",
+    "Portuguese": "Portuguese",
+    "Swedish": "Swedish",
+    "Norwegian": "Norwegian",
+    "Irish": "Irish",
+    "Scottish": "Scottish",
+    "Welsh": "Welsh",
+    "Brazilian": "Brazilian",
+    "Argentinian": "Argentinian",
+    "Colombian": "Colombian",
+    "Jamaican": "Jamaican",
+    "Andet": "Other"
+  },
+  "mealTypes": {
+    "Morgenmad": "Breakfast",
+    "Frokost": "Lunch",
+    "Aftensmad": "Dinner",
+    "Dessert": "Dessert",
+    "Snack": "Snack",
+    "Drikke": "Drink"
+  },
+  "modal": {
+    "closeModal": "Close modal",
+    "confirmYes": "Yes, I'm sure",
+    "confirmNo": "No, cancel"
+  },
+  "mealForm": {
+    "mealName": "Meal Name",
+    "enterMealName": "Enter meal name",
+    "description": "Description",
+    "enterDescription": "Enter meal description",
+    "imageUrl": "Image URL",
+    "enterImageUrl": "Enter image URL",
+    "cuisine": "Cuisine",
+    "selectCuisine": "Select cuisine",
+    "mealType": "Meal Type",
+    "selectMealType": "Select meal type",
+    "ingredients": "Ingredients",
+    "selectIngredients": "Select ingredients",
+    "cancel": "Cancel",
+    "saveMeal": "Save Meal",
+    "createMeal": "Create Meal"
+  },
+  "mealCarousel": {
+    "noFavoritesYet": "You haven't added any favorite meals yet.",
+    "noMealsAvailable": "No meals available."
+  },
+  "loadingSpinner": {
+    "loading": "Loading..."
+  },
+  "userPage": {
+    "unknown": "Unknown",
+    "favoriteMeals": "Favorite Meals",
+    "userProfile": "User Profile",
+    "profileInformation": "Profile Information",
+    "displayName": "Display Name",
+    "notSet": "Not set",
+    "email": "Email",
+    "accountCreated": "Account Created",
+    "lastLogin": "Last Login",
+    "signOut": "Sign Out",
+    "signingOut": "Signing Out...",
+    "favoritesMeals": "Favorite Meals",
+    "noFavoritesYet": "You haven't added any favorites yet.",
+    "browseMealsToAdd": "Browse meals to add favorites"
+  },
+  "notFoundPage": {
+    "pageNotFound": "Page Not Found",
+    "sorryMessage": "Sorry, we couldn't find the page you're looking for. It might have been removed or doesn't exist.",
+    "goBackHome": "Go back to homepage"
+  },
+  "mealTypePage": {
+    "loading": "Loading...",
+    "tryAgain": "Try Again",
+    "noMealTypeSelected": "No meal type selected.",
+    "noMealsYet": "No {{mealType}} meals yet, sadly. :(",
+    "startExploring": "Start exploring meals and add some to your favorites!",
+    "createYourOwn": "Create Your Own Meal",
+    "mealsTitle": "{{mealType}} Meals"
+  },
+  "homePage": {
+    "clearCache": "Clear Cache & Refresh Data (Dev Only)",
+    "title": "Cheap Meals: Delicious Cooking Made Affordable",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nulla sit amet aliquam lacinia, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl.",
+    "getStarted": "Get Started",
+    "yourFavoriteMeals": "Your Favorite Meals",
+    "exploreMeals": "Explore Meals",
+    "createYourOwnMeal": "Create Your Own Meal"
+  },
+  "favoritesPage": {
+    "myFavoriteMeals": "My Favorite Meals",
+    "pleaseLogIn": "Please log in to view your favorite meals.",
+    "noFavoritesYet": "No favorite meals yet",
+    "startExploring": "Start exploring meals and add some to your favorites!"
+  },
+  "editMealPage": {
+    "editMeal": "Edit Meal",
+    "loading": "loading...",
+    "confirmLeave": "Are you sure you want to leave this page? Changes are not saved.",
+    "mealNotFound": "Meal not found",
+    "noPermission": "You don't have permission to edit this meal",
+    "errorOccurred": "An error occurred",
+    "mustBeLoggedIn": "You must be logged in to edit a meal",
+    "home": "Home"
+  },
+  "cuisinePage": {
+    "loading": "Loading...",
+    "tryAgain": "Try Again",
+    "noCuisineSelected": "No cuisine selected.",
+    "noMealsYet": "No {{cuisine}} meals yet, sadly. :(",
+    "startExploring": "Start exploring meals and add some to your favorites!",
+    "createYourOwn": "Create Your Own Meal",
+    "cuisineTitle": "{{cuisine}} Cuisine"
+  },
+  "createMealPage": {
+    "createNewMeal": "Create New Meal",
+    "confirmLeave": "Are you sure you want to leave this page? Changes are not saved.",
+    "mustBeLoggedIn": "You must be logged in to create a meal",
+    "mealSuccessfullyAdded": "Meal successfully added!",
+    "failedToAddMeal": "Failed to add meal!",
+    "errorLoadingData": "Error loading food components data"
   }
 }

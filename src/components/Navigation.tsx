@@ -192,7 +192,7 @@ function Navigation() {
                       setCuisineDropdownOpen(false);
                     }}
                   >
-                    {cuisine}
+                    {t(`cuisines.${cuisine}`)}
                   </Link>
                 ))}
               </div>
@@ -226,7 +226,7 @@ function Navigation() {
                       setMealTypeDropdownOpen(false);
                     }}
                   >
-                    {mealType}
+                    {t(`mealTypes.${mealType}`)}
                   </Link>
                 ))}
               </div>

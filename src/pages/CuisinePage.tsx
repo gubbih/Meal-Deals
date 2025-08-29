@@ -1,9 +1,11 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import useCachedMeals from "../hooks/useCachedMeals";
 import { Link, useParams } from "react-router-dom";
 import MealCarousel from "../components/MealCarousel";
 
 const CuisinePage: React.FC = () => {
+  const { t } = useTranslation();
   const { cuisine } = useParams<{ cuisine: string }>();
   const { meals, loading, error, refetch } = useCachedMeals();
 
@@ -15,7 +17,7 @@ const CuisinePage: React.FC = () => {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-pulse text-gray-600 dark:text-gray-300">
-          Loading...
+          {t("cuisinePage.loading")}
         </div>
       </div>
     );
@@ -28,7 +30,7 @@ const CuisinePage: React.FC = () => {
           onClick={() => refetch()}
           className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
-          Try Again
+          {t("cuisinePage.tryAgain")}
         </button>
       </div>
     );
@@ -36,7 +38,7 @@ const CuisinePage: React.FC = () => {
   if (cuisine === undefined) {
     return (
       <div className="p-4">
-        <p>No cuisine selected.</p>
+        <p>{t("cuisinePage.noCuisineSelected")}</p>
       </div>
     );
   }
@@ -46,26 +48,24 @@ const CuisinePage: React.FC = () => {
       {meals.filter((meal) => meal.mealCuisine === cuisine).length === 0 ? (
         <div className="text-center py-12">
           <h2 className="text-xl text-gray-600 dark:text-gray-400 mb-4">
-            No {cuisine} meals yet, sadly. :(
+            {t("cuisinePage.noMealsYet", { cuisine })}
           </h2>
           <p className="text-gray-500 dark:text-gray-500">
-            Start exploring meals and add some to your favorites!
+            {t("cuisinePage.startExploring")}
           </p>
           <div className="text-center mt-8 sm:mt-12">
             <Link
               to="/create"
               className="inline-block bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition"
             >
-              Create Your Own Meal
+              {t("cuisinePage.createYourOwn")}
             </Link>
           </div>
         </div>
       ) : (
         <MealCarousel
           meals={mealsByCuisine}
-          title={
-            cuisine.charAt(0).toUpperCase() + cuisine.slice(1) + " Cuisine"
-          }
+          title={t("cuisinePage.cuisineTitle", { cuisine: cuisine.charAt(0).toUpperCase() + cuisine.slice(1) })}
         />
       )}
     </div>

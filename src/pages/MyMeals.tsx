@@ -7,6 +7,7 @@ import Toast from "../components/Toast";
 import { useCache } from "../contexts/CacheContext";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
+import { translateCuisine, translateMealType } from "../utils/translationHelpers";
 
 const MyMeals = () => {
   const { user } = useAuth();
@@ -87,7 +88,6 @@ const MyMeals = () => {
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
               {t('myMeals.title')}
             </h1>
-            <LanguageSwitcher />
           </div>
           <Link
             to="/create"
@@ -129,12 +129,12 @@ const MyMeals = () => {
                   <div className="flex flex-wrap gap-2 mb-3">
                     {meal.mealType && (
                       <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                        {meal.mealType}
+                        {translateMealType(meal.mealType, t)}
                       </span>
                     )}
                     {meal.mealCuisine && (
                       <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">
-                        {meal.mealCuisine}
+                        {translateCuisine(meal.mealCuisine, t)}
                       </span>
                     )}
                   </div>
