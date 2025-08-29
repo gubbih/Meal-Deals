@@ -7,7 +7,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { mealFormSchema, MealFormValues } from "../schemas/mealSchemas";
 import { useTranslation } from "react-i18next";
-import { getTranslatedCuisines, getTranslatedMealTypes } from "../utils/translationHelpers";
+import {
+  getTranslatedCuisines,
+  getTranslatedMealTypes,
+} from "../utils/translationHelpers";
 
 interface MealFormProps {
   meal: Meal;
@@ -25,7 +28,7 @@ const MealForm: React.FC<MealFormProps> = ({
   onCancel,
 }) => {
   const { t } = useTranslation();
-  
+
   const defaultMeal = {
     mealCuisine: meal.mealCuisine || "",
     mealType: meal.mealType || "",
@@ -63,7 +66,7 @@ const MealForm: React.FC<MealFormProps> = ({
       label: `${component.category}: ${item}`,
       value: [item],
       category: component.category,
-    }))
+    })),
   );
 
   // Handle food component selection change
@@ -105,7 +108,7 @@ const MealForm: React.FC<MealFormProps> = ({
     // Map all food component options and mark those already selected as disabled
     return foodComponentOptions.map((option) => {
       const isSelected = existingComponents.has(
-        `${option.category}:${option.value[0]}`
+        `${option.category}:${option.value[0]}`,
       );
       return {
         ...option,
@@ -190,7 +193,7 @@ const MealForm: React.FC<MealFormProps> = ({
               options={cuisineOptions}
               value={
                 cuisineOptions.find(
-                  (option) => option.value === watch("mealCuisine")
+                  (option) => option.value === watch("mealCuisine"),
                 ) || null
               }
               onChange={handleCuisineChange}
@@ -215,7 +218,7 @@ const MealForm: React.FC<MealFormProps> = ({
               options={mealTypeOptions}
               value={
                 mealTypeOptions.find(
-                  (option) => option.value === watch("mealType")
+                  (option) => option.value === watch("mealType"),
                 ) || null
               }
               onChange={handleMealTypeChange}

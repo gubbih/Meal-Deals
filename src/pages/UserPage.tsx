@@ -20,7 +20,7 @@ function UserPage() {
 
   const handleUserSignOut = async () => {
     await handleSignOut();
-    setToast({ type: "success", message:  t("mealPage.toast.signedOut") });
+    setToast({ type: "success", message: t("mealPage.toast.signedOut") });
   };
   // Filter favorite meals
   const favoriteMeals = user?.favoriteRecipes
@@ -93,7 +93,9 @@ function UserPage() {
               disabled={signOutLoading}
               className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
             >
-              {signOutLoading ? t("userPage.signingOut") : t("userPage.signOut")}
+              {signOutLoading
+                ? t("userPage.signingOut")
+                : t("userPage.signOut")}
             </button>
           </div>
 
@@ -113,7 +115,8 @@ function UserPage() {
                       <img
                         src={meal.imagePath}
                         alt={meal.name}
-                        className="h-full w-full object-cover" />
+                        className="h-full w-full object-cover"
+                      />
                     </div>
                     <div className="flex-1">
                       <h3 className="font-medium text-base text-gray-900 dark:text-white line-clamp-2">

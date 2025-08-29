@@ -1,4 +1,4 @@
-import { cuisineKeys, mealTypeKeys } from '../assets/Arrays';
+import { cuisineKeys, mealTypeKeys } from "../assets/Arrays";
 
 /**
  * Get translated cuisine options for dropdowns/selects
@@ -8,7 +8,7 @@ import { cuisineKeys, mealTypeKeys } from '../assets/Arrays';
 export const getTranslatedCuisines = (t: any) => {
   return cuisineKeys.map((cuisine) => ({
     value: cuisine,
-    label: t(`cuisines.${cuisine}`)
+    label: t(`cuisines.${cuisine}`),
   }));
 };
 
@@ -20,7 +20,7 @@ export const getTranslatedCuisines = (t: any) => {
 export const getTranslatedMealTypes = (t: any) => {
   return mealTypeKeys.map((mealType) => ({
     value: mealType,
-    label: t(`mealTypes.${mealType}`)
+    label: t(`mealTypes.${mealType}`),
   }));
 };
 
@@ -49,7 +49,7 @@ export const getTranslatedMealTypeNames = (t: any) => {
  * @returns Translated cuisine name
  */
 export const translateCuisine = (cuisine: string | undefined, t: any) => {
-  if (!cuisine) return '';
+  if (!cuisine) return "";
   return t(`cuisines.${cuisine}`);
 };
 
@@ -60,6 +60,6 @@ export const translateCuisine = (cuisine: string | undefined, t: any) => {
  * @returns Translated meal type name
  */
 export const translateMealType = (mealType: string | undefined, t: any) => {
-  if (!mealType) return '';
+  if (!mealType) return "";
   return t(`mealTypes.${mealType}`);
 };

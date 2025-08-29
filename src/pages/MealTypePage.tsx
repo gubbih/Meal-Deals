@@ -73,7 +73,9 @@ const MealTypePage: React.FC = () => {
       ) : (
         <MealCarousel
           meals={mealsByType}
-          title={t("mealTypePage.mealsTitle", { mealType: mealType.charAt(0).toUpperCase() + mealType.slice(1) })}
+          title={t("mealTypePage.mealsTitle", {
+            mealType: mealType.charAt(0).toUpperCase() + mealType.slice(1),
+          })}
         />
       )}
     </div>

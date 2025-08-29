@@ -12,7 +12,7 @@ const useCachedFoodComponents = () => {
     {
       maxAge: CACHE_DURATIONS.FOOD_COMPONENTS,
       enabled: true,
-    }
+    },
   );
 
   return {

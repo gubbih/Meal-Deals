@@ -1,10 +1,10 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
 
 // Import translation files
-import enTranslations from './locales/en.json';
-import daTranslations from './locales/da.json';
+import enTranslations from "./locales/en.json";
+import daTranslations from "./locales/da.json";
 
 const resources = {
   en: {
@@ -23,8 +23,8 @@ i18n
   // Initialize i18next
   .init({
     resources,
-    fallbackLng: 'en', // Default language if detection fails
-    debug: process.env.NODE_ENV === 'development',
+    fallbackLng: "en", // Default language if detection fails
+    debug: process.env.NODE_ENV === "development",
 
     interpolation: {
       escapeValue: false, // React already escapes values
@@ -33,11 +33,11 @@ i18n
     // Language detection options
     detection: {
       // Order of detection methods
-      order: ['localStorage', 'navigator', 'htmlTag'],
+      order: ["localStorage", "navigator", "htmlTag"],
       // Cache user language
-      caches: ['localStorage'],
+      caches: ["localStorage"],
       // Look for language in these places
-      lookupLocalStorage: 'i18nextLng',
+      lookupLocalStorage: "i18nextLng",
     },
   });
 

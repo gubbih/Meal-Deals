@@ -12,7 +12,7 @@ const useCachedOffers = () => {
     {
       maxAge: CACHE_DURATIONS.OFFERS,
       enabled: true,
-    }
+    },
   );
 
   return {
