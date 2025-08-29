@@ -9,7 +9,7 @@ import React, {
 
 // Utility functions for calculating cache durations based on update schedules
 export const getCacheMaxAgeForWeeklyUpdates = (
-  updateDays: number[]
+  updateDays: number[],
 ): number => {
   const now = new Date();
   const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
@@ -162,7 +162,7 @@ export const CacheProvider: React.FC<CacheProviderProps> = ({
 
       return cleaned;
     },
-    [defaultMaxAge, maxCacheSize]
+    [defaultMaxAge, maxCacheSize],
   );
 
   // Get an item from cache, respecting max age
@@ -189,7 +189,7 @@ export const CacheProvider: React.FC<CacheProviderProps> = ({
 
       return item.data;
     },
-    [cache, defaultMaxAge, cleanupCache]
+    [cache, defaultMaxAge, cleanupCache],
   );
 
   // Store an item in cache
@@ -207,7 +207,7 @@ export const CacheProvider: React.FC<CacheProviderProps> = ({
         return cleanupCache(newCache);
       });
     },
-    [cleanupCache]
+    [cleanupCache],
   );
 
   // Invalidate a specific cache item
@@ -280,7 +280,7 @@ export const useCachedFetch = <T,>(
     onSuccess?: (data: T) => void;
     onError?: (error: Error) => void;
     backgroundRefresh?: boolean; // Refresh data in background when close to expiry
-  }
+  },
 ) => {
   const { get, set } = useCache();
   const [data, setData] = useState<T | null>(null);
@@ -324,7 +324,7 @@ export const useCachedFetch = <T,>(
         setLoading(false);
       }
     },
-    [fetchFunction, get, key, maxAge, options, set]
+    [fetchFunction, get, key, maxAge, options, set],
   );
 
   // Background refresh when data is close to expiry
@@ -372,7 +372,7 @@ export const useCachedFetch = <T,>(
 
     const interval = setInterval(
       checkForBackgroundRefresh,
-      Math.min(maxAge * 0.1, 30000)
+      Math.min(maxAge * 0.1, 30000),
     ); // Check every 10% of max age or 30s max
 
     return () => clearInterval(interval);
@@ -399,7 +399,7 @@ export const useCacheDebug = () => {
         console.log("Cache size:", getCacheSize());
         console.log(
           "Cache contents:",
-          localStorage.getItem("meal-deals-cache")
+          localStorage.getItem("meal-deals-cache"),
         );
       }
     },

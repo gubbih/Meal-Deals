@@ -7,7 +7,10 @@ import Toast from "../components/Toast";
 import { useCache } from "../contexts/CacheContext";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
-import { translateCuisine, translateMealType } from "../utils/translationHelpers";
+import {
+  translateCuisine,
+  translateMealType,
+} from "../utils/translationHelpers";
 
 const MyMeals = () => {
   const { user } = useAuth();
@@ -28,7 +31,7 @@ const MyMeals = () => {
       setMeals(usersMeal);
     } catch (error) {
       console.error("Error fetching meals:", error);
-      setToast({ type: "error", message: t('myMeals.messages.fetchError') });
+      setToast({ type: "error", message: t("myMeals.messages.fetchError") });
     }
   }, [user, t]);
 
@@ -50,12 +53,15 @@ const MyMeals = () => {
         // Also invalidate the specific meal's cache
         invalidate(`meal-${mealToDelete}`);
 
-        setToast({ type: "success", message: t('myMeals.messages.deleteSuccess') });
+        setToast({
+          type: "success",
+          message: t("myMeals.messages.deleteSuccess"),
+        });
         // Ensure we fetch meals after successful deletion
         await fetchMeals();
       } catch (error) {
         console.error("Error deleting meal:", error);
-        setToast({ type: "error", message: t('myMeals.messages.deleteError') });
+        setToast({ type: "error", message: t("myMeals.messages.deleteError") });
       } finally {
         setIsModalVisible(false);
         setMealToDelete(null);
@@ -72,7 +78,7 @@ const MyMeals = () => {
     return (
       <div className="flex items-center justify-center h-64 bg-gray-50 dark:bg-gray-900">
         <div className="animate-pulse text-gray-600 dark:text-gray-300">
-          {t('myMeals.waitingForUser')}
+          {t("myMeals.waitingForUser")}
         </div>
       </div>
     );
@@ -86,25 +92,27 @@ const MyMeals = () => {
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-4">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-              {t('myMeals.title')}
+              {t("myMeals.title")}
             </h1>
           </div>
           <Link
             to="/create"
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700"
           >
-            {t('myMeals.addMeal')}
+            {t("myMeals.addMeal")}
           </Link>
         </div>
 
         {meals.length === 0 ? (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center">
-            <p className="text-gray-600 dark:text-gray-300">{t('myMeals.noMealsFound')}</p>
+            <p className="text-gray-600 dark:text-gray-300">
+              {t("myMeals.noMealsFound")}
+            </p>
             <Link
               to="/create"
               className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
             >
-              {t('myMeals.addFirstMeal')}
+              {t("myMeals.addFirstMeal")}
             </Link>
           </div>
         ) : (
@@ -144,19 +152,19 @@ const MyMeals = () => {
                       to={`/meal/${meal.id}`}
                       className="flex-1 text-center px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700"
                     >
-                      {t('myMeals.actions.view')}
+                      {t("myMeals.actions.view")}
                     </Link>
                     <Link
                       to={`/meal/${meal.id}/edit`}
                       className="flex-1 text-center px-3 py-2 bg-amber-600 text-white text-sm font-medium rounded-md hover:bg-amber-700"
                     >
-                      {t('myMeals.actions.edit')}
+                      {t("myMeals.actions.edit")}
                     </Link>
                     <button
                       onClick={() => handleDelete(meal.id)}
                       className="flex-1 px-3 py-2 text-white text-sm font-medium rounded-md bg-red-600 hover:bg-red-700"
                     >
-                      {t('myMeals.actions.delete')}
+                      {t("myMeals.actions.delete")}
                     </button>
                   </div>
                 </div>
@@ -170,7 +178,7 @@ const MyMeals = () => {
         isVisible={isModalVisible}
         onClose={cancelDelete}
         onConfirm={confirmDelete}
-        message={t('myMeals.deleteConfirm')}
+        message={t("myMeals.deleteConfirm")}
       />
     </div>
   );

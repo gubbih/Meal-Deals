@@ -187,7 +187,7 @@ export function Row({
                           </svg>
                           <span>
                             {DateTime.fromISO(offer.offerStart).toFormat(
-                              "d MMM"
+                              "d MMM",
                             )}{" "}
                             til{" "}
                             {DateTime.fromISO(offer.offerEnd).toFormat("d MMM")}

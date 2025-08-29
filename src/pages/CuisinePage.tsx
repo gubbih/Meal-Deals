@@ -65,7 +65,9 @@ const CuisinePage: React.FC = () => {
       ) : (
         <MealCarousel
           meals={mealsByCuisine}
-          title={t("cuisinePage.cuisineTitle", { cuisine: cuisine.charAt(0).toUpperCase() + cuisine.slice(1) })}
+          title={t("cuisinePage.cuisineTitle", {
+            cuisine: cuisine.charAt(0).toUpperCase() + cuisine.slice(1),
+          })}
         />
       )}
     </div>

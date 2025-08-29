@@ -13,7 +13,10 @@ import { useAuth } from "../services/firebase";
 import useFavoriteMeals from "../hooks/useFavoriteMeals";
 import Toast from "../components/Toast";
 import { LoadingSpinner } from "../components/LoadingSpinner";
-import { translateCuisine, translateMealType } from "../utils/translationHelpers";
+import {
+  translateCuisine,
+  translateMealType,
+} from "../utils/translationHelpers";
 
 function MealPage() {
   const { t } = useTranslation();
@@ -144,9 +147,15 @@ function MealPage() {
           const matchedOffers = filteredOffers.filter((offer) => {
             // Collect all possible food component names from offer
             let fcList = [
-              ...(Array.isArray(offer.foodComponent) ? offer.foodComponent : [offer.foodComponent || ""]),
-              ...(Array.isArray(offer.foodcomponent) ? offer.foodcomponent : [offer.foodcomponent || ""])
-            ].flat().filter(Boolean);
+              ...(Array.isArray(offer.foodComponent)
+                ? offer.foodComponent
+                : [offer.foodComponent || ""]),
+              ...(Array.isArray(offer.foodcomponent)
+                ? offer.foodcomponent
+                : [offer.foodcomponent || ""]),
+            ]
+              .flat()
+              .filter(Boolean);
 
             return fcList.some((fcName) => {
               const fcNameLower = fcName.toString().toLowerCase();
@@ -189,7 +198,10 @@ function MealPage() {
 
   const handleToggleFavorite = async () => {
     if (!user) {
-      setToast({ type: "warning", message: t("mealPage.toast.signInToFavorite") });
+      setToast({
+        type: "warning",
+        message: t("mealPage.toast.signInToFavorite"),
+      });
       return;
     }
 
@@ -198,10 +210,16 @@ function MealPage() {
     try {
       if (favorites.includes(id)) {
         await removeFromFavorites(id);
-        setToast({ type: "success", message: t("mealPage.toast.removedFavorite") });
+        setToast({
+          type: "success",
+          message: t("mealPage.toast.removedFavorite"),
+        });
       } else {
         await addToFavorites(id);
-        setToast({ type: "success", message: t("mealPage.toast.addedFavorite") });
+        setToast({
+          type: "success",
+          message: t("mealPage.toast.addedFavorite"),
+        });
       }
     } catch (error) {
       console.error(t("mealPage.toast.failedFavorite"), error);
@@ -250,7 +268,9 @@ function MealPage() {
   if (!meal) {
     return (
       <div className="p-4 text-gray-600 dark:text-gray-400 flex flex-col items-center justify-center min-h-64">
-        <p className="text-lg font-medium mb-2">{t("mealPage.errors.mealNotFound")}</p>
+        <p className="text-lg font-medium mb-2">
+          {t("mealPage.errors.mealNotFound")}
+        </p>
         <button
           onClick={() => navigate("/")}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
@@ -327,7 +347,9 @@ function MealPage() {
                   />
                 </svg>
                 <span className="hidden sm:inline">
-                  {isFavorite ? t("mealPage.favorite.remove") : t("mealPage.favorite.add")}
+                  {isFavorite
+                    ? t("mealPage.favorite.remove")
+                    : t("mealPage.favorite.add")}
                 </span>
               </button>
 
@@ -350,7 +372,9 @@ function MealPage() {
                       d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                     />
                   </svg>
-                  <span className="hidden sm:inline">{t("mealPage.editMeal")}</span>
+                  <span className="hidden sm:inline">
+                    {t("mealPage.editMeal")}
+                  </span>
                 </button>
               )}
             </div>
@@ -399,7 +423,9 @@ function MealPage() {
                         ? "bg-green-100 hover:bg-green-200 dark:bg-green-900 dark:hover:bg-green-800 text-green-800 dark:text-green-200 border-2 border-green-300 dark:border-green-700"
                         : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border-2 border-transparent"
                     }`}
-                    title={t("mealPage.offersAvailable", { count: storeOfferCount })}
+                    title={t("mealPage.offersAvailable", {
+                      count: storeOfferCount,
+                    })}
                   >
                     {store} ({storeOfferCount})
                   </button>
@@ -410,7 +436,10 @@ function MealPage() {
           <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
             {selectedStores.length === 0
               ? t("mealPage.noStoresSelected")
-              : t("mealPage.showingOffers", { selected: selectedStores.length, total: availableStores.length })}
+              : t("mealPage.showingOffers", {
+                  selected: selectedStores.length,
+                  total: availableStores.length,
+                })}
           </div>
         </div>
       )}

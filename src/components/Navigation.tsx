@@ -110,7 +110,7 @@ function Navigation() {
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-3">
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-            {t('navigation.brand')}
+            {t("navigation.brand")}
           </span>
         </Link>
 
@@ -160,7 +160,7 @@ function Navigation() {
                 className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                {t('navigation.home')}
+                {t("navigation.home")}
               </Link>
             </li>
 
@@ -172,7 +172,7 @@ function Navigation() {
                 onClick={() => setCuisineDropdownOpen(!cuisineDropdownOpen)}
                 className="flex items-center py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
-                {t('navigation.cuisines')}
+                {t("navigation.cuisines")}
                 <IoChevronDown className="ml-1 h-4 w-4" />
               </button>
               <div
@@ -206,7 +206,7 @@ function Navigation() {
                 onClick={() => setMealTypeDropdownOpen(!mealTypeDropdownOpen)}
                 className="flex items-center py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
-                {t('navigation.mealTypes')}
+                {t("navigation.mealTypes")}
                 <IoChevronDown className="ml-1 h-4 w-4" />
               </button>
               <div
@@ -240,7 +240,7 @@ function Navigation() {
                   className="block py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  {t('navigation.createMeal')}
+                  {t("navigation.createMeal")}
                 </Link>
               </li>
             )}
@@ -254,7 +254,7 @@ function Navigation() {
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                   className="flex items-center py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
-                  {t('navigation.profile')}
+                  {t("navigation.profile")}
                   <IoChevronDown className="ml-1 h-4 w-4" />
                 </button>
                 <div
@@ -272,7 +272,7 @@ function Navigation() {
                       setProfileDropdownOpen(false);
                     }}
                   >
-                    {t('navigation.profileSettings')}
+                    {t("navigation.profileSettings")}
                   </Link>
                   <Link
                     to="/MyMeals"
@@ -282,7 +282,7 @@ function Navigation() {
                       setProfileDropdownOpen(false);
                     }}
                   >
-                    {t('navigation.myMeals')}
+                    {t("navigation.myMeals")}
                   </Link>
                   <Link
                     to="/favorites"
@@ -292,7 +292,7 @@ function Navigation() {
                       setProfileDropdownOpen(false);
                     }}
                   >
-                    {t('navigation.favorites')}
+                    {t("navigation.favorites")}
                   </Link>
                   {user.isAdmin && (
                     <Link
@@ -303,7 +303,7 @@ function Navigation() {
                         setProfileDropdownOpen(false);
                       }}
                     >
-                      {t('navigation.admin')}
+                      {t("navigation.admin")}
                     </Link>
                   )}
                   <button
@@ -313,7 +313,7 @@ function Navigation() {
                     }}
                     className="block w-full text-left px-4 py-2 text-red-600 dark:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700 border-t border-gray-200 dark:border-gray-600"
                   >
-                    {t('navigation.signOut')}
+                    {t("navigation.signOut")}
                   </button>
                 </div>
               </li>
@@ -327,14 +327,14 @@ function Navigation() {
                   className="block py-2 px-5 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent mb-2 sm:mb-0"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  {t('navigation.login')}
+                  {t("navigation.login")}
                 </Link>
                 <Link
                   to="/auth?signup=true"
                   className="block py-2 px-5 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent mb-2 sm:mb-0"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  {t('navigation.signUp')}
+                  {t("navigation.signUp")}
                 </Link>
               </li>
             )}

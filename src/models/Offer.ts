@@ -20,6 +20,6 @@ export interface Offer {
   productId: string;
   isOrganic: boolean;
   confidence: number;
-  foodComponent?: string | string[];    // Make optional and support array
-  foodcomponent?: string | string[];    // Add this line for lowercase variant
+  foodComponent?: string | string[]; // Make optional and support array
+  foodcomponent?: string | string[]; // Add this line for lowercase variant
 }

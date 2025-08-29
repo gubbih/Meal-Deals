@@ -12,7 +12,7 @@ const useCachedMeals = () => {
     {
       maxAge: CACHE_DURATIONS.MEALS,
       enabled: true,
-    }
+    },
   );
 
   return {
