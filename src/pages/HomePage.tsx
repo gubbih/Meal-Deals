@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import useCachedMeals from "../hooks/useCachedMeals";
 import { useAuth } from "../services/firebase";
@@ -7,6 +8,7 @@ import { useLocation } from "react-router-dom";
 import { useCache } from "../contexts/CacheContext";
 
 function HomePage() {
+  const { t } = useTranslation();
   const location = useLocation();
   const { meals, loading, error, refetch } = useCachedMeals();
   const { user } = useAuth();
@@ -28,7 +30,7 @@ function HomePage() {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-pulse text-gray-600 dark:text-gray-300">
-          Loading...
+          {t("mealTypePage.loading")}
         </div>
       </div>
     );
@@ -42,7 +44,7 @@ function HomePage() {
           onClick={() => refetch()}
           className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
-          Try Again
+          {t("mealTypePage.tryAgain")}
         </button>
       </div>
     );
@@ -60,7 +62,7 @@ function HomePage() {
             }}
             className="text-xs text-yellow-800 dark:text-yellow-200 underline"
           >
-            Clear Cache & Refresh Data (Dev Only)
+            {t("homePage.clearCache")}
           </button>
         </div>
       )}
@@ -68,12 +70,10 @@ function HomePage() {
       {/* About Section */}
       <section className="mb-8 sm:mb-12 text-center max-w-4xl mx-auto">
         <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-          Cheap Meals: Delicious Cooking Made Affordable
+          {t("homePage.title")}
         </h1>
         <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod,
-          nulla sit amet aliquam lacinia, nisl nisl aliquam nisl, nec aliquam
-          nisl nisl sit amet nisl.
+          {t("homePage.description")}
         </p>
 
         {!user && (
@@ -82,7 +82,7 @@ function HomePage() {
               to="/user"
               className="inline-block bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition"
             >
-              Get Started
+              {t("homePage.getStarted")}
             </Link>
           </div>
         )}
@@ -92,13 +92,13 @@ function HomePage() {
       {user && favoriteMeals.length > 0 && (
         <MealCarousel
           meals={favoriteMeals}
-          title="Your Favorite Meals"
+          title={t("homePage.yourFavoriteMeals")}
           isFavoriteSection
         />
       )}
 
       {/* All Meals Section */}
-      <MealCarousel meals={meals} title="Explore Meals" />
+      <MealCarousel meals={meals} title={t("homePage.exploreMeals")} />
 
       {/* Create Meal Call to Action */}
       {user && (
@@ -107,7 +107,7 @@ function HomePage() {
             to="/create"
             className="inline-block bg-green-600 text-white px-5 py-3 rounded-lg hover:bg-green-700 transition"
           >
-            Create Your Own Meal
+            {t("homePage.createYourOwnMeal")}
           </Link>
         </div>
       )}

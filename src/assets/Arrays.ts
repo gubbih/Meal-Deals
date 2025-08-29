@@ -1,4 +1,5 @@
-export const cuisines = [
+// These are the translation keys - the actual values are in the translation files
+export const cuisineKeys = [
   "Danish",
   "Italian",
   "Chinese",
@@ -28,7 +29,7 @@ export const cuisines = [
   "Andet",
 ];
 
-export const mealsTypes = [
+export const mealTypeKeys = [
   "Morgenmad",
   "Frokost",
   "Aftensmad",
@@ -36,3 +37,7 @@ export const mealsTypes = [
   "Snack",
   "Drikke",
 ];
+
+// Keep the original exports for backward compatibility and validation
+export const cuisines = cuisineKeys;
+export const mealsTypes = mealTypeKeys;

@@ -38,5 +38,195 @@
     "success": "Succes",
     "cancel": "Annuller",
     "confirm": "Bekræft"
+  },
+  "mealPage": {
+    "description": "Beskrivelse",
+    "ingredients": "Ingredienser",
+    "details": "Detaljer",
+    "mealType": "Måltidstype:",
+    "mealCuisine": "Køkken:",
+    "editMeal": "Rediger Måltid",
+    "filterBySupermarket": "Filtrer efter Supermarked",
+    "selectAll": "Vælg Alle",
+    "clearAll": "Ryd Alle",
+    "noStoresSelected": "Ingen butikker valgt - viser alle tilbud",
+    "showingOffers": "Viser tilbud fra {{selected}} af {{total}} butikker",
+    "offersOnIngredients": "Tilbud på Ingredienser",
+    "offersAvailable": "{{count}} tilbud tilgængelige",
+    "favorite": {
+      "add": "Tilføj til Favoritter",
+      "remove": "Fjern Favorit"
+    },
+    "toast": {
+      "signInToFavorite": "Log venligst ind for at tilføje favoritter",
+      "addedFavorite": "Tilføjet til favoritter",
+      "removedFavorite": "Fjernet fra favoritter",
+      "failedFavorite": "Kunne ikke opdatere favoritter",
+      "noEditPermission": "Du har ikke tilladelse til at redigere dette måltid"
+    },
+    "errors": {
+      "noMealId": "Intet måltids-ID angivet",
+      "fetchingData": "Fejl ved hentning af data",
+      "localStorage": "Fejl ved adgang til localStorage",
+      "saveStores": "Kunne ikke gemme valgte butikker til localStorage",
+      "processingOffers": "Fejl ved behandling af tilbud",
+      "mealNotFound": "Måltid ikke fundet"
+    }
+  },
+  "authForm": {
+    "signIn": "Log Ind",
+    "createAccount": "Opret Konto",
+    "displayName": "Visningsnavn",
+    "email": "Email",
+    "password": "Adgangskode",
+    "creatingAccount": "Opretter konto...",
+    "signingIn": "Logger ind...",
+    "toast": {
+      "signInSuccess": "Logget ind med succes!",
+      "signUpSuccess": "Konto oprettet med succes!",
+      "authFailed": "Godkendelse mislykkedes."
+    }
+  },
+  "cuisines": {
+    "Danish": "Dansk",
+    "Italian": "Italiensk",
+    "Chinese": "Kinesisk",
+    "Thai": "Thai",
+    "Indian": "Indisk",
+    "French": "Fransk",
+    "Japanese": "Japansk",
+    "Mexican": "Mexicansk",
+    "Greek": "Græsk",
+    "Spanish": "Spansk",
+    "American": "Amerikansk",
+    "Korean": "Koreansk",
+    "Turkish": "Tyrkisk",
+    "Lebanese": "Libanesisk",
+    "British": "Britisk",
+    "German": "Tysk",
+    "Portuguese": "Portugisisk",
+    "Swedish": "Svensk",
+    "Norwegian": "Norsk",
+    "Irish": "Irsk",
+    "Scottish": "Skotsk",
+    "Welsh": "Walisisk",
+    "Brazilian": "Brasiliansk",
+    "Argentinian": "Argentinsk",
+    "Colombian": "Colombiansk",
+    "Jamaican": "Jamaikansk",
+    "Andet": "Andet"
+  },
+  "mealTypes": {
+    "Morgenmad": "Morgenmad",
+    "Frokost": "Frokost",
+    "Aftensmad": "Aftensmad",
+    "Dessert": "Dessert",
+    "Snack": "Snack",
+    "Drikke": "Drikke"
+  },
+  "modal": {
+    "closeModal": "Luk modal",
+    "confirmYes": "Ja, jeg er sikker",
+    "confirmNo": "Nej, annuller"
+  },
+  "mealForm": {
+    "mealName": "Måltidsnavn",
+    "enterMealName": "Indtast måltidsnavn",
+    "description": "Beskrivelse",
+    "enterDescription": "Indtast måltidsbeskrivelse",
+    "imageUrl": "Billede URL",
+    "enterImageUrl": "Indtast billede URL",
+    "cuisine": "Køkken",
+    "selectCuisine": "Vælg køkken",
+    "mealType": "Måltidstype",
+    "selectMealType": "Vælg måltidstype",
+    "ingredients": "Ingredienser",
+    "selectIngredients": "Vælg ingredienser",
+    "cancel": "Annuller",
+    "saveMeal": "Gem Måltid",
+    "createMeal": "Opret Måltid"
+  },
+  "mealCarousel": {
+    "noFavoritesYet": "Du har ikke tilføjet nogen favoritmåltider endnu.",
+    "noMealsAvailable": "Ingen måltider tilgængelige."
+  },
+  "loadingSpinner": {
+    "loading": "Indlæser..."
+  },
+  "userPage": {
+    "unknown": "Ukendt",
+    "favoriteMeals": "Favoritmåltider",
+    "userProfile": "Brugerprofil",
+    "editProfile": "Rediger Profil",
+    "profilePicture": "Profilbillede",
+    "uploadNewPicture": "Upload nyt billede",
+    "removePicture": "Fjern billede",
+    "profileInformation": "Profilinformation",
+    "displayName": "Visningsnavn",
+    "notSet": "Ikke angivet",
+    "email": "Email",
+    "accountCreated": "Konto Oprettet",
+    "lastLogin": "Sidste Login",
+    "signOut": "Log Ud",
+    "signingOut": "Logger ud...",
+    "favoritesMeals": "Favoritmåltider",
+    "noFavoritesYet": "Du har ikke tilføjet nogen favoritter endnu.",
+    "browseMealsToAdd": "Gennemse måltider for at tilføje favoritter"
+  },
+  "notFoundPage": {
+    "pageNotFound": "Side Ikke Fundet",
+    "sorryMessage": "Beklager, vi kunne ikke finde den side, du leder efter. Den kan være blevet fjernet eller eksisterer ikke.",
+    "goBackHome": "Gå tilbage til hjemmesiden"
+  },
+  "mealTypePage": {
+    "loading": "Indlæser...",
+    "tryAgain": "Prøv Igen",
+    "noMealTypeSelected": "Ingen måltidstype valgt.",
+    "noMealsYet": "Ingen {{mealType}} måltider endnu, desværre. :(",
+    "startExploring": "Begynd at udforske måltider og tilføj nogle til dine favoritter!",
+    "createYourOwn": "Opret Dit Eget Måltid",
+    "mealsTitle": "{{mealType}} Måltider"
+  },
+  "homePage": {
+    "clearCache": "Ryd Cache & Opdater Data (Kun Dev)",
+    "title": "Billige Måltider: Lækker Madlavning Gjort Overkommelig",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nulla sit amet aliquam lacinia, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl.",
+    "getStarted": "Kom I Gang",
+    "yourFavoriteMeals": "Dine Favoritmåltider",
+    "exploreMeals": "Udforsk Måltider",
+    "createYourOwnMeal": "Opret Dit Eget Måltid"
+  },
+  "favoritesPage": {
+    "myFavoriteMeals": "Mine Favoritmåltider",
+    "pleaseLogIn": "Log venligst ind for at se dine favoritmåltider.",
+    "noFavoritesYet": "Ingen favoritmåltider endnu",
+    "startExploring": "Begynd at udforske måltider og tilføj nogle til dine favoritter!"
+  },
+  "editMealPage": {
+    "editMeal": "Rediger Måltid",
+    "loading": "indlæser...",
+    "confirmLeave": "Er du sikker på at du vil forlade denne side? Ændringer er ikke gemt.",
+    "mealNotFound": "Måltid ikke fundet",
+    "noPermission": "Du har ikke tilladelse til at redigere dette måltid",
+    "errorOccurred": "Der opstod en fejl",
+    "mustBeLoggedIn": "Du skal være logget ind for at redigere et måltid",
+    "home": "Hjem"
+  },
+  "cuisinePage": {
+    "loading": "Indlæser...",
+    "tryAgain": "Prøv Igen",
+    "noCuisineSelected": "Intet køkken valgt.",
+    "noMealsYet": "Ingen {{cuisine}} måltider endnu, desværre. :(",
+    "startExploring": "Begynd at udforske måltider og tilføj nogle til dine favoritter!",
+    "createYourOwn": "Opret Dit Eget Måltid",
+    "cuisineTitle": "{{cuisine}} Køkken"
+  },
+  "createMealPage": {
+    "createNewMeal": "Opret Nyt Måltid",
+    "confirmLeave": "Er du sikker på at du vil forlade denne side? Ændringer er ikke gemt.",
+    "mustBeLoggedIn": "Du skal være logget ind for at oprette et måltid",
+    "mealSuccessfullyAdded": "Måltid tilføjet med succes!",
+    "failedToAddMeal": "Kunne ikke tilføje måltid!",
+    "errorLoadingData": "Fejl ved indlæsning af fødevarekomponentdata"
   }
 }

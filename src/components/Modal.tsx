@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface ModalProps {
   isVisible: boolean;
@@ -13,6 +14,7 @@ const Modal: React.FC<ModalProps> = ({
   onConfirm,
   message,
 }) => {
+  const { t } = useTranslation();
   return (
     <div
       className={`${isVisible ? "flex" : "hidden"} fixed inset-0 z-50 justify-center items-center w-full h-full bg-black bg-opacity-50`}
@@ -39,7 +41,7 @@ const Modal: React.FC<ModalProps> = ({
                 d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
               />
             </svg>
-            <span className="sr-only">Close modal</span>
+            <span className="sr-only">{t("modal.closeModal")}</span>
           </button>
           <div className="p-4 md:p-5 text-center">
             <svg
@@ -65,14 +67,14 @@ const Modal: React.FC<ModalProps> = ({
               type="button"
               className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
             >
-              Ja, jeg er sikker
+              {t("modal.confirmYes")}
             </button>
             <button
               onClick={onClose}
               type="button"
               className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
             >
-              Nej, annuller
+              {t("modal.confirmNo")}
             </button>
           </div>
         </div>

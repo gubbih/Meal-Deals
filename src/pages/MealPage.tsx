@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { getMeal, getOffers } from "../services/firebase";
 import { Meal } from "../models/Meal";
@@ -12,8 +13,10 @@ import { useAuth } from "../services/firebase";
 import useFavoriteMeals from "../hooks/useFavoriteMeals";
 import Toast from "../components/Toast";
 import { LoadingSpinner } from "../components/LoadingSpinner";
+import { translateCuisine, translateMealType } from "../utils/translationHelpers";
 
 function MealPage() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [meal, setMeal] = useState<Meal | null>(null);
@@ -40,7 +43,7 @@ function MealPage() {
   useEffect(() => {
     const fetchData = async () => {
       if (!id) {
-        setError("No meal ID provided");
+        setError(t("mealPage.errors.noMealId"));
         setLoading(false);
         return;
       }
@@ -56,8 +59,8 @@ function MealPage() {
         const offersData = await getOffers();
         setOffers(offersData);
       } catch (error) {
-        console.error("Error fetching data:", error);
-        setError(error instanceof Error ? error.message : "An error occurred");
+        console.error(t("mealPage.errors.fetchingData"), error);
+        setError(error instanceof Error ? error.message : t("common.error"));
       } finally {
         setLoading(false);
       }
@@ -79,7 +82,7 @@ function MealPage() {
       try {
         savedStores = localStorage.getItem("selectedStores");
       } catch (error) {
-        console.error("Error accessing localStorage:", error);
+        console.error(t("mealPage.errors.localStorage"), error);
       }
       if (savedStores) {
         try {
@@ -106,7 +109,7 @@ function MealPage() {
       try {
         localStorage.setItem("selectedStores", JSON.stringify(selectedStores));
       } catch (error) {
-        console.error("Failed to save selected stores to localStorage:", error);
+        console.error(t("mealPage.errors.saveStores"), error);
       }
     }
   }, [selectedStores]);
@@ -127,21 +130,28 @@ function MealPage() {
       // Process each food component
       meal.foodComponents.forEach((fc) => {
         if (!fc?.category || !fc?.items || !Array.isArray(fc.items)) {
-          console.warn("Invalid food component format:", fc);
+          console.log("Invalid food component format:", fc);
           return;
         }
 
         // Process each item in the food component
         fc.items.forEach((item) => {
+          console.log("Debug meal item:", item);
+          filteredOffers.forEach((offer) => {
+            console.log("Debug offer:", offer);
+          });
           // Find offers that match this specific item from filtered offers
           const matchedOffers = filteredOffers.filter((offer) => {
-            if (!offer.matchedItems || !Array.isArray(offer.matchedItems))
-              return false;
+            // Collect all possible food component names from offer
+            let fcList = [
+              ...(Array.isArray(offer.foodComponent) ? offer.foodComponent : [offer.foodComponent || ""]),
+              ...(Array.isArray(offer.foodcomponent) ? offer.foodcomponent : [offer.foodcomponent || ""])
+            ].flat().filter(Boolean);
 
-            return offer.matchedItems.some((matchItem) => {
-              const matchItemName = matchItem?.name?.toString().toLowerCase();
-              const itemName = item?.toString().toLowerCase();
-              return matchItemName && itemName && matchItemName === itemName;
+            return fcList.some((fcName) => {
+              const fcNameLower = fcName.toString().toLowerCase();
+              const itemName = item.toString().toLowerCase();
+              return fcNameLower === itemName;
             });
           });
 
@@ -172,14 +182,14 @@ function MealPage() {
       console.log("grouped", grouped);
       setGroupedOffers(grouped);
     } catch (error) {
-      console.error("Error processing offers:", error);
-      setError("Error processing offers");
+      console.error(t("mealPage.errors.processingOffers"), error);
+      setError(t("mealPage.errors.processingOffers"));
     }
   }, [meal, offers, selectedStores]);
 
   const handleToggleFavorite = async () => {
     if (!user) {
-      setToast({ type: "warning", message: "Please sign in to add favorites" });
+      setToast({ type: "warning", message: t("mealPage.toast.signInToFavorite") });
       return;
     }
 
@@ -188,14 +198,14 @@ function MealPage() {
     try {
       if (favorites.includes(id)) {
         await removeFromFavorites(id);
-        setToast({ type: "success", message: "Removed from favorites" });
+        setToast({ type: "success", message: t("mealPage.toast.removedFavorite") });
       } else {
         await addToFavorites(id);
-        setToast({ type: "success", message: "Added to favorites" });
+        setToast({ type: "success", message: t("mealPage.toast.addedFavorite") });
       }
     } catch (error) {
-      console.error("Error toggling favorite:", error);
-      setToast({ type: "error", message: "Failed to update favorites" });
+      console.error(t("mealPage.toast.failedFavorite"), error);
+      setToast({ type: "error", message: t("mealPage.toast.failedFavorite") });
     }
   };
 
@@ -205,7 +215,7 @@ function MealPage() {
     } else {
       setToast({
         type: "error",
-        message: "You don't have permission to edit this meal",
+        message: t("mealPage.toast.noEditPermission"),
       });
     }
   };
@@ -225,13 +235,13 @@ function MealPage() {
   if (error) {
     return (
       <div className="p-4 text-red-600 dark:text-red-400 flex flex-col items-center justify-center min-h-64">
-        <p className="text-lg font-medium mb-2">Error</p>
+        <p className="text-lg font-medium mb-2">{t("common.error")}</p>
         <p>{error}</p>
         <button
           onClick={() => navigate("/")}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
-          Home
+          {t("navigation.home")}
         </button>
       </div>
     );
@@ -240,12 +250,12 @@ function MealPage() {
   if (!meal) {
     return (
       <div className="p-4 text-gray-600 dark:text-gray-400 flex flex-col items-center justify-center min-h-64">
-        <p className="text-lg font-medium mb-2">Meal not found</p>
+        <p className="text-lg font-medium mb-2">{t("mealPage.errors.mealNotFound")}</p>
         <button
           onClick={() => navigate("/")}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
-          Home
+          {t("navigation.home")}
         </button>
       </div>
     );
@@ -275,14 +285,14 @@ function MealPage() {
                 {meal.mealType && (
                   <Link to={`/meal-type/${meal.mealType}`}>
                     <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                      {meal.mealType}
+                      {translateMealType(meal.mealType, t)}
                     </span>
                   </Link>
                 )}
                 {meal.mealCuisine && (
                   <Link to={`/cuisine/${meal.mealCuisine}`}>
                     <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">
-                      {meal.mealCuisine}
+                      {translateCuisine(meal.mealCuisine, t)}
                     </span>
                   </Link>
                 )}
@@ -317,7 +327,7 @@ function MealPage() {
                   />
                 </svg>
                 <span className="hidden sm:inline">
-                  {isFavorite ? "Remove Favorite" : "Add to Favorites"}
+                  {isFavorite ? t("mealPage.favorite.remove") : t("mealPage.favorite.add")}
                 </span>
               </button>
 
@@ -340,7 +350,7 @@ function MealPage() {
                       d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                     />
                   </svg>
-                  <span className="hidden sm:inline">Edit Meal</span>
+                  <span className="hidden sm:inline">{t("mealPage.editMeal")}</span>
                 </button>
               )}
             </div>
@@ -352,20 +362,20 @@ function MealPage() {
       {availableStores.length > 0 && (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-6 mb-8">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Filter by Supermarket
+            {t("mealPage.filterBySupermarket")}
           </h2>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setSelectedStores(availableStores)}
               className="px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-800 dark:text-blue-200 rounded-md transition-colors"
             >
-              Select All
+              {t("mealPage.selectAll")}
             </button>
             <button
               onClick={() => setSelectedStores([])}
               className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-md transition-colors"
             >
-              Clear All
+              {t("mealPage.clearAll")}
             </button>
             <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
               {availableStores.map((store) => {
@@ -389,7 +399,7 @@ function MealPage() {
                         ? "bg-green-100 hover:bg-green-200 dark:bg-green-900 dark:hover:bg-green-800 text-green-800 dark:text-green-200 border-2 border-green-300 dark:border-green-700"
                         : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border-2 border-transparent"
                     }`}
-                    title={`${storeOfferCount} offers available`}
+                    title={t("mealPage.offersAvailable", { count: storeOfferCount })}
                   >
                     {store} ({storeOfferCount})
                   </button>
@@ -399,8 +409,8 @@ function MealPage() {
           </div>
           <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
             {selectedStores.length === 0
-              ? "No stores selected - showing all offers"
-              : `Showing offers from ${selectedStores.length} of ${availableStores.length} stores`}
+              ? t("mealPage.noStoresSelected")
+              : t("mealPage.showingOffers", { selected: selectedStores.length, total: availableStores.length })}
           </div>
         </div>
       )}
@@ -412,7 +422,7 @@ function MealPage() {
         <div className="lg:col-span-2">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
             <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
-              Beskrivelse
+              {t("mealPage.description")}
             </h2>
             <div className="prose max-w-none dark:prose-invert">
               {meal.description.split("\n\n").map((paragraph, idx) => (
@@ -425,7 +435,7 @@ function MealPage() {
           {/* Ingredients & Offers Table */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-6">
             <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-white">
-              Tilbud på Ingredienser
+              {t("mealPage.offersOnIngredients")}
             </h2>
 
             <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
@@ -465,6 +475,7 @@ function MealPage() {
 
                     // Render the sorted components
                     return sortedComponents.map((component, index) => {
+                      console.log("Rendering component:", component);
                       if (component.hasOffers) {
                         // Render row with offers
                         return (
@@ -534,26 +545,23 @@ function MealPage() {
         <div>
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
             <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white border-b pb-2 border-gray-200 dark:border-gray-700">
-              Ingredients
+              {t("mealPage.ingredients")}
             </h2>
 
             <div className="space-y-5">
               {(() => {
                 // Group items by category
                 const groupedByCategory: Record<string, string[]> = {};
-
                 meal.foodComponents.forEach((fc) => {
                   if (!groupedByCategory[fc.category]) {
                     groupedByCategory[fc.category] = [];
                   }
-
                   if (Array.isArray(fc.items)) {
                     groupedByCategory[fc.category].push(...fc.items);
                   } else {
                     groupedByCategory[fc.category].push(fc.items);
                   }
                 });
-
                 return Object.entries(groupedByCategory).map(
                   ([category, items]) => (
                     <div key={category} className="mb-4">
@@ -561,13 +569,8 @@ function MealPage() {
                         {category}
                       </h3>
                       <ul className="list-disc list-inside space-y-1 pl-2">
-                        {items.map((item, itemIndex) => (
-                          <li
-                            key={itemIndex}
-                            className="text-gray-700 dark:text-gray-300"
-                          >
-                            {item}
-                          </li>
+                        {items.map((item) => (
+                          <li key={item}>{item}</li>
                         ))}
                       </ul>
                     </div>
@@ -578,26 +581,26 @@ function MealPage() {
 
             <div className="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
-                Details
+                {t("mealPage.details")}
               </h3>
               <dl className="space-y-2">
                 {meal.mealType && (
                   <div className="flex justify-between">
                     <dt className="text-gray-600 dark:text-gray-400">
-                      Meal Type:
+                      {t("mealPage.mealType")}
                     </dt>
                     <dd className="font-medium text-gray-900 dark:text-white">
-                      {meal.mealType}
+                      {translateMealType(meal.mealType, t)}
                     </dd>
                   </div>
                 )}
                 {meal.mealCuisine && (
                   <div className="flex justify-between">
                     <dt className="text-gray-600 dark:text-gray-400">
-                      Cuisine:
+                      {t("mealPage.mealCuisine")}
                     </dt>
                     <dd className="font-medium text-gray-900 dark:text-white">
-                      {meal.mealCuisine}
+                      {translateCuisine(meal.mealCuisine, t)}
                     </dd>
                   </div>
                 )}

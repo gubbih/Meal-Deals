@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Meal } from "../models/Meal";
@@ -36,6 +37,7 @@ const MealCarousel: React.FC<MealCarouselProps> = ({
   isFavoriteSection = false,
 }) => {
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   // If it's a favorite section and no favorites, return null
   if (isFavoriteSection && meals.length === 0) {
@@ -51,8 +53,8 @@ const MealCarousel: React.FC<MealCarouselProps> = ({
       {meals.length === 0 ? (
         <p className="text-gray-600 dark:text-gray-400 px-2">
           {isFavoriteSection
-            ? "You haven't added any favorite meals yet."
-            : "No meals available."}
+            ? t("mealCarousel.noFavoritesYet")
+            : t("mealCarousel.noMealsAvailable")}
         </p>
       ) : (
         <Carousel

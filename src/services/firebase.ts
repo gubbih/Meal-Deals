@@ -213,6 +213,7 @@ export const getOffers = async (): Promise<Offer[]> => {
         productId: child.val().product_id,
         isOrganic: child.val().is_organic,
         confidence: child.val().confidence,
+        foodComponent: child.val().foodcomponent,
       };
       offerList.push(data);
     });

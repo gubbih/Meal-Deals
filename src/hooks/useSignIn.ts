@@ -16,6 +16,7 @@ const useSignIn = () => {
       } else {
         setError(String(err));
       }
+      throw err; // Re-throw the error so AuthForm can handle it properly
     } finally {
       setLoading(false);
     }

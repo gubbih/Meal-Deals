@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Meal } from "../models/Meal";
 import useFavoriteMeals from "../hooks/useFavoriteMeals";
 import Toast from "../components/Toast";
@@ -7,6 +8,7 @@ import useCachedMeals from "../hooks/useCachedMeals";
 import { useAuth } from "../services/firebase";
 
 const FavoritesPage: React.FC = () => {
+  const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
   const { error } = useFavoriteMeals();
   const { meals, loading: mealsLoading } = useCachedMeals();
@@ -40,10 +42,10 @@ const FavoritesPage: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-            My Favorite Meals
+            {t("favoritesPage.myFavoriteMeals")}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Please log in to view your favorite meals.
+            {t("favoritesPage.pleaseLogIn")}
           </p>
         </div>
       </div>
@@ -66,7 +68,7 @@ const FavoritesPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-        My Favorite Meals
+        {t("favoritesPage.myFavoriteMeals")}
       </h1>
 
       {error && <Toast message={error} type="error" />}
@@ -74,10 +76,10 @@ const FavoritesPage: React.FC = () => {
       {favoriteMeals.length === 0 ? (
         <div className="text-center py-12">
           <h2 className="text-xl text-gray-600 dark:text-gray-400 mb-4">
-            No favorite meals yet
+            {t("favoritesPage.noFavoritesYet")}
           </h2>
           <p className="text-gray-500 dark:text-gray-500">
-            Start exploring meals and add some to your favorites!
+            {t("favoritesPage.startExploring")}
           </p>
         </div>
       ) : (

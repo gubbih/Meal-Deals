@@ -6,6 +6,8 @@ import { cuisines, mealsTypes } from "../assets/Arrays";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { mealFormSchema, MealFormValues } from "../schemas/mealSchemas";
+import { useTranslation } from "react-i18next";
+import { getTranslatedCuisines, getTranslatedMealTypes } from "../utils/translationHelpers";
 
 interface MealFormProps {
   meal: Meal;
@@ -22,21 +24,16 @@ const MealForm: React.FC<MealFormProps> = ({
   onSubmit,
   onCancel,
 }) => {
+  const { t } = useTranslation();
+  
   const defaultMeal = {
     mealCuisine: meal.mealCuisine || "",
     mealType: meal.mealType || "",
     ...meal,
   };
 
-  const cuisineOptions = cuisines.map((cuisine) => ({
-    value: cuisine,
-    label: cuisine,
-  }));
-
-  const mealTypeOptions = mealsTypes.map((mealType) => ({
-    value: mealType,
-    label: mealType,
-  }));
+  const cuisineOptions = getTranslatedCuisines(t);
+  const mealTypeOptions = getTranslatedMealTypes(t);
 
   const {
     register,

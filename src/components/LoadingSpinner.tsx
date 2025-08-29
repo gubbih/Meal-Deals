@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 function LoadingSpinner() {
+  const { t } = useTranslation();
   return (
     <div role="status">
       <svg
@@ -19,7 +21,7 @@ function LoadingSpinner() {
           fill="currentFill"
         />
       </svg>
-      <span className="sr-only">Loading...</span>
+      <span className="sr-only">{t("loadingSpinner.loading")}</span>
     </div>
   );
 }
