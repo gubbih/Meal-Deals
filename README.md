@@ -32,6 +32,7 @@ This project is a work-in-progress for building a simple meal planning applicati
 - [ ] **Data validation**
   - Implement proper form validation beyond HTML validation
   - Fix type casting issues in MealForm
+- [ ] **Limmiter on api calls**
 
 ### Medium Priority
 
