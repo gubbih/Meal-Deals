@@ -19,7 +19,7 @@ This project is a work-in-progress for building a simple meal planning applicati
 
 - [ ] **Authentication refinement**
 
-  - Fix user login/creation flow
+  - [x] Fix user login/creation flow
   - [x] Implement proper validation for authentication forms
   - Add password reset functionality
 
