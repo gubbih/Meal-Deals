@@ -11,6 +11,11 @@ This project is a work-in-progress for building a simple meal planning applicati
 ## Development Roadmap
 
 ### High Priority
+- [ ] Move everything from Firebase to other host site
+  - Move database
+  - Move Hosting
+  - Move Image hosting?
+  - Move Auth or still use firebase? figure this out :)
 
 - [ ] **Authentication refinement**
 
