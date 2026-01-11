@@ -11,10 +11,15 @@ This project is a work-in-progress for building a simple meal planning applicati
 ## Development Roadmap
 
 ### High Priority
+- [ ] Move everything from Firebase to other host site
+  - Move database
+  - Move Hosting
+  - Move Image hosting?
+  - Move Auth or still use firebase? figure this out :)
 
 - [ ] **Authentication refinement**
 
-  - Fix user login/creation flow
+  - [x] Fix user login/creation flow
   - [x] Implement proper validation for authentication forms
   - Add password reset functionality
 
@@ -32,6 +37,7 @@ This project is a work-in-progress for building a simple meal planning applicati
 - [ ] **Data validation**
   - Implement proper form validation beyond HTML validation
   - Fix type casting issues in MealForm
+- [ ] **Limmiter on api calls**
 
 ### Medium Priority
 
