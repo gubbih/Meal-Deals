@@ -7,6 +7,7 @@ import MealCarousel from "../components/MealCarousel";
 import { useLocation } from "react-router-dom";
 import { useCache } from "../contexts/CacheContext";
 import { resetCircuitBreaker, getCircuitBreakerStatus } from "../services/api";
+import { getAuthToken } from "../services/api/client";
 
 function HomePage() {
   const { t } = useTranslation();
@@ -96,7 +97,7 @@ function HomePage() {
                 <p>{error}</p>
                 {isRateLimit && (
                   <p className="mt-2 text-xs">
-                    💡{" "}
+                    {" "}
                     {t(
                       "errors.rateLimitHint",
                       "The API has a limit of 100 requests per 15 minutes. Please wait a few minutes before trying again."
@@ -133,7 +134,7 @@ function HomePage() {
                     className="px-4 py-2 rounded-md bg-gray-600 hover:bg-gray-700 text-white font-medium transition-colors"
                     title="Reset circuit breaker and retry"
                   >
-                    🔄 Reset & Retry
+                    Reset & Retry
                   </button>
                 )}
               </div>
@@ -157,6 +158,14 @@ function HomePage() {
             className="text-xs text-yellow-800 dark:text-yellow-200 underline"
           >
             {t("homePage.clearCache")}
+          </button>
+          <button
+            onClick={() => {
+              getAuthToken();
+            }}
+            className="ml-4 text-xs text-yellow-800 dark:text-yellow-200 underline"
+          >
+            {t("homePage.logAuthToken")}
           </button>
         </div>
       )}

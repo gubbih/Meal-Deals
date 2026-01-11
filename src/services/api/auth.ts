@@ -1,5 +1,5 @@
 import axios from "axios";
-import { api, setAuthToken } from "./client";
+import { api, setAuthToken, getAuthToken } from "./client";
 import { User } from "../../models/User";
 
 export const signIn = async (
@@ -59,5 +59,26 @@ export const getCurrentUser = async (): Promise<User | null> => {
   } catch (error) {
     setAuthToken(null);
     return null;
+  }
+};
+
+export const refreshToken = async () => {
+  try {
+    const response = await fetch("/api/auth/refresh", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+    if (data.success) {
+      // Store the new token
+      localStorage.setItem("token", data.data.token);
+      return data.data.token;
+    }
+  } catch (error) {
+    console.error("Token refresh failed:", error);
   }
 };

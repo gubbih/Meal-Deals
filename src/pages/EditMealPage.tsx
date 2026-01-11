@@ -12,6 +12,43 @@ import { useCache } from "../contexts/CacheContext";
 import { useAuth } from "../contexts/AuthContext";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 
+// Helper function to transform nested food components structure to flat structure
+const transformFoodComponents = (foodComponents: any[]) => {
+  if (!foodComponents || foodComponents.length === 0) return [];
+
+  return foodComponents.map((item) => {
+    // Check if it's the nested structure (has a "component" property)
+    if (item.component) {
+      return {
+        id: item.component.id,
+        componentName: item.component.componentName,
+        normalizedName:
+          item.component.normalizedName || item.component.componentName,
+        categoryId:
+          item.component.category?.id || item.component.categoryId || "",
+        category: {
+          id: item.component.category?.id || item.component.categoryId || "",
+          categoryName: item.component.category?.categoryName || "Unknown",
+        },
+        categoryName: item.component.category?.categoryName || "Unknown",
+      };
+    }
+
+    // If it's already in the correct format, ensure it has proper structure
+    return {
+      id: item.id,
+      componentName: item.componentName,
+      normalizedName: item.normalizedName || item.componentName,
+      categoryId: item.category?.id || item.categoryId || "",
+      category: {
+        id: item.category?.id || item.categoryId || "",
+        categoryName: item.category?.categoryName || "Unknown",
+      },
+      categoryName: item.category?.categoryName || "Unknown",
+    };
+  });
+};
+
 function EditMealPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -91,10 +128,33 @@ function EditMealPage() {
       try {
         setFormSubmitting(true);
 
+        // Process food components to ensure proper structure before saving
+        const processedFoodComponents = data.foodComponents.map(
+          (component: any) => ({
+            id: component.id,
+            componentName: component.componentName,
+            normalizedName: component.normalizedName || component.componentName,
+            categoryId: component.category?.id || component.categoryId || "",
+            category:
+              component.category && typeof component.category === "object"
+                ? {
+                    id: component.category.id || 0,
+                    categoryName:
+                      component.category.categoryName || "Uncategorized",
+                  }
+                : { id: 0, categoryName: "Uncategorized" },
+            categoryName:
+              component.category?.categoryName ||
+              component.categoryName ||
+              "Uncategorized",
+          })
+        );
+
         // Combine existing meal data with form updates
         const updatedMeal: Meal = {
           ...fetchedMeal,
           ...data,
+          foodComponents: processedFoodComponents,
         };
 
         await updateMealData(id || "", updatedMeal);
@@ -124,19 +184,6 @@ function EditMealPage() {
       }
     }
   };
-  const categoryOptions = useMemo(() => {
-    // Map all food components to the format expected by the MealForm component
-    return foodComponents.flatMap((fc) => {
-      if (Array.isArray(fc.items)) {
-        return fc.items.map((item) => ({
-          label: `${fc.category}: ${item}`,
-          value: item,
-          category: fc.category,
-        }));
-      }
-      return [];
-    });
-  }, [foodComponents]);
 
   const isLoading =
     authLoading || mealLoading || foodComponentsLoading || updateLoading;
@@ -212,16 +259,26 @@ function EditMealPage() {
     );
   }
 
+  // Transform food components from nested structure to flat structure for the form
+  const transformedFoodComponents = transformFoodComponents(
+    fetchedMeal.foodComponents || []
+  );
+
+  console.log("Original food components:", fetchedMeal.foodComponents);
+  console.log("Transformed food components:", transformedFoodComponents);
+
   // Ensure meal has complete data for the form
   const mealWithDefaults: Meal = {
     ...fetchedMeal,
     mealCuisine: fetchedMeal.mealCuisine || "",
     mealType: fetchedMeal.mealType || "",
-    foodComponents: fetchedMeal.foodComponents || [],
+    foodComponents: transformedFoodComponents,
   };
+
   if (!id) {
     return <div>loading...</div>;
   }
+
   return (
     <div className="p-4 bg-white dark:bg-gray-900">
       <Modal
@@ -246,7 +303,7 @@ function EditMealPage() {
       ) : (
         <MealForm
           meal={mealWithDefaults}
-          foodComponentOptions={categoryOptions}
+          foodComponents={foodComponents}
           onSubmit={handleSubmit}
           onCancel={handleCancel}
         />

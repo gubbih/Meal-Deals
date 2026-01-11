@@ -11,7 +11,7 @@ const useFetchMeals = () => {
     const fetchMeals = async () => {
       try {
         const data = await getMeals();
-        setMeals(data);
+        setMeals(data.meals); // Extract meals from the response object
       } catch (error) {
         if (error instanceof Error) {
           setError(error.message);

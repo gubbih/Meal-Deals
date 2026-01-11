@@ -31,8 +31,8 @@ function CreateMealPage() {
     imagePath: "",
     image: undefined,
     foodComponents: [],
-    mealType: "",
-    mealCuisine: "",
+    mealType: null,
+    mealCuisine: null,
     createdBy: user?.id || "guest",
     createdAt: new Date().toISOString(),
   };
@@ -50,6 +50,7 @@ function CreateMealPage() {
   }, [user, authLoading, navigate, showToast]);
 
   const handleSubmit = async (formData: MealFormValues) => {
+    console.log("handleSubmit called with:", formData);
     if (!user) {
       showToast("error", "You must be logged in to create a meal");
       navigate("/auth");
@@ -66,8 +67,6 @@ function CreateMealPage() {
         createdBy: user.id,
         createdAt: new Date().toISOString(),
       };
-      console.log("Creating meal with data:", mealData);
-
       await createMeal(mealData);
 
       // Invalidate meals cache since we've added a new meal
@@ -77,7 +76,7 @@ function CreateMealPage() {
 
       // Add a small delay before navigation to ensure toast is visible
       setTimeout(() => {
-        navigate("/MyMeals", {
+        navigate("/", {
           state: {
             refetch: true,
             toast: {
@@ -110,46 +109,6 @@ function CreateMealPage() {
       navigate("/");
     }
   }, [navigateAway, navigate]);
-
-  const categoryOptions = useMemo(() => {
-    // Group food components by category for better organization
-    const categorized = new Map<string, string[]>();
-
-    foodComponents.forEach((fc) => {
-      if (Array.isArray(fc.items)) {
-        fc.items.forEach((item) => {
-          if (!categorized.has(fc.category)) {
-            categorized.set(fc.category, []);
-          }
-          categorized.get(fc.category)?.push(item);
-        });
-      }
-    });
-
-    // Convert the map to the format expected by the MealForm component
-    const options: Array<{
-      label: string;
-      value: string;
-      category: string;
-    }> = [];
-
-    categorized.forEach((items, category) => {
-      items.forEach((item) => {
-        options.push({
-          label: `${category}: ${item}`,
-          value: item,
-          category: category,
-        });
-      });
-    });
-
-    // Sort options alphabetically by category, then by item
-    return options.sort((a, b) => {
-      const categoryCompare = a.category.localeCompare(b.category);
-      if (categoryCompare !== 0) return categoryCompare;
-      return a.value.localeCompare(b.value);
-    });
-  }, [foodComponents]);
 
   // Show loading spinner if we're still checking auth or loading food components
   if (authLoading || foodComponentsLoading) {
@@ -197,7 +156,7 @@ function CreateMealPage() {
       ) : (
         <MealForm
           meal={initialMeal}
-          foodComponentOptions={categoryOptions}
+          foodComponents={foodComponents}
           onSubmit={handleSubmit}
           onCancel={handleCancel}
         />

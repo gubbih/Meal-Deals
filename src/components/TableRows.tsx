@@ -26,14 +26,16 @@ export function Row({
   const firstOffer = offers[0];
   const remainingOffers = offers.slice(0); // Get all offers
 
-  // Get the item name to display
+  // Get the item name and category to display
   const itemName =
-    typeof foodComponentName.items === "string"
-      ? foodComponentName.items
-      : Array.isArray(foodComponentName.items) &&
-          foodComponentName.items.length > 0
-        ? foodComponentName.items[0]
-        : "Unknown item";
+    "componentName" in foodComponentName
+      ? foodComponentName.componentName
+      : foodComponentName.items;
+
+  const categoryName =
+    "componentName" in foodComponentName
+      ? foodComponentName.category.categoryName
+      : foodComponentName.category;
 
   return (
     <React.Fragment>
@@ -83,7 +85,7 @@ export function Row({
                     </div>
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {foodComponentName.category}
+                    {categoryName}
                   </div>
 
                   {/* Dates - Only visible on mobile */}
@@ -187,7 +189,7 @@ export function Row({
                           </svg>
                           <span>
                             {DateTime.fromISO(offer.offerStart).toFormat(
-                              "d MMM",
+                              "d MMM"
                             )}{" "}
                             til{" "}
                             {DateTime.fromISO(offer.offerEnd).toFormat("d MMM")}

@@ -113,7 +113,7 @@ function UserPage() {
                   >
                     <div className="w-full h-36 rounded-md overflow-hidden mb-3">
                       <img
-                        src={meal.imagePath}
+                        src={"https://api.cheapmeals.dk" + meal.imagePath}
                         alt={meal.name}
                         className="h-full w-full object-cover"
                       />
@@ -123,7 +123,7 @@ function UserPage() {
                         {meal.name}
                       </h3>
                       <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        {translateMealType(meal.mealType, t)}
+                        {meal.mealType}
                       </p>
                     </div>
                   </Link>

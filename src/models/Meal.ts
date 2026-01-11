@@ -1,4 +1,5 @@
 import { FoodComponent } from "./FoodComponent";
+import { User } from "./User";
 
 export interface Meal {
   id: string;
@@ -9,8 +10,12 @@ export interface Meal {
   imagePath?: string;
   image?: File;
   foodComponents: FoodComponent[];
-  mealCuisine: string;
-  mealType: string;
+  mealCuisine: string | null;
+  mealType: string | null;
   createdBy: string;
   createdAt: string;
+  user?: {
+    id: string;
+    displayName: string;
+  };
 }

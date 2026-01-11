@@ -1,8 +1,8 @@
 import axios from "axios";
 
 // API Configuration
-const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "https://api.cheapmeals.dk";
+const API_BASE_URL = "http://localhost:3001";
+//process.env.REACT_APP_API_BASE_URL || "https://api.cheapmeals.dk";
 
 // Request deduplication - prevent duplicate in-flight requests
 const pendingRequests = new Map<string, Promise<any>>();
@@ -57,9 +57,20 @@ export const setAuthToken = (token: string | null) => {
     localStorage.removeItem("authToken");
   }
 };
+export const getAuthToken = (): string | null => {
+  console.log(
+    "Current auth token:",
+    authToken ? "set: " + authToken : "not set"
+  );
+  return authToken;
+};
 
 // Initialize token from localStorage
 const storedToken = localStorage.getItem("authToken");
+console.log(
+  "Initializing auth token from storage:",
+  storedToken ? "found" : "not found"
+);
 if (storedToken) {
   setAuthToken(storedToken);
 }
@@ -159,7 +170,7 @@ api.interceptors.response.use(
 
     // Handle 401 Unauthorized - only redirect once
     if (error.response?.status === 401) {
-      console.warn("🔒 Unauthorized. Redirecting to login...");
+      console.warn("Unauthorized. Redirecting to login...");
       setAuthToken(null);
       // Use a flag to prevent multiple redirects
       if (!window.location.pathname.includes("/auth")) {

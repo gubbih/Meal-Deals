@@ -72,7 +72,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(false);
     }
   };
-
   const signUp = async (
     email: string,
     password: string,

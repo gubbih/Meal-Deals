@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { Meal } from "../models/Meal";
+import { FoodComponent } from "../models/FoodComponent";
 import { cuisines, mealsTypes } from "../assets/Arrays";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,7 +15,7 @@ import {
 
 interface MealFormProps {
   meal: Meal;
-  foodComponentOptions: { label: string; value: string; category: string }[];
+  foodComponents: FoodComponent[];
   onSubmit: (data: MealFormValues) => Promise<void>;
   onCancel: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
@@ -23,7 +24,7 @@ const animatedComponents = makeAnimated();
 
 const MealForm: React.FC<MealFormProps> = ({
   meal,
-  foodComponentOptions,
+  foodComponents,
   onSubmit,
   onCancel,
 }) => {
@@ -44,48 +45,80 @@ const MealForm: React.FC<MealFormProps> = ({
       name: meal.name,
       description: meal.description,
       imagePath: meal.imagePath,
-      mealCuisine: meal.mealCuisine,
-      mealType: meal.mealType,
-      foodComponents: meal.foodComponents,
+      mealCuisine: meal.mealCuisine || "",
+      mealType: meal.mealType || "",
+      foodComponents: meal.foodComponents || [],
     },
     mode: "onChange",
   });
 
+  // Transform food components for Select component display
+  const foodComponentOptions = useMemo(() => {
+    // Check if foodComponents is in the nested format (array of category objects)
+    if (
+      foodComponents.length > 0 &&
+      foodComponents[0].category &&
+      foodComponents[0].hasOwnProperty("items")
+    ) {
+      // Flatten the nested structure
+      return foodComponents.flatMap((categoryGroup: any) =>
+        categoryGroup.items.map((component: any) => ({
+          value: component.id,
+          label: `${categoryGroup.category}: ${component.componentName}`,
+          component: {
+            ...component,
+            category: { categoryName: categoryGroup.category },
+          },
+        }))
+      );
+    }
+
+    // Fallback for the original flat structure
+    return foodComponents.map((component) => ({
+      value: component.id,
+      label: `${component.category?.categoryName || "Unknown"}: ${component.componentName}`,
+      component: component,
+    }));
+  }, [foodComponents]);
+
   // Get current food components value for the Select component
-  const foodComponents = watch("foodComponents") || [];
+  const selectedFoodComponents = watch("foodComponents") || [];
 
   // Convert the current form value to the format expected by Select
-  const selectedFoodComponents = useMemo(() => {
-    return foodComponents.flatMap((component) =>
-      component.items.map((item) => ({
-        label: `${component.category}: ${item}`,
-        value: item,
-        category: component.category,
-      }))
-    );
-  }, [foodComponents]);
+  const selectedOptions = useMemo(() => {
+    return selectedFoodComponents.map((component) => ({
+      value: component.id,
+      label: `${component.category?.categoryName || "Unknown"}: ${component.componentName}`,
+      component: component,
+    }));
+  }, [selectedFoodComponents]);
+
+  // Group options by category for better display
+  const groupedOptions = useMemo(() => {
+    const groups: { [key: string]: any[] } = {};
+
+    foodComponentOptions.forEach((option) => {
+      const categoryName = option.component.category?.categoryName || "Unknown";
+      if (!groups[categoryName]) {
+        groups[categoryName] = [];
+      }
+      groups[categoryName].push(option);
+    });
+
+    const result = Object.entries(groups).map(([label, options]) => ({
+      label,
+      options,
+    }));
+    return result;
+  }, [foodComponentOptions]);
 
   // Handle food component selection change
   const handleFoodComponentChange = (selectedOptions: any) => {
-    // Group selected options by category
-    const categoryMap = new Map<string, string[]>();
+    const selectedComponents = selectedOptions
+      ? selectedOptions.map((option: any) => option.component)
+      : [];
 
-    selectedOptions.forEach((option: any) => {
-      if (!categoryMap.has(option.category)) {
-        categoryMap.set(option.category, []);
-      }
-      categoryMap.get(option.category)?.push(option.value);
-    });
-
-    // Convert map to array format
-    const formattedComponents = Array.from(categoryMap.entries()).map(
-      ([category, items]) => ({
-        category,
-        items,
-      })
-    );
-
-    setValue("foodComponents", formattedComponents, {
+    setValue("foodComponents", selectedComponents, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
@@ -98,42 +131,27 @@ const MealForm: React.FC<MealFormProps> = ({
       shouldValidate: true,
     });
   };
-
+  useEffect(() => {
+    console.log("Form errors updated:", errors);
+  }, [errors]);
   // Handle meal type selection
   const handleMealTypeChange = (option: any) => {
     setValue("mealType", option ? option.value : "", {
       shouldValidate: true,
     });
   };
-  useEffect(() => {
-    if (Object.keys(errors).length > 0) {
-      console.log("Validation Errors:", errors);
-    }
-  }, [errors]);
-  const filteredFoodComponentOptions = React.useMemo(() => {
-    // Create a map of existing components for easier lookup
-    const existingComponents = new Map();
-    foodComponents.forEach((component) => {
-      component.items.forEach((item) => {
-        existingComponents.set(`${component.category}:${item}`, true);
-      });
-    });
-
-    // Map all food component options and mark those already selected as disabled
-    return foodComponentOptions.map((option) => {
-      const isSelected = existingComponents.has(
-        `${option.category}:${option.value}`
-      );
-      return {
-        ...option,
-        isDisabled: isSelected,
-      };
-    });
-  }, [foodComponentOptions, foodComponents]);
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <form
+        onSubmit={(e) => {
+          console.log("Form submit triggered");
+          console.log("Form errors:", errors);
+          console.log("Form values:", watch());
+          handleSubmit(onSubmit)(e);
+        }}
+        className="space-y-5"
+      >
         {/* Name */}
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -266,17 +284,29 @@ const MealForm: React.FC<MealFormProps> = ({
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
             Madkomponenter
           </label>
+
+          {/* Debug information 
+          {process.env.NODE_ENV === "development" && (
+            <div className="mb-2 p-2 bg-yellow-100 text-xs">
+              <p>Food components count: {foodComponents.length}</p>
+              <p>Options count: {foodComponentOptions.length}</p>
+              <p>Grouped options count: {groupedOptions.length}</p>
+            </div>
+          )}*/}
+
           <Select
             className="my-react-select-container"
             classNamePrefix="my-react-select"
             closeMenuOnSelect={false}
             components={animatedComponents}
-            options={filteredFoodComponentOptions}
+            options={groupedOptions}
             isMulti
-            value={selectedFoodComponents}
+            value={selectedOptions}
             onChange={handleFoodComponentChange}
             placeholder="Vælg madkomponenter..."
             noOptionsMessage={() => "No matching food components"}
+            isLoading={foodComponents.length === 0}
+            loadingMessage={() => "Loading food components..."}
             menuPortalTarget={document.body}
             menuPosition="fixed"
             styles={{
@@ -302,11 +332,28 @@ const MealForm: React.FC<MealFormProps> = ({
                   backgroundColor: "rgb(75 85 99)",
                 },
               }),
+              group: (base) => ({
+                ...base,
+                paddingTop: 8,
+                paddingBottom: 8,
+              }),
+              groupHeading: (base) => ({
+                ...base,
+                fontSize: 12,
+                fontWeight: 600,
+                color: "rgb(156 163 175)",
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+                marginBottom: 4,
+              }),
             }}
             formatOptionLabel={(option) => (
               <div className="flex items-center justify-between w-full">
                 <div>
-                  <span>{option.label}</span>
+                  <span>{option.component.componentName}</span>
+                  <div className="text-xs text-gray-400">
+                    {option.component.category?.categoryName || "Unknown"}
+                  </div>
                 </div>
               </div>
             )}
@@ -316,6 +363,45 @@ const MealForm: React.FC<MealFormProps> = ({
               {errors.foodComponents.message}
             </p>
           )}
+
+          {/* Display selected components grouped by category 
+          {selectedFoodComponents.length > 0 && (
+            <div className="mt-3 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Selected Components ({selectedFoodComponents.length}):
+              </h4>
+              <div className="space-y-2">
+                {Object.entries(
+                  selectedFoodComponents.reduce(
+                    (acc, component) => {
+                      const categoryName =
+                        component.category?.categoryName || "Unknown";
+                      if (!acc[categoryName]) acc[categoryName] = [];
+                      acc[categoryName].push(component);
+                      return acc;
+                    },
+                    {} as { [key: string]: typeof selectedFoodComponents }
+                  )
+                ).map(([categoryName, components]) => (
+                  <div key={categoryName}>
+                    <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                      {categoryName}
+                    </h5>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {components.map((component) => (
+                        <span
+                          key={component.id}
+                          className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full"
+                        >
+                          {component.componentName}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}*/}
         </div>
 
         <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 pt-3">

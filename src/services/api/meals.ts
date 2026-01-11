@@ -2,13 +2,48 @@ import axios from "axios";
 import { api, deduplicatedGet } from "./client";
 import { Meal } from "../../models/Meal";
 
-export const getMeals = async (): Promise<Meal[]> => {
+interface GetMealsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  cuisine?: string;
+  mealType?: string;
+  createdBy?: string;
+}
+
+interface GetMealsResponse {
+  success: boolean;
+  data: {
+    meals: Meal[];
+    pagination: {
+      currentPage: number;
+      totalPages: number;
+      totalCount: number;
+      pageSize: number;
+    };
+  };
+}
+
+export const getMeals = async (
+  params?: GetMealsParams
+): Promise<{ meals: Meal[]; pagination?: any }> => {
   try {
-    const response = await deduplicatedGet<{
-      success: boolean;
-      data: { meals: Meal[] };
-    }>("/api/meals");
-    return response.data.meals;
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.set("page", params.page.toString());
+    if (params?.limit) searchParams.set("limit", params.limit.toString());
+    if (params?.search) searchParams.set("search", params.search);
+    if (params?.cuisine) searchParams.set("cuisine", params.cuisine);
+    if (params?.mealType) searchParams.set("mealType", params.mealType);
+    if (params?.createdBy) searchParams.set("createdBy", params.createdBy);
+
+    const url = `/api/meals${searchParams.toString() ? `?${searchParams}` : ""}`;
+
+    const response = await deduplicatedGet<GetMealsResponse>(url);
+
+    return {
+      meals: response.data.meals,
+      pagination: response.data.pagination,
+    };
   } catch (error) {
     // Check if it's a circuit breaker cancellation
     if (axios.isCancel(error)) {
@@ -57,7 +92,54 @@ export const createMeal = async (
   mealData: Omit<Meal, "id" | "createdAt">
 ): Promise<Meal> => {
   try {
-    const response = await api.post("/api/meals", mealData);
+    console.log("Creating meal with data:", mealData);
+
+    // Check if there's a file to upload
+    const hasFile = mealData.image instanceof File;
+
+    let requestData;
+    let config = {};
+
+    if (hasFile) {
+      // Use FormData for file uploads
+      const formData = new FormData();
+
+      // Add all meal data except the image file
+      const { image, foodComponents, ...otherData } = mealData;
+      Object.entries(otherData).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, value.toString());
+        }
+      });
+
+      // Add food component IDs as an array
+      if (foodComponents && foodComponents.length > 0) {
+        formData.append(
+          "foodComponents",
+          JSON.stringify(foodComponents.map((fc) => fc.id))
+        );
+      }
+
+      // Add the image file (we know it's a File because hasFile is true)
+      formData.append("image", image as File);
+
+      requestData = formData;
+      config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+    } else {
+      // Use JSON for URL-based images
+      const { foodComponents, ...otherData } = mealData;
+      requestData = {
+        ...otherData,
+        foodComponents: foodComponents?.map((fc) => fc.id) || [],
+      };
+    }
+
+    const response = await api.post("/api/meals", requestData, config);
+    console.log("Create meal response:", response);
     return response.data.data.meal; // Backend returns {success, data: {meal}}
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -72,7 +154,51 @@ export const updateMeal = async (
   updates: Partial<Meal>
 ): Promise<Meal> => {
   try {
-    const response = await api.put(`/api/meals/${id}`, updates);
+    // Check if there's a file to upload
+    const hasFile = updates.image instanceof File;
+
+    let requestData;
+    let config = {};
+
+    if (hasFile) {
+      // Use FormData for file uploads
+      const formData = new FormData();
+
+      // Add all meal data except the image file
+      const { image, foodComponents, ...otherData } = updates;
+      Object.entries(otherData).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, value.toString());
+        }
+      });
+
+      // Add food component IDs as an array
+      if (foodComponents && foodComponents.length > 0) {
+        formData.append(
+          "foodComponents",
+          JSON.stringify(foodComponents.map((fc) => fc.id))
+        );
+      }
+
+      // Add the image file (we know it's a File because hasFile is true)
+      formData.append("image", image as File);
+
+      requestData = formData;
+      config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+    } else {
+      // Use JSON for URL-based images
+      const { foodComponents, ...otherData } = updates;
+      requestData = {
+        ...otherData,
+        foodComponents: foodComponents?.map((fc) => fc.id) || [],
+      };
+    }
+
+    const response = await api.put(`/api/meals/${id}`, requestData, config);
     return response.data.data.meal; // Backend returns {success, data: {meal}}
   } catch (error) {
     if (axios.isAxiosError(error)) {

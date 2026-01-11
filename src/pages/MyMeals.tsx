@@ -136,7 +136,7 @@ const MyMeals = () => {
               >
                 <div className="h-48 overflow-hidden">
                   <img
-                    src={meal.imagePath}
+                    src={"https://api.cheapmeals.dk" + meal.imagePath}
                     alt={meal.name}
                     className="w-full h-full object-cover"
                   />

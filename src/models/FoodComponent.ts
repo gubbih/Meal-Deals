@@ -1,4 +1,10 @@
 export interface FoodComponent {
-  category: string;
-  items: string[];
+  id: number;
+  componentName: string;
+  normalizedName: string;
+  categoryId: number;
+  category: {
+    id: number;
+    categoryName: string;
+  };
 }

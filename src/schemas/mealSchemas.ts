@@ -1,8 +1,20 @@
 import { z } from "zod";
 import { cuisines, mealsTypes } from "../assets/Arrays";
 
-// Schema for food component selection
+// Schema for the new food component structure (individual components)
 export const foodComponentSchema = z.object({
+  id: z.number(),
+  componentName: z.string(),
+  normalizedName: z.string(),
+  categoryId: z.number(),
+  category: z.object({
+    id: z.number(),
+    categoryName: z.string(),
+  }),
+});
+
+// Legacy schema for backward compatibility with the form structure
+export const legacyFoodComponentSchema = z.object({
   category: z.string().min(1, "Category is required"),
   items: z.array(z.string()).min(1, "At least one item is required"),
 });
@@ -59,22 +71,10 @@ export const mealFormSchema = z
       message: "Please select a valid meal type",
     }),
 
+    // For the form, we'll use an array of selected food component objects
     foodComponents: z
-      .array(foodComponentSchema)
-      .min(1, "Please select at least one food component")
-      .max(20, "Too many food components selected")
-      .refine(
-        (components) => {
-          // Check for duplicate categories and items
-          const categoryItemPairs = components.map(
-            (c) => `${c.category}:${c.items.join(",")}`
-          );
-          return new Set(categoryItemPairs).size === categoryItemPairs.length;
-        },
-        {
-          message: "Duplicate food components detected",
-        }
-      ),
+      .array(z.any())
+      .min(1, "At least one food component is required"), // Change this if you want to allow empty
   })
   .refine(
     (data) => {
@@ -94,4 +94,7 @@ export const mealFormSchema = z
 
 // Type definitions based on the schemas
 export type FoodComponentInput = z.infer<typeof foodComponentSchema>;
+export type LegacyFoodComponentInput = z.infer<
+  typeof legacyFoodComponentSchema
+>;
 export type MealFormValues = z.infer<typeof mealFormSchema>;

@@ -18,6 +18,24 @@ import {
   translateMealType,
 } from "../utils/translationHelpers";
 
+// Helper function to safely get the actual component data
+const getComponent = (item: any): any => {
+  // Handle nested structure where component data is inside a "component" property
+  return item?.component || item;
+};
+
+// Helper function to safely get category name
+const getCategoryName = (item: any): string => {
+  const component = getComponent(item);
+  if (component?.category?.categoryName) {
+    return component.category.categoryName;
+  }
+  if (component?.categoryName) {
+    return component.categoryName;
+  }
+  return "Uncategorized";
+};
+
 function MealPage() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
@@ -56,6 +74,8 @@ function MealPage() {
 
         // Fetch meal data
         const mealData = await getMeal(id);
+        console.log("Fetched meal data:", mealData);
+        console.log("Food components:", mealData.foodComponents);
         setMeal(mealData);
 
         // Fetch offers data
@@ -129,61 +149,58 @@ function MealPage() {
         selectedStores.length > 0 &&
         selectedStores.length < availableStores.length
           ? offers.filter((offer) => selectedStores.includes(offer.store))
-          : offers; // Show all offers if none selected or all selected
+          : offers;
 
       // Process each food component
-      meal.foodComponents.forEach((fc) => {
-        if (!fc?.category || !fc?.items || !Array.isArray(fc.items)) {
-          return;
-        }
+      meal.foodComponents.forEach((item) => {
+        const component = getComponent(item);
+        if (!component?.componentName) return;
 
-        // Process each item in the food component
-        fc.items.forEach((item) => {
-          // Find offers that match this specific item from filtered offers
-          const matchedOffers = filteredOffers.filter((offer) => {
-            // Collect all possible food component names from offer
-            let fcList = [
-              ...(Array.isArray(offer.foodComponent)
-                ? offer.foodComponent
-                : [offer.foodComponent || ""]),
-              ...(Array.isArray(offer.foodcomponent)
-                ? offer.foodcomponent
-                : [offer.foodcomponent || ""]),
-            ]
-              .flat()
-              .filter(Boolean);
+        // Find offers that match this component's name
+        const matchedOffers = filteredOffers.filter((offer) => {
+          let fcList = [
+            ...(Array.isArray(offer.foodComponent)
+              ? offer.foodComponent
+              : [offer.foodComponent || ""]),
+            ...(Array.isArray(offer.foodcomponent)
+              ? offer.foodcomponent
+              : [offer.foodcomponent || ""]),
+          ]
+            .flat()
+            .filter(Boolean);
 
-            return fcList.some((fcName) => {
-              const fcNameLower = fcName.toString().toLowerCase();
-              const itemName = item.toString().toLowerCase();
-              return fcNameLower === itemName;
-            });
+          return fcList.some((fcName) => {
+            const fcNameLower = fcName.toString().toLowerCase();
+            const componentName = component.componentName.toLowerCase();
+            const normalizedName =
+              component.normalizedName?.toLowerCase() || "";
+            return (
+              fcNameLower === componentName || fcNameLower === normalizedName
+            );
+          });
+        });
+
+        // Add matched offers to the grouped object
+        if (matchedOffers.length > 0) {
+          const key = component.componentName;
+          if (!grouped[key]) {
+            grouped[key] = [];
+          }
+
+          matchedOffers.forEach((offer) => {
+            const isDuplicate = grouped[key].some(
+              (existingOffer) => existingOffer.id === offer.id
+            );
+
+            if (!isDuplicate) {
+              grouped[key].push(offer);
+            }
           });
 
-          // Add matched offers to the grouped object
-          if (matchedOffers.length > 0) {
-            if (!grouped[item]) {
-              grouped[item] = [];
-            }
-
-            // Add only unique offers
-            matchedOffers.forEach((offer) => {
-              const isDuplicate = grouped[item].some(
-                (existingOffer) => existingOffer.id === offer.id
-              );
-
-              if (!isDuplicate) {
-                grouped[item].push(offer);
-              }
-            });
-
-            // Sort offers by price (lowest first)
-            grouped[item].sort((a, b) => a.price - b.price);
-          }
-        });
+          grouped[key].sort((a, b) => a.price - b.price);
+        }
       });
 
-      // Store the grouped offers in state for rendering
       setGroupedOffers(grouped);
     } catch (error) {
       console.error(t("mealPage.errors.processingOffers"), error);
@@ -280,19 +297,17 @@ function MealPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 dark:text-white dark:bg-gray-900">
       {toast && <Toast type={toast.type} message={toast.message} />}
 
-      {/* Hero section with image, title and actions */}
+      {/* Hero section */}
       <div className="relative rounded-xl overflow-hidden mb-10">
-        {/* Image with gradient overlay */}
         <div className="w-full h-96 relative">
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
           <img
-            src={meal.imagePath}
+            src={"https://api.cheapmeals.dk" + meal.imagePath}
             alt={meal.name}
             className="w-full h-full object-cover"
           />
         </div>
 
-        {/* Content positioned over the image */}
         <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
@@ -400,12 +415,10 @@ function MealPage() {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
               {availableStores.map((store) => {
-                // Count only matched offers for this store from groupedOffers
                 const matchedOffersForStore = Object.values(groupedOffers)
                   .flat()
                   .filter((offer) => offer.store === store);
 
-                // Get unique offers (in case same offer appears for multiple ingredients)
                 const uniqueOffers = Array.from(
                   new Set(matchedOffersForStore.map((o) => o.id))
                 );
@@ -450,7 +463,6 @@ function MealPage() {
       )}
 
       {/* Main content grid */}
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Left column - description */}
         <div className="lg:col-span-2">
@@ -466,6 +478,7 @@ function MealPage() {
               ))}
             </div>
           </div>
+
           {/* Ingredients & Offers Table */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 sm:p-6">
             <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-white">
@@ -479,53 +492,56 @@ function MealPage() {
                 size="small"
               >
                 <TableBody>
-                  {/* Pre-process and sort food components - Those with offers first */}
                   {(() => {
-                    // Prepare the data with info about whether items have offers
-                    const sortedComponents = meal.foodComponents.flatMap(
-                      (fc) => {
-                        const foodItems = Array.isArray(fc.items)
-                          ? fc.items
-                          : [fc.items];
+                    // Filter out invalid components and map to sorted structure
+                    const sortedComponents = meal.foodComponents
+                      .map((item, index) => {
+                        const component = getComponent(item);
+                        return component && component.componentName
+                          ? {
+                              category: getCategoryName(item),
+                              item: component.componentName,
+                              hasOffers: Boolean(
+                                groupedOffers[component.componentName]?.length >
+                                  0
+                              ),
+                              offers:
+                                groupedOffers[component.componentName] || [],
+                              component: component,
+                              index: index,
+                            }
+                          : null;
+                      })
+                      .filter(
+                        (item): item is NonNullable<typeof item> =>
+                          item !== null
+                      );
 
-                        return foodItems.map((item) => ({
-                          category: fc.category,
-                          item,
-                          hasOffers: Boolean(groupedOffers[item]?.length > 0),
-                          offers: groupedOffers[item] || [],
-                        }));
-                      }
-                    );
-
-                    // Sort: items with offers first, then alphabetically by name
                     sortedComponents.sort((a, b) => {
-                      // First sort by whether it has offers
                       if (a.hasOffers && !b.hasOffers) return -1;
                       if (!a.hasOffers && b.hasOffers) return 1;
-
-                      // Then sort alphabetically by item name
-                      return a.item.localeCompare(b.item);
+                      return (a.item || "").localeCompare(b.item || "");
                     });
 
-                    // Render the sorted components
-                    return sortedComponents.map((component, index) => {
-                      if (component.hasOffers) {
-                        // Render row with offers
+                    return sortedComponents.map((componentData) => {
+                      if (componentData.hasOffers) {
                         return (
                           <Row
-                            key={`sorted-${index}`}
-                            offers={component.offers}
+                            key={
+                              componentData.component.id ||
+                              `comp-${componentData.index}`
+                            }
+                            offers={componentData.offers}
                             foodComponentName={{
-                              category: component.category,
-                              items: component.item,
+                              category: componentData.category,
+                              items: componentData.item,
                             }}
                           />
                         );
                       } else {
-                        // Render row showing no offers
                         return (
                           <TableRow
-                            key={`sorted-${index}-no-offer`}
+                            key={`no-offer-${componentData.component.id || componentData.index}`}
                             className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b dark:border-gray-700"
                           >
                             <TableCell
@@ -534,27 +550,23 @@ function MealPage() {
                             >
                               <div className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/70 transition-colors min-h-[4.5rem]">
                                 <div className="grid grid-cols-1 sm:grid-cols-6 gap-3 p-3">
-                                  {/* Left side - ingredient info */}
                                   <div className="sm:col-span-4 flex">
                                     <div className="pr-3 pt-1">
                                       <div className="w-8"></div>
                                     </div>
-
                                     <div className="flex-1 min-w-0 flex flex-col justify-center">
                                       <div className="flex items-start mb-1">
                                         <div className="flex-1">
                                           <span className="text-gray-700 dark:text-gray-300 font-medium line-clamp-2">
-                                            {component.item}
+                                            {componentData.item}
                                           </span>
                                         </div>
                                       </div>
                                       <div className="text-sm text-gray-600 dark:text-gray-400">
-                                        {component.category}
+                                        {componentData.category}
                                       </div>
                                     </div>
                                   </div>
-
-                                  {/* Right side - no offers message */}
                                   <div className="sm:col-span-2 flex items-center justify-center">
                                     <span className="inline-block px-3 py-1.5 bg-gray-100 dark:bg-gray-700 rounded-full text-xs text-gray-500 dark:text-gray-400">
                                       Ingen aktuelle tilbud
@@ -583,27 +595,34 @@ function MealPage() {
 
             <div className="space-y-5">
               {(() => {
-                // Group items by category
-                const groupedByCategory: Record<string, string[]> = {};
-                meal.foodComponents.forEach((fc) => {
-                  if (!groupedByCategory[fc.category]) {
-                    groupedByCategory[fc.category] = [];
+                const groupedByCategory: Record<string, any[]> = {};
+
+                // Process all food components
+                meal.foodComponents.forEach((item) => {
+                  const component = getComponent(item);
+                  if (!component || !component.componentName) return;
+
+                  const categoryName = getCategoryName(item);
+                  if (!groupedByCategory[categoryName]) {
+                    groupedByCategory[categoryName] = [];
                   }
-                  if (Array.isArray(fc.items)) {
-                    groupedByCategory[fc.category].push(...fc.items);
-                  } else {
-                    groupedByCategory[fc.category].push(fc.items);
-                  }
+                  groupedByCategory[categoryName].push(component);
                 });
+
                 return Object.entries(groupedByCategory).map(
-                  ([category, items]) => (
-                    <div key={category} className="mb-4">
+                  ([categoryName, components]) => (
+                    <div key={categoryName} className="mb-4">
                       <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-                        {category}
+                        {categoryName}
                       </h3>
                       <ul className="list-disc list-inside space-y-1 pl-2">
-                        {items.map((item) => (
-                          <li key={item}>{item}</li>
+                        {components.map((component, idx) => (
+                          <li
+                            key={component.id || `ingredient-${idx}`}
+                            className="text-gray-700 dark:text-gray-300"
+                          >
+                            {component.componentName}
+                          </li>
                         ))}
                       </ul>
                     </div>

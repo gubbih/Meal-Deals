@@ -40,10 +40,10 @@ export const useFilteredMeals = (meals: Meal[]) => {
       }
       // Filter by food component
       if (filters.foodComponent) {
-        const hasFoodComponent = meal.foodComponents.some((fc) =>
-          fc.items.some((item) =>
-            item.toLowerCase().includes(filters.foodComponent!.toLowerCase()),
-          ),
+        const hasFoodComponent = meal.foodComponents.some((component) =>
+          component.componentName
+            .toLowerCase()
+            .includes(filters.foodComponent!.toLowerCase())
         );
 
         if (!hasFoodComponent) {

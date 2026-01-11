@@ -8,8 +8,10 @@ export const getFoodComponents = async (): Promise<FoodComponent[]> => {
       success: boolean;
       data: { foodComponents: FoodComponent[] };
     }>("/api/food-components");
+
     return response.data.foodComponents;
   } catch (error) {
+    console.error("getFoodComponents error:", error);
     if (axios.isAxiosError(error)) {
       throw new Error(
         error.response?.data?.message || "Failed to fetch food components"

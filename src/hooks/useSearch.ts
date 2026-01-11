@@ -19,10 +19,8 @@ export const useSearch = (meals: Meal[]) => {
         .includes(lowercaseSearchTerm);
 
       // Search in food components
-      const foodComponentMatch = meal.foodComponents.some((fc) =>
-        fc.items.some((item) =>
-          item.toLowerCase().includes(lowercaseSearchTerm),
-        ),
+      const foodComponentMatch = meal.foodComponents.some((component) =>
+        component.componentName.toLowerCase().includes(lowercaseSearchTerm)
       );
 
       // Search in meal type and cuisine
