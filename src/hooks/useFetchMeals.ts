@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getMeals } from "../services/firebase";
+import { getMeals } from "../services/api";
 import { Meal } from "../models/Meal";
 
 const useFetchMeals = () => {

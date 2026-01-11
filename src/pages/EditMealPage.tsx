@@ -9,7 +9,7 @@ import Modal from "../components/Modal";
 import { MealFormValues } from "../schemas/mealSchemas";
 import { useToast } from "../contexts/ToastContext";
 import { useCache } from "../contexts/CacheContext";
-import { useAuth } from "../services/firebase";
+import { useAuth } from "../contexts/AuthContext";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 
 function EditMealPage() {
@@ -46,7 +46,7 @@ function EditMealPage() {
   // Check permission - only allow editing of own meals
   useEffect(() => {
     if (!mealLoading && fetchedMeal && user) {
-      if (fetchedMeal.createdBy !== user.uid && !user.isAdmin) {
+      if (fetchedMeal.createdBy !== user.id && !user.isAdmin) {
         setPermissionError(true);
         showToast("error", "You don't have permission to edit this meal");
       }
@@ -97,7 +97,7 @@ function EditMealPage() {
           ...data,
         };
 
-        await updateMealData(updatedMeal);
+        await updateMealData(id || "", updatedMeal);
 
         // Invalidate both the all-meals cache and this specific meal's cache
         invalidate("all-meals");
@@ -130,7 +130,7 @@ function EditMealPage() {
       if (Array.isArray(fc.items)) {
         return fc.items.map((item) => ({
           label: `${fc.category}: ${item}`,
-          value: [item],
+          value: item,
           category: fc.category,
         }));
       }

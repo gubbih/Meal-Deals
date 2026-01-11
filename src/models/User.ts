@@ -1,5 +1,6 @@
 export interface User {
-  uid: string;
+  id: string; // Changed from uid to match backend response
+  uid?: string; // Keep for backward compatibility
   email: string;
   displayName?: string;
   isAdmin?: boolean;

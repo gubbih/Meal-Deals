@@ -5,7 +5,7 @@ import useFavoriteMeals from "../hooks/useFavoriteMeals";
 import Toast from "../components/Toast";
 import MealCard from "../components/MealCard";
 import useCachedMeals from "../hooks/useCachedMeals";
-import { useAuth } from "../services/firebase";
+import { useAuth } from "../contexts/AuthContext";
 
 const FavoritesPage: React.FC = () => {
   const { t } = useTranslation();
@@ -25,7 +25,7 @@ const FavoritesPage: React.FC = () => {
       // Filter meals to only include those in user's favoriteRecipes
       const favoriteIds = user.favoriteRecipes || [];
       const filteredFavoriteMeals = meals.filter((meal) =>
-        favoriteIds.includes(meal.id),
+        favoriteIds.includes(meal.id)
       );
       setFavoriteMeals(filteredFavoriteMeals);
       setLoading(false);

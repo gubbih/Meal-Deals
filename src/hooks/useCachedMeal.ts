@@ -1,5 +1,5 @@
 import { Meal } from "../models/Meal";
-import { getMeal } from "../services/firebase";
+import { getMeal } from "../services/api";
 import { useCachedFetch, CACHE_DURATIONS } from "../contexts/CacheContext";
 
 // Create a cache key for a specific meal
@@ -12,7 +12,7 @@ export function useCachedMeal(id: string) {
     {
       maxAge: CACHE_DURATIONS.MEAL_DETAIL,
       enabled: !!id, // Only fetch if an ID is provided
-    },
+    }
   );
   return {
     meal: data,

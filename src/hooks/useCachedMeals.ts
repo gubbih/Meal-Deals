@@ -1,5 +1,5 @@
 import { Meal } from "../models/Meal";
-import { getMeals } from "../services/firebase";
+import { getMeals } from "../services/api";
 import { useCachedFetch, CACHE_DURATIONS } from "../contexts/CacheContext";
 
 // Cache key for all meals
@@ -12,7 +12,7 @@ const useCachedMeals = () => {
     {
       maxAge: CACHE_DURATIONS.MEALS,
       enabled: true,
-    },
+    }
   );
 
   return {

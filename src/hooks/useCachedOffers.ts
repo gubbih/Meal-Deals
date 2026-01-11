@@ -1,5 +1,5 @@
 import { Offer } from "../models/Offer";
-import { getOffers } from "../services/firebase";
+import { getOffers } from "../services/api";
 import { useCachedFetch, CACHE_DURATIONS } from "../contexts/CacheContext";
 
 // Cache key for offers
@@ -12,7 +12,7 @@ const useCachedOffers = () => {
     {
       maxAge: CACHE_DURATIONS.OFFERS,
       enabled: true,
-    },
+    }
   );
 
   return {

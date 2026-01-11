@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { signOut } from "../services/firebase";
+import { useAuth } from "../contexts/AuthContext";
 
 const useSignOut = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { signOut } = useAuth();
 
   const handleSignOut = async () => {
     setLoading(true);

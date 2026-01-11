@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { addMeal } from "../services/firebase";
+import { createMeal } from "../services/api";
 import { Meal } from "../models/Meal";
 import useCachedFoodComponents from "../hooks/useCachedFoodComponents";
 import MealForm from "../components/MealForm";
 import Modal from "../components/Modal";
-import { useAuth } from "../services/firebase";
+import { useAuth } from "../contexts/AuthContext";
 import { MealFormValues } from "../schemas/mealSchemas";
 import { useToast } from "../contexts/ToastContext";
 import { useCache } from "../contexts/CacheContext";
@@ -29,10 +29,11 @@ function CreateMealPage() {
     price: 0,
     priceCurrency: "",
     imagePath: "",
+    image: undefined,
     foodComponents: [],
     mealType: "",
     mealCuisine: "",
-    createdBy: user?.uid || "guest",
+    createdBy: user?.id || "guest",
     createdAt: new Date().toISOString(),
   };
 
@@ -59,14 +60,15 @@ function CreateMealPage() {
       setFormSubmitting(true);
 
       // Combine form data with additional meal properties
-      const mealData: Meal = {
+      const mealData: Omit<Meal, "id"> = {
         ...initialMeal,
         ...formData,
-        createdBy: user.uid,
+        createdBy: user.id,
         createdAt: new Date().toISOString(),
       };
+      console.log("Creating meal with data:", mealData);
 
-      await addMeal(mealData);
+      await createMeal(mealData);
 
       // Invalidate meals cache since we've added a new meal
       invalidate("all-meals");
@@ -75,8 +77,9 @@ function CreateMealPage() {
 
       // Add a small delay before navigation to ensure toast is visible
       setTimeout(() => {
-        navigate("/", {
+        navigate("/MyMeals", {
           state: {
+            refetch: true,
             toast: {
               type: "success",
               message: "Meal successfully added!",
@@ -126,7 +129,7 @@ function CreateMealPage() {
     // Convert the map to the format expected by the MealForm component
     const options: Array<{
       label: string;
-      value: string[];
+      value: string;
       category: string;
     }> = [];
 
@@ -134,7 +137,7 @@ function CreateMealPage() {
       items.forEach((item) => {
         options.push({
           label: `${category}: ${item}`,
-          value: [item],
+          value: item,
           category: category,
         });
       });
@@ -144,7 +147,7 @@ function CreateMealPage() {
     return options.sort((a, b) => {
       const categoryCompare = a.category.localeCompare(b.category);
       if (categoryCompare !== 0) return categoryCompare;
-      return a.value[0].localeCompare(b.value[0]);
+      return a.value.localeCompare(b.value);
     });
   }, [foodComponents]);
 

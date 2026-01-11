@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { deleteMeal } from "../services/firebase";
+import { deleteMeal } from "../services/api";
 
 const useDeleteMeal = () => {
   const [loading, setLoading] = useState(false);

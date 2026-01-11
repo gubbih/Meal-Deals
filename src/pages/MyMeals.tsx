@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useAuth, getMealByUser, deleteMeal } from "../services/firebase";
+import { useAuth } from "../contexts/AuthContext";
+import { deleteMeal } from "../services/api";
 import { Meal } from "../models/Meal";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Modal from "../components/Modal";
 import Toast from "../components/Toast";
 import { useCache } from "../contexts/CacheContext";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
+import useCachedMeals from "../hooks/useCachedMeals";
 import {
   translateCuisine,
   translateMealType,
@@ -16,7 +18,8 @@ const MyMeals = () => {
   const { user } = useAuth();
   const { invalidate } = useCache();
   const { t } = useTranslation();
-  const [meals, setMeals] = useState<Meal[]>([]);
+  const location = useLocation();
+  const { meals: allMeals, loading, refetch } = useCachedMeals();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [mealToDelete, setMealToDelete] = useState<string | null>(null);
   const [toast, setToast] = useState<{
@@ -24,20 +27,19 @@ const MyMeals = () => {
     message: string;
   } | null>(null);
 
-  const fetchMeals = useCallback(async () => {
-    if (!user) return;
-    try {
-      const usersMeal = await getMealByUser(user.uid);
-      setMeals(usersMeal);
-    } catch (error) {
-      console.error("Error fetching meals:", error);
-      setToast({ type: "error", message: t("myMeals.messages.fetchError") });
-    }
-  }, [user, t]);
+  // Filter meals for current user
+  const meals = allMeals.filter((meal) => meal.createdBy === user?.id);
 
+  // Refetch meals when component mounts or when coming back from creating a meal
   useEffect(() => {
-    fetchMeals();
-  }, [fetchMeals]);
+    // Check if we're coming from a meal creation/edit
+    if (location.state?.refetch) {
+      invalidate("all-meals");
+      refetch();
+      // Clear the state
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, invalidate, refetch]);
 
   const handleDelete = (mealId: string) => {
     setMealToDelete(mealId);
@@ -57,8 +59,8 @@ const MyMeals = () => {
           type: "success",
           message: t("myMeals.messages.deleteSuccess"),
         });
-        // Ensure we fetch meals after successful deletion
-        await fetchMeals();
+        // Refetch meals after successful deletion
+        await refetch();
       } catch (error) {
         console.error("Error deleting meal:", error);
         setToast({ type: "error", message: t("myMeals.messages.deleteError") });
@@ -79,6 +81,16 @@ const MyMeals = () => {
       <div className="flex items-center justify-center h-64 bg-gray-50 dark:bg-gray-900">
         <div className="animate-pulse text-gray-600 dark:text-gray-300">
           {t("myMeals.waitingForUser")}
+        </div>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64 bg-gray-50 dark:bg-gray-900">
+        <div className="animate-pulse text-gray-600 dark:text-gray-300">
+          {t("myMeals.loading")}
         </div>
       </div>
     );

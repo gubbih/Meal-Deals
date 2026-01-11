@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Meal } from "../models/Meal";
-import { useAuth } from "../services/firebase";
+import { useAuth } from "../contexts/AuthContext";
 import MealCard from "./MealCard";
 
 // Responsive breakpoints for the carousel - improved for mobile

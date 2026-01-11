@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useCache, CACHE_DURATIONS } from "../contexts/CacheContext";
-import { useAuth } from "../services/firebase";
+import { useAuth } from "../contexts/AuthContext";
 
 const CacheDebugPanel: React.FC = () => {
   const { user } = useAuth();

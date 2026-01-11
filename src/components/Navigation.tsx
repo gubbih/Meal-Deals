@@ -7,7 +7,7 @@ import {
   IoClose,
   IoChevronDown,
 } from "react-icons/io5";
-import { useAuth, signOut } from "../services/firebase";
+import { useAuth } from "../contexts/AuthContext";
 import { cuisines, mealsTypes } from "../assets/Arrays";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -22,15 +22,15 @@ function Navigation() {
   const [mealTypeDropdownOpen, setMealTypeDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [cuisineTimeout, setCuisineTimeout] = useState<NodeJS.Timeout | null>(
-    null,
+    null
   );
   const [mealTypeTimeout, setMealTypeTimeout] = useState<NodeJS.Timeout | null>(
-    null,
+    null
   );
   const [profileTimeout, setProfileTimeout] = useState<NodeJS.Timeout | null>(
-    null,
+    null
   );
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
   React.useEffect(() => {
     if (dark) {

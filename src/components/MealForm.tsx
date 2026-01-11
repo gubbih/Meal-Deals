@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { Meal } from "../models/Meal";
@@ -14,7 +14,7 @@ import {
 
 interface MealFormProps {
   meal: Meal;
-  foodComponentOptions: { label: string; value: string[]; category: string }[];
+  foodComponentOptions: { label: string; value: string; category: string }[];
   onSubmit: (data: MealFormValues) => Promise<void>;
   onCancel: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
@@ -29,12 +29,6 @@ const MealForm: React.FC<MealFormProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const defaultMeal = {
-    mealCuisine: meal.mealCuisine || "",
-    mealType: meal.mealType || "",
-    ...meal,
-  };
-
   const cuisineOptions = getTranslatedCuisines(t);
   const mealTypeOptions = getTranslatedMealTypes(t);
 
@@ -47,34 +41,50 @@ const MealForm: React.FC<MealFormProps> = ({
   } = useForm<MealFormValues>({
     resolver: zodResolver(mealFormSchema),
     defaultValues: {
-      name: defaultMeal.name,
-      description: defaultMeal.description,
-      imagePath: defaultMeal.imagePath,
-      mealCuisine: defaultMeal.mealCuisine,
-      mealType: defaultMeal.mealType,
-      foodComponents: defaultMeal.foodComponents,
+      name: meal.name,
+      description: meal.description,
+      imagePath: meal.imagePath,
+      mealCuisine: meal.mealCuisine,
+      mealType: meal.mealType,
+      foodComponents: meal.foodComponents,
     },
     mode: "onChange",
   });
 
   // Get current food components value for the Select component
-  const foodComponents = useMemo(() => watch("foodComponents") || [], [watch]);
+  const foodComponents = watch("foodComponents") || [];
 
   // Convert the current form value to the format expected by Select
-  const selectedFoodComponents = foodComponents.flatMap((component) =>
-    component.items.map((item) => ({
-      label: `${component.category}: ${item}`,
-      value: [item],
-      category: component.category,
-    })),
-  );
+  const selectedFoodComponents = useMemo(() => {
+    return foodComponents.flatMap((component) =>
+      component.items.map((item) => ({
+        label: `${component.category}: ${item}`,
+        value: item,
+        category: component.category,
+      }))
+    );
+  }, [foodComponents]);
 
   // Handle food component selection change
   const handleFoodComponentChange = (selectedOptions: any) => {
-    const formattedComponents = selectedOptions.map((option: any) => ({
-      category: option.category,
-      items: option.value,
-    }));
+    // Group selected options by category
+    const categoryMap = new Map<string, string[]>();
+
+    selectedOptions.forEach((option: any) => {
+      if (!categoryMap.has(option.category)) {
+        categoryMap.set(option.category, []);
+      }
+      categoryMap.get(option.category)?.push(option.value);
+    });
+
+    // Convert map to array format
+    const formattedComponents = Array.from(categoryMap.entries()).map(
+      ([category, items]) => ({
+        category,
+        items,
+      })
+    );
+
     setValue("foodComponents", formattedComponents, {
       shouldValidate: true,
       shouldDirty: true,
@@ -95,7 +105,11 @@ const MealForm: React.FC<MealFormProps> = ({
       shouldValidate: true,
     });
   };
-
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      console.log("Validation Errors:", errors);
+    }
+  }, [errors]);
   const filteredFoodComponentOptions = React.useMemo(() => {
     // Create a map of existing components for easier lookup
     const existingComponents = new Map();
@@ -108,12 +122,10 @@ const MealForm: React.FC<MealFormProps> = ({
     // Map all food component options and mark those already selected as disabled
     return foodComponentOptions.map((option) => {
       const isSelected = existingComponents.has(
-        `${option.category}:${option.value[0]}`,
+        `${option.category}:${option.value}`
       );
       return {
         ...option,
-        value: option.value,
-        label: `${option.category}: ${option.value[0]}`,
         isDisabled: isSelected,
       };
     });
@@ -175,6 +187,22 @@ const MealForm: React.FC<MealFormProps> = ({
               errors.imagePath ? "border-red-500" : "border-gray-300"
             } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
           />
+
+          <br />
+          {/* image button*/}
+          <input
+            type="file"
+            accept="image/*"
+            {...register("image")}
+            className={`bg-gray-50 border ${
+              errors.image ? "border-red-500" : "border-gray-300"
+            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+          />
+          {errors.image?.message && (
+            <p className="text-red-500 text-sm">
+              {String(errors.image.message)}
+            </p>
+          )}
           {errors.imagePath && (
             <p className="mt-1 text-sm text-red-600 dark:text-red-400">
               {errors.imagePath.message}
@@ -193,7 +221,7 @@ const MealForm: React.FC<MealFormProps> = ({
               options={cuisineOptions}
               value={
                 cuisineOptions.find(
-                  (option) => option.value === watch("mealCuisine"),
+                  (option) => option.value === watch("mealCuisine")
                 ) || null
               }
               onChange={handleCuisineChange}
@@ -218,7 +246,7 @@ const MealForm: React.FC<MealFormProps> = ({
               options={mealTypeOptions}
               value={
                 mealTypeOptions.find(
-                  (option) => option.value === watch("mealType"),
+                  (option) => option.value === watch("mealType")
                 ) || null
               }
               onChange={handleMealTypeChange}
@@ -296,18 +324,14 @@ const MealForm: React.FC<MealFormProps> = ({
             disabled={isSubmitting}
             className="bg-green-500 hover:bg-green-600 text-white p-2 rounded flex-1 text-center disabled:bg-green-300"
           >
-            {isSubmitting
-              ? "Gemmer..."
-              : defaultMeal.id
-                ? "Opdater Ret"
-                : "Opret Ret"}
+            {isSubmitting ? "Gemmer..." : meal.id ? "Opdater Ret" : "Opret Ret"}
           </button>
           <a
             href="/"
             onClick={onCancel}
             className="bg-red-500 hover:bg-red-600 text-white p-2 rounded flex-1 text-center"
           >
-            Anullere
+            Annuller
           </a>
         </div>
       </form>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { getMeal, getOffers } from "../services/firebase";
+import { getMeal, getOffers } from "../services/api";
 import { Meal } from "../models/Meal";
 import { Offer } from "../models/Offer";
 import { Row } from "../components/TableRows";
@@ -9,7 +9,7 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { useAuth } from "../services/firebase";
+import { useAuth } from "../contexts/AuthContext";
 import useFavoriteMeals from "../hooks/useFavoriteMeals";
 import Toast from "../components/Toast";
 import { LoadingSpinner } from "../components/LoadingSpinner";
@@ -25,7 +25,7 @@ function MealPage() {
   const [meal, setMeal] = useState<Meal | null>(null);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [groupedOffers, setGroupedOffers] = useState<Record<string, Offer[]>>(
-    {},
+    {}
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -92,10 +92,10 @@ function MealPage() {
           const parsed = JSON.parse(savedStores);
           // Only include stores that exist in current offers
           const validStores = parsed.filter((store: string) =>
-            uniqueStores.includes(store),
+            uniqueStores.includes(store)
           );
           setSelectedStores(
-            validStores.length > 0 ? validStores : uniqueStores,
+            validStores.length > 0 ? validStores : uniqueStores
           );
         } catch {
           setSelectedStores(uniqueStores);
@@ -126,23 +126,19 @@ function MealPage() {
 
       // Filter offers by selected stores
       const filteredOffers =
-        selectedStores.length > 0
+        selectedStores.length > 0 &&
+        selectedStores.length < availableStores.length
           ? offers.filter((offer) => selectedStores.includes(offer.store))
-          : offers;
+          : offers; // Show all offers if none selected or all selected
 
       // Process each food component
       meal.foodComponents.forEach((fc) => {
         if (!fc?.category || !fc?.items || !Array.isArray(fc.items)) {
-          console.log("Invalid food component format:", fc);
           return;
         }
 
         // Process each item in the food component
         fc.items.forEach((item) => {
-          console.log("Debug meal item:", item);
-          filteredOffers.forEach((offer) => {
-            console.log("Debug offer:", offer);
-          });
           // Find offers that match this specific item from filtered offers
           const matchedOffers = filteredOffers.filter((offer) => {
             // Collect all possible food component names from offer
@@ -173,7 +169,7 @@ function MealPage() {
             // Add only unique offers
             matchedOffers.forEach((offer) => {
               const isDuplicate = grouped[item].some(
-                (existingOffer) => existingOffer.id === offer.id,
+                (existingOffer) => existingOffer.id === offer.id
               );
 
               if (!isDuplicate) {
@@ -188,7 +184,6 @@ function MealPage() {
       });
 
       // Store the grouped offers in state for rendering
-      console.log("grouped", grouped);
       setGroupedOffers(grouped);
     } catch (error) {
       console.error(t("mealPage.errors.processingOffers"), error);
@@ -228,7 +223,7 @@ function MealPage() {
   };
 
   const handleEdit = () => {
-    if (meal && user && (user.uid === meal.createdBy || user.isAdmin)) {
+    if (meal && user && (user.id === meal.createdBy || user.isAdmin)) {
       navigate(`/meal/${id}/edit`);
     } else {
       setToast({
@@ -240,7 +235,7 @@ function MealPage() {
 
   const isFavorite = id ? favorites.includes(id) : false;
   const canEdit =
-    user && meal ? user.uid === meal.createdBy || user.isAdmin : false;
+    user && meal ? user.id === meal.createdBy || user.isAdmin : false;
 
   if (loading) {
     return (
@@ -388,31 +383,41 @@ function MealPage() {
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             {t("mealPage.filterBySupermarket")}
           </h2>
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setSelectedStores(availableStores)}
-              className="px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-800 dark:text-blue-200 rounded-md transition-colors"
-            >
-              {t("mealPage.selectAll")}
-            </button>
-            <button
-              onClick={() => setSelectedStores([])}
-              className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-md transition-colors"
-            >
-              {t("mealPage.clearAll")}
-            </button>
+          <div className="space-y-3">
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedStores(availableStores)}
+                className="px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-800 dark:text-blue-200 rounded-md transition-colors"
+              >
+                {t("mealPage.selectAll")}
+              </button>
+              <button
+                onClick={() => setSelectedStores([])}
+                className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-md transition-colors"
+              >
+                {t("mealPage.clearAll")}
+              </button>
+            </div>
             <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
               {availableStores.map((store) => {
-                const storeOfferCount = offers.filter(
-                  (offer) => offer.store === store,
-                ).length;
+                // Count only matched offers for this store from groupedOffers
+                const matchedOffersForStore = Object.values(groupedOffers)
+                  .flat()
+                  .filter((offer) => offer.store === store);
+
+                // Get unique offers (in case same offer appears for multiple ingredients)
+                const uniqueOffers = Array.from(
+                  new Set(matchedOffersForStore.map((o) => o.id))
+                );
+                const storeOfferCount = uniqueOffers.length;
+
                 return (
                   <button
                     key={store}
                     onClick={() => {
                       if (selectedStores.includes(store)) {
                         setSelectedStores(
-                          selectedStores.filter((s) => s !== store),
+                          selectedStores.filter((s) => s !== store)
                         );
                       } else {
                         setSelectedStores([...selectedStores, store]);
@@ -489,7 +494,7 @@ function MealPage() {
                           hasOffers: Boolean(groupedOffers[item]?.length > 0),
                           offers: groupedOffers[item] || [],
                         }));
-                      },
+                      }
                     );
 
                     // Sort: items with offers first, then alphabetically by name
@@ -504,7 +509,6 @@ function MealPage() {
 
                     // Render the sorted components
                     return sortedComponents.map((component, index) => {
-                      console.log("Rendering component:", component);
                       if (component.hasOffers) {
                         // Render row with offers
                         return (
@@ -603,7 +607,7 @@ function MealPage() {
                         ))}
                       </ul>
                     </div>
-                  ),
+                  )
                 );
               })()}
             </div>

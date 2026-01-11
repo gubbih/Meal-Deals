@@ -1,8 +1,8 @@
 // src/hooks/useUpdateUserProfile.ts
 import { useState } from "react";
-import { updateUser } from "../services/firebase";
+import { updateUser } from "../services/api";
 import { User } from "../models/User";
-import { useAuth } from "../services/firebase";
+import { useAuth } from "../contexts/AuthContext";
 
 function useUpdateUserProfile() {
   const [loading, setLoading] = useState(false);
@@ -18,11 +18,7 @@ function useUpdateUserProfile() {
     setLoading(true);
     setError(null);
     try {
-      const updatedUser: User = {
-        ...currentUser,
-        ...userData,
-      };
-      await updateUser(updatedUser);
+      await updateUser(currentUser.id, userData);
       setLoading(false);
     } catch (err: any) {
       setLoading(false);

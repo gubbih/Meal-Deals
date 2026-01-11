@@ -9,7 +9,7 @@ import React, {
 
 // Utility functions for calculating cache durations based on update schedules
 export const getCacheMaxAgeForWeeklyUpdates = (
-  updateDays: number[],
+  updateDays: number[]
 ): number => {
   const now = new Date();
   const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
@@ -36,16 +36,17 @@ export const getCacheMaxAgeForWeeklyUpdates = (
 };
 
 // Specific cache durations for different data types
+// Optimized for rate limit: 100 requests per 15 minutes
 export const CACHE_DURATIONS = {
   // Offers and food components update Monday (1) and Friday (5) nights
   OFFERS: getCacheMaxAgeForWeeklyUpdates([1, 5]), // Monday and Friday
   FOOD_COMPONENTS: getCacheMaxAgeForWeeklyUpdates([1, 5]), // Monday and Friday
 
-  // Meals can change more frequently
-  MEALS: 5 * 60 * 1000, // 5 minutes
-  MEAL_DETAIL: 10 * 60 * 1000, // 10 minutes
+  // Meals - increased cache to reduce API calls
+  MEALS: 10 * 60 * 1000, // 10 minutes (was 5)
+  MEAL_DETAIL: 15 * 60 * 1000, // 15 minutes (was 10)
 
-  // User data changes moderately
+  // User data - match rate limit window
   USER_DATA: 15 * 60 * 1000, // 15 minutes
 } as const;
 
@@ -162,7 +163,7 @@ export const CacheProvider: React.FC<CacheProviderProps> = ({
 
       return cleaned;
     },
-    [defaultMaxAge, maxCacheSize],
+    [defaultMaxAge, maxCacheSize]
   );
 
   // Get an item from cache, respecting max age
@@ -189,7 +190,7 @@ export const CacheProvider: React.FC<CacheProviderProps> = ({
 
       return item.data;
     },
-    [cache, defaultMaxAge, cleanupCache],
+    [cache, defaultMaxAge, cleanupCache]
   );
 
   // Store an item in cache
@@ -207,7 +208,7 @@ export const CacheProvider: React.FC<CacheProviderProps> = ({
         return cleanupCache(newCache);
       });
     },
-    [cleanupCache],
+    [cleanupCache]
   );
 
   // Invalidate a specific cache item
@@ -280,12 +281,13 @@ export const useCachedFetch = <T,>(
     onSuccess?: (data: T) => void;
     onError?: (error: Error) => void;
     backgroundRefresh?: boolean; // Refresh data in background when close to expiry
-  },
+  }
 ) => {
   const { get, set } = useCache();
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
+  const [hasAttempted, setHasAttempted] = useState<boolean>(false);
 
   const maxAge = options?.maxAge;
   const enabled = options?.enabled ?? true;
@@ -294,6 +296,11 @@ export const useCachedFetch = <T,>(
   // Execute the fetch
   const execute = useCallback(
     async (skipCache = false) => {
+      // If we already have an error and haven't explicitly requested a refetch, don't retry
+      if (error && !skipCache && hasAttempted) {
+        return;
+      }
+
       setLoading(true);
       setError(null);
 
@@ -304,6 +311,7 @@ export const useCachedFetch = <T,>(
           if (cachedData) {
             setData(cachedData);
             setLoading(false);
+            setHasAttempted(true);
             options?.onSuccess?.(cachedData);
             return cachedData;
           }
@@ -313,18 +321,20 @@ export const useCachedFetch = <T,>(
         const freshData = await fetchFunction();
         set(key, freshData);
         setData(freshData);
+        setHasAttempted(true);
         options?.onSuccess?.(freshData);
         return freshData;
       } catch (e) {
         const err = e instanceof Error ? e : new Error(String(e));
         setError(err);
+        setHasAttempted(true);
         options?.onError?.(err);
         throw err;
       } finally {
         setLoading(false);
       }
     },
-    [fetchFunction, get, key, maxAge, options, set],
+    [fetchFunction, get, key, maxAge, options, set, error, hasAttempted]
   );
 
   // Background refresh when data is close to expiry
@@ -372,7 +382,7 @@ export const useCachedFetch = <T,>(
 
     const interval = setInterval(
       checkForBackgroundRefresh,
-      Math.min(maxAge * 0.1, 30000),
+      Math.min(maxAge * 0.1, 30000)
     ); // Check every 10% of max age or 30s max
 
     return () => clearInterval(interval);
@@ -399,7 +409,7 @@ export const useCacheDebug = () => {
         console.log("Cache size:", getCacheSize());
         console.log(
           "Cache contents:",
-          localStorage.getItem("meal-deals-cache"),
+          localStorage.getItem("meal-deals-cache")
         );
       }
     },

@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
-import {
-  addFavoriteMeal,
-  removeFavoriteMeal,
-  useAuth,
-} from "../services/firebase";
+import { addFavoriteMeal, removeFavoriteMeal } from "../services/api";
+import { useAuth } from "../contexts/AuthContext";
 
 const useFavoriteMeals = () => {
   const [loading, setLoading] = useState(false);
@@ -29,7 +26,7 @@ const useFavoriteMeals = () => {
     setLoading(true);
     setError(null);
     try {
-      await addFavoriteMeal(user.uid, mealId);
+      await addFavoriteMeal(user.id, mealId);
       // Optimistically update local state
       setFavorites((prev) => [...prev, mealId]);
     } catch (err) {
@@ -54,7 +51,7 @@ const useFavoriteMeals = () => {
     setLoading(true);
     setError(null);
     try {
-      await removeFavoriteMeal(user.uid, mealId);
+      await removeFavoriteMeal(user.id, mealId);
       // Optimistically update local state
       setFavorites((prev) => prev.filter((id) => id !== mealId));
     } catch (err) {

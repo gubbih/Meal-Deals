@@ -1,5 +1,5 @@
 import { FoodComponent } from "../models/FoodComponent";
-import { getFoodComponents } from "../services/firebase";
+import { getFoodComponents } from "../services/api";
 import { useCachedFetch, CACHE_DURATIONS } from "../contexts/CacheContext";
 
 // Cache key for food components
@@ -12,7 +12,7 @@ const useCachedFoodComponents = () => {
     {
       maxAge: CACHE_DURATIONS.FOOD_COMPONENTS,
       enabled: true,
-    },
+    }
   );
 
   return {

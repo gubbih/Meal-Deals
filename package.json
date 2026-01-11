@@ -18,6 +18,7 @@
     "babel-plugin-react-css-modules": "^5.2.6",
     "cra-template-typescript": "1.2.0",
     "dotenv": "^16.4.7",
+    "express": "^5.2.1",
     "firebase": "^11.2.0",
     "firebase-admin": "^13.0.2",
     "i18next": "^25.3.2",

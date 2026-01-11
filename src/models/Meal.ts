@@ -6,10 +6,11 @@ export interface Meal {
   description: string;
   price: number | null;
   priceCurrency: string | null;
-  imagePath: string;
+  imagePath?: string;
+  image?: File;
   foodComponents: FoodComponent[];
-  mealCuisine?: string;
-  mealType?: string;
+  mealCuisine: string;
+  mealType: string;
   createdBy: string;
   createdAt: string;
 }

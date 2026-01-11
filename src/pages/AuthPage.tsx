@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../services/firebase";
+import { useAuth } from "../contexts/AuthContext";
 import AuthForm from "../components/AuthForm";
 
 function AuthPage() {

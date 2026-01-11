@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getOffers } from "../services/firebase";
+import { getOffers } from "../services/api";
 import { Offer } from "../models/Offer";
 
 // Custom hook til at hente tilbud

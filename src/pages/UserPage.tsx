@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAuth } from "../services/firebase";
+import { useAuth } from "../contexts/AuthContext";
 import useSignOut from "../hooks/useSignOut";
 import useFetchMeals from "../hooks/useFetchMeals";
 import { Link } from "react-router-dom";

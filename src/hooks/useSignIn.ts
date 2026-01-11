@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { signIn } from "../services/firebase";
+import { useAuth } from "../contexts/AuthContext";
 
 const useSignIn = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { signIn } = useAuth();
 
   const handleSignIn = async (email: string, password: string) => {
     setLoading(true);
