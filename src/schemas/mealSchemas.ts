@@ -50,20 +50,20 @@ const createImageSchema = z
   .any()
   .refine(
     (files) => !files || files.length === 0 || files instanceof FileList,
-    "Invalid file input"
+    "Invalid file input",
   )
   .transform((files) =>
-    files instanceof FileList && files.length > 0 ? files[0] : undefined
+    files instanceof FileList && files.length > 0 ? files[0] : undefined,
   )
   .optional()
   .refine(
     (file) => !file || (file instanceof File && file.size <= 5 * 1024 * 1024),
-    "Max file size is 5MB"
+    "Max file size is 5MB",
   )
   .refine(
     (file) =>
       !file || ["image/jpeg", "image/png", "image/webp"].includes(file.type),
-    "Only .jpg, .png, and .webp formats are supported"
+    "Only .jpg, .png, and .webp formats are supported",
   );
 
 export const createMealFormSchema = baseMealFormSchema

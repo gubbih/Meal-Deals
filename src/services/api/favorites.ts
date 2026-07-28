@@ -26,11 +26,11 @@ export const getFavoriteMeals = async (userId: string): Promise<string[]> => {
 
         return null;
       })
-        .filter((id: string | null): id is string => Boolean(id));
+      .filter((id: string | null): id is string => Boolean(id));
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch favorite meals"
+        error.response?.data?.message || "Failed to fetch favorite meals",
       );
     }
     throw error;
@@ -39,14 +39,14 @@ export const getFavoriteMeals = async (userId: string): Promise<string[]> => {
 
 export const addFavoriteMeal = async (
   userId: string,
-  mealId: string
+  mealId: string,
 ): Promise<void> => {
   try {
     await api.post(`/api/users/${userId}/favorites`, { mealId });
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(
-        error.response?.data?.message || "Failed to add favorite meal"
+        error.response?.data?.message || "Failed to add favorite meal",
       );
     }
     throw error;
@@ -55,14 +55,14 @@ export const addFavoriteMeal = async (
 
 export const removeFavoriteMeal = async (
   userId: string,
-  mealId: string
+  mealId: string,
 ): Promise<void> => {
   try {
     await api.delete(`/api/users/${userId}/favorites/${mealId}`);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(
-        error.response?.data?.message || "Failed to remove favorite meal"
+        error.response?.data?.message || "Failed to remove favorite meal",
       );
     }
     throw error;

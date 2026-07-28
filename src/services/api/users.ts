@@ -4,7 +4,7 @@ import { User } from "../../models/User";
 
 export const updateUser = async (
   userId: string,
-  updates: Partial<User>
+  updates: Partial<User>,
 ): Promise<User> => {
   try {
     const response = await api.put(`/api/users/${userId}`, updates);

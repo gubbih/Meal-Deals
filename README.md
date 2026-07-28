@@ -9,14 +9,16 @@ This project is a work-in-progress for building a simple meal planning applicati
 ## To-Do List
 
 create mailing system
-  reset password
+reset password
 rating system, one rating pr user for each meal (start system or like/dislikes)
 create search
 create more slings.
 fix issues.
+
 ## Development Roadmap
 
 ### High Priority
+
 - [x] Move everything from Firebase to other host site
   - Move database
   - Move Hosting
@@ -55,7 +57,7 @@ fix issues.
 
 - [x] **Image handling**
 
-  - Implement image storage. 
+  - Implement image storage.
   - Add image upload functionality
 
 - [ ] **User features**
@@ -80,6 +82,7 @@ fix issues.
   - Create sample data for new users
 
 ## Technical Tasks
+
 - [x] Remove http image from create meal
 
 - [x] **Fix the foodComponents system**

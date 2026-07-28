@@ -74,7 +74,7 @@ export function Row({
                   <div className="flex items-start mb-1">
                     <div className="flex-1">
                       <a
-                          href={`https://etilbudsavis.dk/${firstOffer.store}?publication=${firstOffer.catelogid}&offer=${firstOffer.productId}`}
+                        href={`https://etilbudsavis.dk/${firstOffer.store}?publication=${firstOffer.catelogid}&offer=${firstOffer.productId}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-gray-900 dark:text-white font-medium hover:text-blue-600 dark:hover:text-blue-400 break-words line-clamp-2"
@@ -189,7 +189,7 @@ export function Row({
                           </svg>
                           <span>
                             {DateTime.fromISO(offer.offerStart).toFormat(
-                              "d MMM"
+                              "d MMM",
                             )}{" "}
                             til{" "}
                             {DateTime.fromISO(offer.offerEnd).toFormat("d MMM")}

@@ -124,7 +124,9 @@ function CreateMealPage() {
   if (error) {
     return (
       <div className="p-4 text-red-600 dark:text-red-400">
-        <p className="font-medium mb-2">{t("createMealPage.errorLoadingData")}:</p>
+        <p className="font-medium mb-2">
+          {t("createMealPage.errorLoadingData")}:
+        </p>
         <p>{error}</p>
         <button
           onClick={() => window.location.reload()}

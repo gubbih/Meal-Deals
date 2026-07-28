@@ -100,7 +100,7 @@ function HomePage() {
                     {" "}
                     {t(
                       "errors.rateLimitHint",
-                      "The API has a limit of 100 requests per 15 minutes. Please wait a few minutes before trying again."
+                      "The API has a limit of 100 requests per 15 minutes. Please wait a few minutes before trying again.",
                     )}
                   </p>
                 )}
@@ -109,7 +109,7 @@ function HomePage() {
                     💡{" "}
                     {t(
                       "errors.connectionHint",
-                      "This might be due to CORS restrictions or the server being rate-limited. Please wait and try again."
+                      "This might be due to CORS restrictions or the server being rate-limited. Please wait and try again.",
                     )}
                   </p>
                 )}
@@ -127,7 +127,7 @@ function HomePage() {
                       resetCircuitBreaker();
                       console.log(
                         "Circuit breaker status:",
-                        getCircuitBreakerStatus()
+                        getCircuitBreakerStatus(),
                       );
                       refetch();
                     }}

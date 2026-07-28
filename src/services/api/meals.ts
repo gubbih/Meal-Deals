@@ -25,7 +25,7 @@ interface GetMealsResponse {
 }
 
 export const getMeals = async (
-  params?: GetMealsParams
+  params?: GetMealsParams,
 ): Promise<{ meals: Meal[]; pagination?: any }> => {
   try {
     const searchParams = new URLSearchParams();
@@ -49,7 +49,7 @@ export const getMeals = async (
     if (axios.isCancel(error)) {
       throw new Error(
         error.message ||
-          "Request blocked by circuit breaker. Please wait and try again."
+          "Request blocked by circuit breaker. Please wait and try again.",
       );
     }
 
@@ -57,7 +57,7 @@ export const getMeals = async (
       // Handle CORS errors (often means rate limit or server error)
       if (!error.response && error.message.includes("Network Error")) {
         throw new Error(
-          "Unable to connect to server. The API may be temporarily unavailable or rate-limited."
+          "Unable to connect to server. The API may be temporarily unavailable or rate-limited.",
         );
       }
       throw new Error(error.response?.data?.message || "Failed to fetch meals");
@@ -89,7 +89,7 @@ export const getMeal = async (id: string): Promise<Meal> => {
 };
 
 export const createMeal = async (
-  mealData: Omit<Meal, "id" | "createdAt">
+  mealData: Omit<Meal, "id" | "createdAt">,
 ): Promise<Meal> => {
   try {
     console.log("Creating meal with data:", mealData);
@@ -121,7 +121,7 @@ export const createMeal = async (
       if (foodComponents && foodComponents.length > 0) {
         formData.append(
           "foodComponents",
-          JSON.stringify(foodComponents.map((fc) => fc.id))
+          JSON.stringify(foodComponents.map((fc) => fc.id)),
         );
       }
 
@@ -156,7 +156,7 @@ export const createMeal = async (
 
 export const updateMeal = async (
   id: string,
-  updates: Partial<Meal>
+  updates: Partial<Meal>,
 ): Promise<Meal> => {
   try {
     // Check if there's a file to upload
@@ -186,7 +186,7 @@ export const updateMeal = async (
       if (foodComponents && foodComponents.length > 0) {
         formData.append(
           "foodComponents",
-          JSON.stringify(foodComponents.map((fc) => fc.id))
+          JSON.stringify(foodComponents.map((fc) => fc.id)),
         );
       }
 

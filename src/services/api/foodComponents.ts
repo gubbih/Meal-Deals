@@ -14,7 +14,7 @@ export const getFoodComponents = async (): Promise<FoodComponent[]> => {
     console.error("getFoodComponents error:", error);
     if (axios.isAxiosError(error)) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch food components"
+        error.response?.data?.message || "Failed to fetch food components",
       );
     }
     throw error;

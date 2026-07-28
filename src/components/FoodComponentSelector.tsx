@@ -58,7 +58,7 @@ const FoodComponentSelector: React.FC<FoodComponentSelectorProps> = ({
       .map(([label, options]) => ({
         label,
         options: options.sort((a, b) =>
-          a.component.componentName.localeCompare(b.component.componentName)
+          a.component.componentName.localeCompare(b.component.componentName),
         ),
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
@@ -97,7 +97,7 @@ const FoodComponentSelector: React.FC<FoodComponentSelectorProps> = ({
         acc[categoryName].push(component);
         return acc;
       },
-      {} as { [key: string]: FoodComponent[] }
+      {} as { [key: string]: FoodComponent[] },
     );
   }, [selectedComponents]);
 
@@ -216,7 +216,7 @@ const FoodComponentSelector: React.FC<FoodComponentSelectorProps> = ({
                           type="button"
                           onClick={() => {
                             const updatedComponents = selectedComponents.filter(
-                              (c) => c.id !== component.id
+                              (c) => c.id !== component.id,
                             );
                             onSelectionChange(updatedComponents);
                           }}
@@ -228,7 +228,7 @@ const FoodComponentSelector: React.FC<FoodComponentSelectorProps> = ({
                     ))}
                   </div>
                 </div>
-              )
+              ),
             )}
           </div>
         </div>

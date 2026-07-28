@@ -11,12 +11,15 @@ interface MealCardProps {
 }
 
 const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
-  const { toggleFavorite, favorites, loading: favoriteLoading } =
-    useFavoriteMeals();
+  const {
+    toggleFavorite,
+    favorites,
+    loading: favoriteLoading,
+  } = useFavoriteMeals();
 
   const handleToggleFavorite = async (
     mealId: string,
-    event: React.MouseEvent
+    event: React.MouseEvent,
   ) => {
     event.preventDefault();
     event.stopPropagation();
@@ -44,7 +47,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
         acc[categoryName].push(component);
         return acc;
       },
-      {} as { [key: string]: typeof meal.foodComponents }
+      {} as { [key: string]: typeof meal.foodComponents },
     );
   }, [meal]);
 

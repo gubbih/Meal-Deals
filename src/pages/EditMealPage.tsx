@@ -69,10 +69,7 @@ function EditMealPage() {
     error: mealError,
     refetch: refetchMeal,
   } = useCachedMeal(id || "");
-  const {
-    updateMealData,
-    loading: updateLoading,
-  } = useUpdateMeal();
+  const { updateMealData, loading: updateLoading } = useUpdateMeal();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [navigateAway, setNavigateAway] = useState(false);
@@ -147,7 +144,7 @@ function EditMealPage() {
               component.category?.categoryName ||
               component.categoryName ||
               "Uncategorized",
-          })
+          }),
         );
 
         // Combine existing meal data with form updates
@@ -174,17 +171,19 @@ function EditMealPage() {
           .map((component) => component.id)
           .sort((a, b) => a - b);
         const persistedFoodComponentIds = (persistedMeal.foodComponents || [])
-          .map((component: any) =>
-            component?.component?.id || component?.id || null
+          .map(
+            (component: any) =>
+              component?.component?.id || component?.id || null,
           )
           .filter((id: number | null): id is number => id !== null)
           .sort((a, b) => a - b);
 
         const sameFoodComponents =
-          expectedFoodComponentIds.length === persistedFoodComponentIds.length &&
+          expectedFoodComponentIds.length ===
+            persistedFoodComponentIds.length &&
           expectedFoodComponentIds.every(
             (componentId, index) =>
-              componentId === persistedFoodComponentIds[index]
+              componentId === persistedFoodComponentIds[index],
           );
 
         const isPersisted =
@@ -300,7 +299,7 @@ function EditMealPage() {
 
   // Transform food components from nested structure to flat structure for the form
   const transformedFoodComponents = transformFoodComponents(
-    fetchedMeal.foodComponents || []
+    fetchedMeal.foodComponents || [],
   );
 
   console.log("Original food components:", fetchedMeal.foodComponents);

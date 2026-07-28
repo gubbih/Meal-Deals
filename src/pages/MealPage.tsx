@@ -43,7 +43,7 @@ function MealPage() {
   const [meal, setMeal] = useState<Meal | null>(null);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [groupedOffers, setGroupedOffers] = useState<Record<string, Offer[]>>(
-    {}
+    {},
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -112,10 +112,10 @@ function MealPage() {
           const parsed = JSON.parse(savedStores);
           // Only include stores that exist in current offers
           const validStores = parsed.filter((store: string) =>
-            uniqueStores.includes(store)
+            uniqueStores.includes(store),
           );
           setSelectedStores(
-            validStores.length > 0 ? validStores : uniqueStores
+            validStores.length > 0 ? validStores : uniqueStores,
           );
         } catch {
           setSelectedStores(uniqueStores);
@@ -189,7 +189,7 @@ function MealPage() {
 
           matchedOffers.forEach((offer) => {
             const isDuplicate = grouped[key].some(
-              (existingOffer) => existingOffer.id === offer.id
+              (existingOffer) => existingOffer.id === offer.id,
             );
 
             if (!isDuplicate) {
@@ -424,7 +424,7 @@ function MealPage() {
                   .filter((offer) => offer.store === store);
 
                 const uniqueOffers = Array.from(
-                  new Set(matchedOffersForStore.map((o) => o.id))
+                  new Set(matchedOffersForStore.map((o) => o.id)),
                 );
                 const storeOfferCount = uniqueOffers.length;
 
@@ -434,7 +434,7 @@ function MealPage() {
                     onClick={() => {
                       if (selectedStores.includes(store)) {
                         setSelectedStores(
-                          selectedStores.filter((s) => s !== store)
+                          selectedStores.filter((s) => s !== store),
                         );
                       } else {
                         setSelectedStores([...selectedStores, store]);
@@ -507,7 +507,7 @@ function MealPage() {
                               item: component.componentName,
                               hasOffers: Boolean(
                                 groupedOffers[component.componentName]?.length >
-                                  0
+                                0,
                               ),
                               offers:
                                 groupedOffers[component.componentName] || [],
@@ -518,7 +518,7 @@ function MealPage() {
                       })
                       .filter(
                         (item): item is NonNullable<typeof item> =>
-                          item !== null
+                          item !== null,
                       );
 
                     sortedComponents.sort((a, b) => {
@@ -630,7 +630,7 @@ function MealPage() {
                         ))}
                       </ul>
                     </div>
-                  )
+                  ),
                 );
               })()}
             </div>

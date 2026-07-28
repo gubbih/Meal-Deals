@@ -4,7 +4,7 @@ import { User } from "../../models/User";
 
 export const signIn = async (
   email: string,
-  password: string
+  password: string,
 ): Promise<{ user: User; token: string }> => {
   try {
     const response = await api.post("/api/auth/login", { email, password });
@@ -22,7 +22,7 @@ export const signIn = async (
 export const signUp = async (
   email: string,
   password: string,
-  displayName?: string
+  displayName?: string,
 ): Promise<{ user: User; token: string }> => {
   try {
     const response = await api.post("/api/auth/register", {

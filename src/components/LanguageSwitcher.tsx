@@ -3,7 +3,11 @@ import { useTranslation } from "react-i18next";
 
 const LanguageSwitcher: React.FC = () => {
   const { i18n } = useTranslation();
-  const currentLanguage = (i18n.resolvedLanguage || i18n.language || "en").toLowerCase();
+  const currentLanguage = (
+    i18n.resolvedLanguage ||
+    i18n.language ||
+    "en"
+  ).toLowerCase();
   const isEnglish = currentLanguage.startsWith("en");
   const isDanish = currentLanguage.startsWith("da");
 

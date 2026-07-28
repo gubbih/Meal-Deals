@@ -29,17 +29,15 @@ function Navigation() {
   const [cuisineDropdownOpen, setCuisineDropdownOpen] = useState(false);
   const [mealTypeDropdownOpen, setMealTypeDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const [cuisineTimeout, setCuisineTimeout] = useState<
-    ReturnType<typeof setTimeout> | null
-  >(
-    null
-  );
-  const [mealTypeTimeout, setMealTypeTimeout] = useState<
-    ReturnType<typeof setTimeout> | null
-  >(null);
-  const [profileTimeout, setProfileTimeout] = useState<
-    ReturnType<typeof setTimeout> | null
-  >(null);
+  const [cuisineTimeout, setCuisineTimeout] = useState<ReturnType<
+    typeof setTimeout
+  > | null>(null);
+  const [mealTypeTimeout, setMealTypeTimeout] = useState<ReturnType<
+    typeof setTimeout
+  > | null>(null);
+  const [profileTimeout, setProfileTimeout] = useState<ReturnType<
+    typeof setTimeout
+  > | null>(null);
   const { user, signOut } = useAuth();
 
   React.useEffect(() => {

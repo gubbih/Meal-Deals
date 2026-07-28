@@ -12,7 +12,7 @@ export const getOffers = async (): Promise<Offer[]> => {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch offers"
+        error.response?.data?.message || "Failed to fetch offers",
       );
     }
     throw error;

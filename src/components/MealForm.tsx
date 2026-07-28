@@ -45,7 +45,9 @@ const MealForm: React.FC<MealFormProps> = ({
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<MealFormValues>({
-    resolver: zodResolver(isEditMode ? editMealFormSchema : createMealFormSchema),
+    resolver: zodResolver(
+      isEditMode ? editMealFormSchema : createMealFormSchema,
+    ),
     defaultValues: {
       name: meal.name,
       description: meal.description,
@@ -90,7 +92,7 @@ const MealForm: React.FC<MealFormProps> = ({
             ...component,
             category: { categoryName: categoryGroup.category },
           },
-        }))
+        })),
       );
     }
 
@@ -277,7 +279,7 @@ const MealForm: React.FC<MealFormProps> = ({
               options={cuisineOptions}
               value={
                 cuisineOptions.find(
-                  (option) => option.value === watch("mealCuisine")
+                  (option) => option.value === watch("mealCuisine"),
                 ) || null
               }
               onChange={handleCuisineChange}
@@ -302,7 +304,7 @@ const MealForm: React.FC<MealFormProps> = ({
               options={mealTypeOptions}
               value={
                 mealTypeOptions.find(
-                  (option) => option.value === watch("mealType")
+                  (option) => option.value === watch("mealType"),
                 ) || null
               }
               onChange={handleMealTypeChange}
@@ -450,7 +452,11 @@ const MealForm: React.FC<MealFormProps> = ({
             disabled={isSubmitting}
             className="bg-green-500 hover:bg-green-600 text-white p-2 rounded flex-1 text-center disabled:bg-green-300"
           >
-            {isSubmitting ? t("editMealPage.updatingMeal") : meal.id ? t("editMealPage.updateMeal") : t("mealForm.createMeal")}
+            {isSubmitting
+              ? t("editMealPage.updatingMeal")
+              : meal.id
+                ? t("editMealPage.updateMeal")
+                : t("mealForm.createMeal")}
           </button>
           <a
             href="/"

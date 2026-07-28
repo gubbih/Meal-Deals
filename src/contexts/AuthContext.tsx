@@ -15,7 +15,7 @@ interface AuthContextType {
   signUp: (
     email: string,
     password: string,
-    displayName?: string
+    displayName?: string,
   ) => Promise<void>;
   signOut: () => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -75,14 +75,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signUp = async (
     email: string,
     password: string,
-    displayName?: string
+    displayName?: string,
   ): Promise<void> => {
     setLoading(true);
     try {
       const { user: newUser, token } = await apiSignUp(
         email,
         password,
-        displayName
+        displayName,
       );
       setUser(newUser);
       setAuthToken(token);

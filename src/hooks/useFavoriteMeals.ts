@@ -49,7 +49,8 @@ const normalizeFavoriteIds = (rawFavorites: unknown): string[] => {
         if (typeof obj.id === "string") return obj.id;
 
         const nestedMeal = obj.meal as Record<string, unknown> | undefined;
-        if (nestedMeal && typeof nestedMeal.id === "string") return nestedMeal.id;
+        if (nestedMeal && typeof nestedMeal.id === "string")
+          return nestedMeal.id;
       }
       return null;
     })
