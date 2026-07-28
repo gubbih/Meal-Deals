@@ -19,7 +19,7 @@ const CloseIcon = IoClose as React.ElementType;
 const ChevronDownIcon = IoChevronDown as React.ElementType;
 
 function Navigation() {
-  const DROPDOWN_CLOSE_DELAY = 50;
+  const DROPDOWN_CLOSE_DELAY = 75;
 
   const { t } = useTranslation();
   const [dark, setDark] = useState(() => {
