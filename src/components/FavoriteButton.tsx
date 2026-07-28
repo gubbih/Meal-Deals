@@ -1,5 +1,4 @@
 import React from "react";
-//import { useAuth } from "../services/firebase";
 
 interface FavoriteButtonProps {
   mealId: string;

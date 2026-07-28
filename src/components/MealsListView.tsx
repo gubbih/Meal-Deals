@@ -5,8 +5,10 @@ import useCachedMeals from "../hooks/useCachedMeals";
 import { useAuth } from "../contexts/AuthContext";
 import MealCard from "./MealCard";
 import { LoadingSpinner } from "./LoadingSpinner";
-import { cuisines, mealsTypes } from "../assets/Arrays";
-import { getTranslatedCuisines, getTranslatedMealTypes } from "../utils/translationHelpers";
+import {
+  getTranslatedCuisines,
+  getTranslatedMealTypes,
+} from "../utils/translationHelpers";
 
 interface MealsListViewProps {
   title?: string;
@@ -25,7 +27,7 @@ const MealsListView: React.FC<MealsListViewProps> = ({
 }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  
+
   // Filter and search state
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCuisine, setSelectedCuisine] = useState("");
@@ -44,7 +46,8 @@ const MealsListView: React.FC<MealsListViewProps> = ({
     createdBy: createdBy || undefined,
   };
 
-  const { meals, pagination, loading, error, refetch } = useCachedMeals(mealsParams);
+  const { meals, pagination, loading, error, refetch } =
+    useCachedMeals(mealsParams);
 
   // Translated options
   const cuisineOptions = getTranslatedCuisines(t);

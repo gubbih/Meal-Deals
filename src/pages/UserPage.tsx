@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import Toast from "../components/Toast";
 import AuthForm from "../components/AuthForm";
 import { useTranslation } from "react-i18next";
-import { translateMealType } from "../utils/translationHelpers";
 
 function UserPage() {
   const { t } = useTranslation();

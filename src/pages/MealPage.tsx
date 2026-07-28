@@ -336,18 +336,18 @@ function MealPage() {
               <button
                 onClick={handleToggleFavorite}
                 disabled={favLoading}
-                className={`flex items-center px-4 py-2 rounded-lg ${
+                className={`flex h-10 items-center justify-center px-4 rounded-lg border ${
                   isFavorite
-                    ? "bg-red-600 hover:bg-red-700 dark:bg-red-500/85 dark:hover:bg-red-400/90 text-white"
-                    : "bg-white/95 hover:bg-gray-100 dark:bg-gray-900/55 dark:hover:bg-gray-900/70 text-gray-800 dark:text-gray-100 border border-gray-200/80 dark:border-white/10 backdrop-blur-sm"
+                    ? "bg-red-600 hover:bg-red-700 dark:bg-red-500/85 dark:hover:bg-red-400/90 text-white border-transparent"
+                    : "bg-white/95 hover:bg-gray-100 dark:bg-gray-900/55 dark:hover:bg-gray-900/70 text-gray-800 dark:text-gray-100 border-gray-200/80 dark:border-white/10 backdrop-blur-sm"
                 } whitespace-nowrap shadow-md transition-colors disabled:cursor-not-allowed disabled:opacity-60`}
               >
                 <svg
-                  className={`w-5 h-5 ${
+                  className={`h-5 w-5 shrink-0 ${
                     isFavorite
                       ? "text-white"
                       : "text-gray-800 dark:text-gray-100"
-                  } mr-2`}
+                  } sm:mr-2`}
                   fill={isFavorite ? "currentColor" : "none"}
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -370,10 +370,10 @@ function MealPage() {
               {canEdit && (
                 <button
                   onClick={handleEdit}
-                  className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md transition-colors"
+                  className="flex h-10 items-center justify-center px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg border border-transparent shadow-md transition-colors"
                 >
                   <svg
-                    className="w-5 h-5 mr-2"
+                    className="h-5 w-5 shrink-0 sm:mr-2"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"

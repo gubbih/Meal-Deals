@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import "./App.css";
 import HomePage from "./pages/HomePage";
 import MealPage from "./pages/MealPage";
 import CreateMealPage from "./pages/CreateMealPage";
@@ -19,13 +18,16 @@ import CuisinePage from "./pages/CuisinePage";
 import MealTypePage from "./pages/MealTypePage";
 import CacheDebugPanel from "./components/CacheDebugPanel";
 
+const CACHE_DEFAULT_MAX_AGE_MS = 5 * 60 * 1000;
+const CACHE_MAX_SIZE = 150;
+
 function App() {
   return (
     <AuthProvider>
       <CacheProvider
-        defaultMaxAge={5 * 60 * 1000} // 5 minutes
-        maxCacheSize={150} // Allow more cache items for better UX
-        persistToStorage={true} // Enable localStorage persistence
+        defaultMaxAge={CACHE_DEFAULT_MAX_AGE_MS}
+        maxCacheSize={CACHE_MAX_SIZE}
+        persistToStorage={true}
       >
         <ToastProvider>
           <Router>

@@ -1,13 +1,11 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { deleteMeal } from "../services/api";
-import { Meal } from "../models/Meal";
 import { Link, useLocation } from "react-router-dom";
 import Modal from "../components/Modal";
 import Toast from "../components/Toast";
 import { useCache } from "../contexts/CacheContext";
 import { useTranslation } from "react-i18next";
-import LanguageSwitcher from "../components/LanguageSwitcher";
 import useCachedMeals from "../hooks/useCachedMeals";
 import {
   translateCuisine,

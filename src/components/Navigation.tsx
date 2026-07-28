@@ -19,6 +19,8 @@ const CloseIcon = IoClose as React.ElementType;
 const ChevronDownIcon = IoChevronDown as React.ElementType;
 
 function Navigation() {
+  const DROPDOWN_CLOSE_DELAY = 50;
+
   const { t } = useTranslation();
   const [dark, setDark] = useState(() => {
     return localStorage.getItem("darkMode") === "true";
@@ -27,23 +29,22 @@ function Navigation() {
   const [cuisineDropdownOpen, setCuisineDropdownOpen] = useState(false);
   const [mealTypeDropdownOpen, setMealTypeDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const [cuisineTimeout, setCuisineTimeout] = useState<NodeJS.Timeout | null>(
+  const [cuisineTimeout, setCuisineTimeout] = useState<
+    ReturnType<typeof setTimeout> | null
+  >(
     null
   );
-  const [mealTypeTimeout, setMealTypeTimeout] = useState<NodeJS.Timeout | null>(
-    null
-  );
-  const [profileTimeout, setProfileTimeout] = useState<NodeJS.Timeout | null>(
-    null
-  );
+  const [mealTypeTimeout, setMealTypeTimeout] = useState<
+    ReturnType<typeof setTimeout> | null
+  >(null);
+  const [profileTimeout, setProfileTimeout] = useState<
+    ReturnType<typeof setTimeout> | null
+  >(null);
   const { user, signOut } = useAuth();
 
   React.useEffect(() => {
-    if (dark) {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
-    }
+    document.documentElement.classList.toggle("dark", dark);
+    document.body.classList.toggle("dark", dark);
   }, [dark]);
 
   const darkModeHandler = () => {
@@ -76,7 +77,7 @@ function Navigation() {
   const handleCuisineMouseLeave = () => {
     const timeout = setTimeout(() => {
       setCuisineDropdownOpen(false);
-    }, 100); // 100ms delay
+    }, DROPDOWN_CLOSE_DELAY);
     setCuisineTimeout(timeout);
   };
 
@@ -91,7 +92,7 @@ function Navigation() {
   const handleMealTypeMouseLeave = () => {
     const timeout = setTimeout(() => {
       setMealTypeDropdownOpen(false);
-    }, 100); // 100ms delay
+    }, DROPDOWN_CLOSE_DELAY);
     setMealTypeTimeout(timeout);
   };
 
@@ -106,7 +107,7 @@ function Navigation() {
   const handleProfileMouseLeave = () => {
     const timeout = setTimeout(() => {
       setProfileDropdownOpen(false);
-    }, 100); // 100ms delay
+    }, DROPDOWN_CLOSE_DELAY);
     setProfileTimeout(timeout);
   };
 
@@ -171,10 +172,12 @@ function Navigation() {
             </li>
 
             {/* Cuisines Dropdown - Always Visible */}
-            <li className="relative group">
+            <li
+              className="relative group"
+              onMouseEnter={handleCuisineMouseEnter}
+              onMouseLeave={handleCuisineMouseLeave}
+            >
               <button
-                onMouseEnter={handleCuisineMouseEnter}
-                onMouseLeave={handleCuisineMouseLeave}
                 onClick={() => setCuisineDropdownOpen(!cuisineDropdownOpen)}
                 className="flex items-center py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
@@ -184,9 +187,7 @@ function Navigation() {
               <div
                 className={`${
                   cuisineDropdownOpen ? "block" : "hidden"
-                } cuisine-scrollbar absolute left-0 mt-2 w-44 max-h-64 overflow-y-scroll bg-white dark:bg-gray-800 rounded-md shadow-lg z-20`}
-                onMouseEnter={handleCuisineMouseEnter}
-                onMouseLeave={handleCuisineMouseLeave}
+                } cuisine-scrollbar absolute left-0 top-full mt-0 w-44 max-h-64 overflow-y-scroll bg-white dark:bg-gray-800 rounded-md shadow-lg z-20`}
               >
                 {cuisines.map((cuisine) => (
                   <Link
@@ -205,10 +206,12 @@ function Navigation() {
             </li>
 
             {/* Meal Types Dropdown - Always Visible */}
-            <li className="relative group">
+            <li
+              className="relative group"
+              onMouseEnter={handleMealTypeMouseEnter}
+              onMouseLeave={handleMealTypeMouseLeave}
+            >
               <button
-                onMouseEnter={handleMealTypeMouseEnter}
-                onMouseLeave={handleMealTypeMouseLeave}
                 onClick={() => setMealTypeDropdownOpen(!mealTypeDropdownOpen)}
                 className="flex items-center py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
@@ -218,9 +221,7 @@ function Navigation() {
               <div
                 className={`${
                   mealTypeDropdownOpen ? "block" : "hidden"
-                } absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-20`}
-                onMouseEnter={handleMealTypeMouseEnter}
-                onMouseLeave={handleMealTypeMouseLeave}
+                } absolute left-0 top-full mt-0 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-20`}
               >
                 {mealsTypes.map((mealType) => (
                   <Link
@@ -253,10 +254,12 @@ function Navigation() {
 
             {/* Profile Dropdown - Only visible when logged in */}
             {user && (
-              <li className="relative group">
+              <li
+                className="relative group"
+                onMouseEnter={handleProfileMouseEnter}
+                onMouseLeave={handleProfileMouseLeave}
+              >
                 <button
-                  onMouseEnter={handleProfileMouseEnter}
-                  onMouseLeave={handleProfileMouseLeave}
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                   className="flex items-center py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
@@ -266,9 +269,7 @@ function Navigation() {
                 <div
                   className={`${
                     profileDropdownOpen ? "block" : "hidden"
-                  } absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-20`}
-                  onMouseEnter={handleProfileMouseEnter}
-                  onMouseLeave={handleProfileMouseLeave}
+                  } absolute left-0 top-full mt-0 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-20`}
                 >
                   <Link
                     to="/user"

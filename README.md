@@ -8,14 +8,20 @@ This project is a work-in-progress for building a simple meal planning applicati
 
 ## To-Do List
 
+create mailing system
+  reset password
+rating system, one rating pr user for each meal (start system or like/dislikes)
+create search
+create more slings.
+fix issues.
 ## Development Roadmap
 
 ### High Priority
 - [x] Move everything from Firebase to other host site
   - Move database
   - Move Hosting
-  - Move Image hosting?
-  - Move Auth or still use firebase? figure this out :)
+  - Move Image hosting
+  - Move Auth from firebase
 
 - [ ] **Authentication refinement**
 
@@ -53,7 +59,7 @@ This project is a work-in-progress for building a simple meal planning applicati
   - Add image upload functionality
 
 - [ ] **User features**
-  - Complete favorites functionality - done
+  - [x] Complete favorites functionality
   - Add meal ratings/reviews
 
 ### Lower Priority
@@ -74,6 +80,7 @@ This project is a work-in-progress for building a simple meal planning applicati
   - Create sample data for new users
 
 ## Technical Tasks
+- [ ] Remove http image from create meal
 
 - [x] **Fix the foodComponents system**
 
@@ -100,10 +107,10 @@ This project is a work-in-progress for building a simple meal planning applicati
 The project follows a modular structure:
 
 - `/src/components`: Reusable UI components
-- `/src/hooks`: Custom React hooks for Firebase and state management
+- `/src/hooks`: Custom React hooks for API integration and state management
 - `/src/models`: TypeScript interfaces and types
 - `/src/pages`: Page components accessible through routing
-- `/src/services`: Firebase service functions
+- `/src/services`: API service functions
 - `/src/assets`: Static assets and configuration
 
 ---
