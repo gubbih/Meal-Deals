@@ -13,12 +13,6 @@ on:
       - "deploy-ssh.sh"
       - ".github/workflows/deploy.yml"
 
-<<<<<<< HEAD
-=======
-permissions:
-  contents: read
-
->>>>>>> f9aeb75aa2ac42713e5c7f924c84c3053cb46d19
 concurrency:
   group: deploy-main
   cancel-in-progress: true
@@ -36,7 +30,6 @@ jobs:
       SSH_USER: ${{ secrets.SSH_USER }}
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-<<<<<<< HEAD
       SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
       GH_DEPLOY_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
       APP_DIR: /home/cheapmea/Meal-Deals
@@ -44,13 +37,6 @@ jobs:
       DEPLOY_BRANCH: main
       REPO_SLUG: ${{ github.repository }}
       PASSENGER_RESTART_FILE: ""
-=======
-      GH_DEPLOY_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
-      APP_DIR: /home/cheapmea/api.cheapmeals.dk
-      DEPLOY_BRANCH: main
-      REPO_SLUG: ${{ github.repository }}
-      PASSENGER_RESTART_FILE: tmp/restart.txt
->>>>>>> f9aeb75aa2ac42713e5c7f924c84c3053cb46d19
 
     steps:
       - name: Validate SSH auth secrets
@@ -67,7 +53,6 @@ jobs:
             exit 1
           fi
 
-<<<<<<< HEAD
           if [ -z "${SSH_KNOWN_HOSTS:-}" ]; then
             echo "Missing required secret: SSH_KNOWN_HOSTS"
             exit 1
@@ -80,13 +65,6 @@ jobs:
           mkdir -p ~/.ssh
           printf "%s\n" "$SSH_PRIVATE_KEY" | sed 's/\r$//' > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-=======
-      - name: Start SSH agent
-        if: env.SSH_PRIVATE_KEY != ''
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
->>>>>>> f9aeb75aa2ac42713e5c7f924c84c3053cb46d19
 
       - name: Install sshpass for password auth
         if: env.SSH_PRIVATE_KEY == '' && env.SSH_PASSWORD != ''
@@ -99,11 +77,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p ~/.ssh
-<<<<<<< HEAD
           printf "%s\n" "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
-=======
-          printf "%s\n" "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
->>>>>>> f9aeb75aa2ac42713e5c7f924c84c3053cb46d19
           chmod 600 ~/.ssh/known_hosts
 
       - name: Deploy over SSH
@@ -112,21 +86,14 @@ jobs:
 
           app_dir_q=$(printf "%q" "$APP_DIR")
           deploy_branch_q=$(printf "%q" "$DEPLOY_BRANCH")
-<<<<<<< HEAD
           static_dir_q=$(printf "%q" "$STATIC_DIR")
-=======
->>>>>>> f9aeb75aa2ac42713e5c7f924c84c3053cb46d19
           repo_slug_q=$(printf "%q" "$REPO_SLUG")
           token_q=$(printf "%q" "$GH_DEPLOY_TOKEN")
           restart_file_q=$(printf "%q" "$PASSENGER_RESTART_FILE")
 
           # Forward deployment context to the remote script via environment variables.
           if [ -n "${SSH_PRIVATE_KEY:-}" ]; then
-<<<<<<< HEAD
             ssh_cmd=(ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -p "${SSH_PORT:-22}" "$SSH_USER@$SSH_HOST" "bash -se")
-=======
-            ssh_cmd=(ssh -p "${SSH_PORT:-22}" "$SSH_USER@$SSH_HOST" "bash -se")
->>>>>>> f9aeb75aa2ac42713e5c7f924c84c3053cb46d19
           else
             ssh_cmd=(sshpass -e ssh -p "${SSH_PORT:-22}" "$SSH_USER@$SSH_HOST" "bash -se")
             export SSHPASS="$SSH_PASSWORD"
@@ -136,10 +103,7 @@ jobs:
           set -euo pipefail
           export APP_DIR=${app_dir_q}
           export DEPLOY_BRANCH=${deploy_branch_q}
-<<<<<<< HEAD
           export STATIC_DIR=${static_dir_q}
-=======
->>>>>>> f9aeb75aa2ac42713e5c7f924c84c3053cb46d19
           export GITHUB_REPOSITORY=${repo_slug_q}
           export GH_DEPLOY_TOKEN=${token_q}
           export PASSENGER_RESTART_FILE=${restart_file_q}

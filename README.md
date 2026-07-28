@@ -150,6 +150,7 @@ Deployment runs only when a pull request is merged into `main` and it changes at
 <<<<<<< HEAD
 Non-merged pull requests do not deploy.
 =======
+
 Merge commits are detected and skipped.
 
 > > > > > > > f9aeb75aa2ac42713e5c7f924c84c3053cb46d19
