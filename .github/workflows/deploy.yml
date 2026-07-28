@@ -13,6 +13,9 @@ on:
       - "deploy-ssh.sh"
       - ".github/workflows/deploy.yml"
 
+permissions:
+  contents: read
+
 concurrency:
   group: deploy-main
   cancel-in-progress: true
