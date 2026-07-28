@@ -7,8 +7,8 @@ const app = express();
 const windowMinutes = parseInt(process.env.RATE_LIMIT_WINDOW_MINUTES, 10);
 const maxRequests = parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10);
 const limiter = rateLimit({
-  windowMs: (!isNaN(windowMinutes) ? windowMinutes : 15) * 60 * 1000,
-  max: !isNaN(maxRequests) ? maxRequests : 100,
+  windowMs: (!isNaN(windowMinutes) && windowMinutes > 0 ? windowMinutes : 15) * 60 * 1000,
+  max: !isNaN(maxRequests) && maxRequests > 0 ? maxRequests : 100,
 });
 app.use(limiter);
 
