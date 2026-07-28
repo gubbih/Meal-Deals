@@ -23,6 +23,9 @@ concurrency:
   group: deploy-main
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     if: github.event.pull_request.merged == true
