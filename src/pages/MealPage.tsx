@@ -507,7 +507,7 @@ function MealPage() {
                               item: component.componentName,
                               hasOffers: Boolean(
                                 groupedOffers[component.componentName]?.length >
-                                0,
+                                  0,
                               ),
                               offers:
                                 groupedOffers[component.componentName] || [],
