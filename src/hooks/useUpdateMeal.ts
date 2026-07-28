@@ -10,11 +10,14 @@ function useUpdateMeal() {
     setLoading(true);
     setError(null);
     try {
-      await updateMeal(mealId, updates);
-      setLoading(false);
+      const updatedMeal = await updateMeal(mealId, updates);
+      return updatedMeal;
     } catch (err: any) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
+      throw err;
+    } finally {
       setLoading(false);
-      setError(err.message);
     }
   };
 

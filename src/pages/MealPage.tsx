@@ -90,7 +90,7 @@ function MealPage() {
     };
 
     fetchData();
-  }, [id]);
+  }, [id, t]);
 
   // Extract unique stores from offers
   useEffect(() => {
@@ -124,7 +124,7 @@ function MealPage() {
         setSelectedStores(uniqueStores);
       }
     }
-  }, [offers]);
+  }, [offers, t]);
 
   // Save selected stores to localStorage when they change
   useEffect(() => {
@@ -135,7 +135,7 @@ function MealPage() {
         console.error(t("mealPage.errors.saveStores"), error);
       }
     }
-  }, [selectedStores]);
+  }, [selectedStores, t]);
 
   // Process food components and match with offers
   useEffect(() => {
@@ -206,7 +206,7 @@ function MealPage() {
       console.error(t("mealPage.errors.processingOffers"), error);
       setError(t("mealPage.errors.processingOffers"));
     }
-  }, [meal, offers, selectedStores]);
+  }, [meal, offers, selectedStores, availableStores.length, t]);
 
   const handleToggleFavorite = async () => {
     if (!user) {

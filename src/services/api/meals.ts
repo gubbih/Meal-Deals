@@ -105,7 +105,12 @@ export const createMeal = async (
       const formData = new FormData();
 
       // Add all meal data except the image file
-      const { image, foodComponents, ...otherData } = mealData;
+      const {
+        image,
+        foodComponents,
+        imagePath: _imagePath,
+        ...otherData
+      } = mealData;
       Object.entries(otherData).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
           formData.append(key, value.toString());
@@ -165,7 +170,12 @@ export const updateMeal = async (
       const formData = new FormData();
 
       // Add all meal data except the image file
-      const { image, foodComponents, ...otherData } = updates;
+      const {
+        image,
+        foodComponents,
+        imagePath: _imagePath,
+        ...otherData
+      } = updates;
       Object.entries(otherData).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
           formData.append(key, value.toString());

@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { User } from "../models/User";
 
 const useSignUp = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
   const { signUp } = useAuth();
 
   const handleSignUp = async (
@@ -29,7 +27,7 @@ const useSignUp = () => {
     }
   };
 
-  return { handleSignUp, user, loading, error };
+  return { handleSignUp, loading, error };
 };
 
 export default useSignUp;

@@ -34,7 +34,7 @@ const MealsListView: React.FC<MealsListViewProps> = ({
   const [selectedMealType, setSelectedMealType] = useState("");
   const [createdBy, setCreatedBy] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(defaultPageSize);
+  const pageSize = defaultPageSize;
 
   // Build parameters for the API call
   const mealsParams = {

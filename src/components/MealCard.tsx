@@ -46,7 +46,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
       },
       {} as { [key: string]: typeof meal.foodComponents }
     );
-  }, [meal.foodComponents]);
+  }, [meal]);
 
   return (
     <div key={meal.id} className="relative group pb-1">

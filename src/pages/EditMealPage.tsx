@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Meal } from "../models/Meal";
 import useCachedFoodComponents from "../hooks/useCachedFoodComponents";
@@ -151,9 +151,15 @@ function EditMealPage() {
         );
 
         // Combine existing meal data with form updates
+        const hasNewImage = data.image instanceof File;
         const updatedMeal: Meal = {
           ...fetchedMeal,
           ...data,
+          imagePath: hasNewImage
+            ? ""
+            : data.imagePath && data.imagePath.trim().length > 0
+              ? data.imagePath
+              : fetchedMeal.imagePath,
           foodComponents: processedFoodComponents,
         };
 
@@ -287,11 +293,6 @@ function EditMealPage() {
         onConfirm={confirmNavigateAway}
         message="Er du sikker på at gå væk fra denne side, tingene er ikke gemt?"
       />
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-          Edit Meal: {fetchedMeal.name}
-        </h1>
-      </div>
 
       {formSubmitting ? (
         <div className="flex flex-col items-center justify-center py-8">

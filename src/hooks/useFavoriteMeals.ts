@@ -98,7 +98,7 @@ const useFavoriteMeals = () => {
       isMounted = false;
       favoritesListeners.delete(listener);
     };
-  }, [user?.id, user?.favoriteRecipes]);
+  }, [user, user?.id, user?.favoriteRecipes]);
 
   const addToFavorites = async (mealId: string) => {
     if (!user) {

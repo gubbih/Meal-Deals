@@ -11,7 +11,7 @@ interface HealthCheckResponse {
 
 export const checkAPIHealth = async (): Promise<HealthCheckResponse> => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/health`, {
+    await axios.get(`${API_BASE_URL}/health`, {
       timeout: 5000, // 5 second timeout
     });
 
