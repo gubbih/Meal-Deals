@@ -18,20 +18,12 @@ require_cmd() {
 require_cmd git
 require_cmd npm
 
-<<<<<<< HEAD
 APP_DIR="${APP_DIR:-/home/cheapmea/Meal-Deals}"
 STATIC_DIR="${STATIC_DIR:-/public_html}"
 DEPLOY_BRANCH="${DEPLOY_BRANCH:-main}"
 REPO_SLUG="${GITHUB_REPOSITORY:-}"
 GH_DEPLOY_TOKEN="${GH_DEPLOY_TOKEN:-}"
 PASSENGER_RESTART_FILE="${PASSENGER_RESTART_FILE:-}"
-=======
-APP_DIR="${APP_DIR:-/home/cheapmea/api.cheapmeals.dk}"
-DEPLOY_BRANCH="${DEPLOY_BRANCH:-main}"
-REPO_SLUG="${GITHUB_REPOSITORY:-}"
-GH_DEPLOY_TOKEN="${GH_DEPLOY_TOKEN:-}"
-PASSENGER_RESTART_FILE="${PASSENGER_RESTART_FILE:-tmp/restart.txt}"
->>>>>>> f9aeb75aa2ac42713e5c7f924c84c3053cb46d19
 
 cd "$APP_DIR"
 
@@ -63,7 +55,6 @@ fi
 log "Building application"
 npm run build
 
-<<<<<<< HEAD
 if [ ! -d build ]; then
   fail "Build output directory not found: $APP_DIR/build"
 fi
@@ -83,23 +74,14 @@ else
     -exec rm -rf {} +
   cp -a build/. "$STATIC_DIR/"
 fi
-
-=======
->>>>>>> f9aeb75aa2ac42713e5c7f924c84c3053cb46d19
 log "Switching to production mode and pruning dev dependencies"
 export NODE_ENV=production
 npm prune --omit=dev
 
-<<<<<<< HEAD
 if [ -n "${PASSENGER_RESTART_FILE:-}" ]; then
   log "Restarting app process"
   mkdir -p "$(dirname "$PASSENGER_RESTART_FILE")"
   touch "$PASSENGER_RESTART_FILE"
 fi
-=======
-log "Restarting Passenger"
-mkdir -p "$(dirname "$PASSENGER_RESTART_FILE")"
-touch "$PASSENGER_RESTART_FILE"
->>>>>>> f9aeb75aa2ac42713e5c7f924c84c3053cb46d19
 
 log "Deployment completed successfully"
