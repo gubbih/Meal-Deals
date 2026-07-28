@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Meal } from "../models/Meal";
+import { getMeal } from "../services/api";
 import useCachedFoodComponents from "../hooks/useCachedFoodComponents";
 import MealForm from "../components/MealForm";
 import { useCachedMeal } from "../hooks/useCachedMeal";
@@ -71,7 +72,6 @@ function EditMealPage() {
   const {
     updateMealData,
     loading: updateLoading,
-    error: updateError,
   } = useUpdateMeal();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -165,6 +165,39 @@ function EditMealPage() {
 
         await updateMealData(id || "", updatedMeal);
 
+        const persistedMeal = await getMeal(id || "");
+        if (!persistedMeal) {
+          throw new Error("Failed to verify persisted meal data");
+        }
+
+        const expectedFoodComponentIds = processedFoodComponents
+          .map((component) => component.id)
+          .sort((a, b) => a - b);
+        const persistedFoodComponentIds = (persistedMeal.foodComponents || [])
+          .map((component: any) =>
+            component?.component?.id || component?.id || null
+          )
+          .filter((id: number | null): id is number => id !== null)
+          .sort((a, b) => a - b);
+
+        const sameFoodComponents =
+          expectedFoodComponentIds.length === persistedFoodComponentIds.length &&
+          expectedFoodComponentIds.every(
+            (componentId, index) =>
+              componentId === persistedFoodComponentIds[index]
+          );
+
+        const isPersisted =
+          persistedMeal.name === updatedMeal.name &&
+          persistedMeal.description === updatedMeal.description &&
+          persistedMeal.mealCuisine === updatedMeal.mealCuisine &&
+          persistedMeal.mealType === updatedMeal.mealType &&
+          sameFoodComponents;
+
+        if (!isPersisted) {
+          throw new Error("Meal update was acknowledged but not persisted");
+        }
+
         // Invalidate both the all-meals cache and this specific meal's cache
         invalidate("all-meals");
         invalidate(`meal-${id}`);
@@ -193,7 +226,7 @@ function EditMealPage() {
 
   const isLoading =
     authLoading || mealLoading || foodComponentsLoading || updateLoading;
-  const error = mealError || foodComponentsError || updateError;
+  const error = mealError || foodComponentsError;
 
   if (isLoading) {
     return (

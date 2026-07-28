@@ -80,7 +80,7 @@ fix issues.
   - Create sample data for new users
 
 ## Technical Tasks
-- [ ] Remove http image from create meal
+- [x] Remove http image from create meal
 
 - [x] **Fix the foodComponents system**
 
