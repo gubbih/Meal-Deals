@@ -12,7 +12,7 @@ function AuthPage() {
   const params = new URLSearchParams(location.search);
   const showSignUp = params.get("signup") === "true";
 
-  // React to URL changes while already on the auth page
+  // React to URL changes while already on the auth pages
   const [isSignUp, setIsSignUp] = React.useState(showSignUp);
 
   React.useEffect(() => {
