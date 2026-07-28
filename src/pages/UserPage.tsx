@@ -113,7 +113,7 @@ function UserPage() {
                   >
                     <div className="w-full h-36 rounded-md overflow-hidden mb-3">
                       <img
-                        src={"https://api.cheapmeals.dk" + meal.imagePath}
+                        src={meal.imagePath}
                         alt={meal.name}
                         className="h-full w-full object-cover"
                       />

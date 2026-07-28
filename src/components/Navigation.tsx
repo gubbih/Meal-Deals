@@ -12,6 +12,12 @@ import { cuisines, mealsTypes } from "../assets/Arrays";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
 
+const SunnyIcon = IoSunny as React.ElementType;
+const MoonIcon = IoMoon as React.ElementType;
+const MenuIcon = IoMenu as React.ElementType;
+const CloseIcon = IoClose as React.ElementType;
+const ChevronDownIcon = IoChevronDown as React.ElementType;
+
 function Navigation() {
   const { t } = useTranslation();
   const [dark, setDark] = useState(() => {
@@ -130,9 +136,9 @@ function Navigation() {
               } inline-block w-4 h-4 rounded-full bg-white`}
             />
             {dark ? (
-              <IoSunny className="absolute left-1 text-yellow-500" />
+              <SunnyIcon className="absolute left-1 text-yellow-500" />
             ) : (
-              <IoMoon className="absolute right-1 text-gray-500" />
+              <MoonIcon className="absolute right-1 text-gray-500" />
             )}
           </button>
 
@@ -142,7 +148,7 @@ function Navigation() {
             className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
             aria-label="Open main menu"
           >
-            {mobileMenuOpen ? <IoClose size={24} /> : <IoMenu size={24} />}
+            {mobileMenuOpen ? <CloseIcon size={24} /> : <MenuIcon size={24} />}
           </button>
         </div>
 
@@ -173,12 +179,12 @@ function Navigation() {
                 className="flex items-center py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
                 {t("navigation.cuisines")}
-                <IoChevronDown className="ml-1 h-4 w-4" />
+                <ChevronDownIcon className="ml-1 h-4 w-4" />
               </button>
               <div
                 className={`${
                   cuisineDropdownOpen ? "block" : "hidden"
-                } absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-20`}
+                } cuisine-scrollbar absolute left-0 mt-2 w-44 max-h-64 overflow-y-scroll bg-white dark:bg-gray-800 rounded-md shadow-lg z-20`}
                 onMouseEnter={handleCuisineMouseEnter}
                 onMouseLeave={handleCuisineMouseLeave}
               >
@@ -207,7 +213,7 @@ function Navigation() {
                 className="flex items-center py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
                 {t("navigation.mealTypes")}
-                <IoChevronDown className="ml-1 h-4 w-4" />
+                <ChevronDownIcon className="ml-1 h-4 w-4" />
               </button>
               <div
                 className={`${
@@ -255,7 +261,7 @@ function Navigation() {
                   className="flex items-center py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
                   {t("navigation.profile")}
-                  <IoChevronDown className="ml-1 h-4 w-4" />
+                  <ChevronDownIcon className="ml-1 h-4 w-4" />
                 </button>
                 <div
                   className={`${

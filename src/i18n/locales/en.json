@@ -1,6 +1,6 @@
 {
   "navigation": {
-    "brand": "Meal Deals",
+    "brand": "Cheap Meals",
     "home": "Home",
     "cuisines": "Cuisines",
     "mealTypes": "Meal Types",
@@ -225,6 +225,8 @@
     "mustBeLoggedIn": "You must be logged in to create a meal",
     "mealSuccessfullyAdded": "Meal successfully added!",
     "failedToAddMeal": "Failed to add meal!",
-    "errorLoadingData": "Error loading food components data"
+    "errorLoadingData": "Error loading food components data",
+    "tryAgain": "Try Again",
+    "savingMeal": "Saving your meal..."
   }
 }

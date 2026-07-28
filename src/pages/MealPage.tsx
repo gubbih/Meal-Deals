@@ -338,12 +338,16 @@ function MealPage() {
                 disabled={favLoading}
                 className={`flex items-center px-4 py-2 rounded-lg ${
                   isFavorite
-                    ? "bg-red-600 hover:bg-red-700 text-white"
-                    : "bg-white hover:bg-gray-100 text-gray-800"
-                } whitespace-nowrap shadow-md transition-colors`}
+                    ? "bg-red-600 hover:bg-red-700 dark:bg-red-500/85 dark:hover:bg-red-400/90 text-white"
+                    : "bg-white/95 hover:bg-gray-100 dark:bg-gray-900/55 dark:hover:bg-gray-900/70 text-gray-800 dark:text-gray-100 border border-gray-200/80 dark:border-white/10 backdrop-blur-sm"
+                } whitespace-nowrap shadow-md transition-colors disabled:cursor-not-allowed disabled:opacity-60`}
               >
                 <svg
-                  className={`w-5 h-5 ${isFavorite ? "text-white" : "text-gray-800"} mr-2`}
+                  className={`w-5 h-5 ${
+                    isFavorite
+                      ? "text-white"
+                      : "text-gray-800 dark:text-gray-100"
+                  } mr-2`}
                   fill={isFavorite ? "currentColor" : "none"}
                   stroke="currentColor"
                   viewBox="0 0 24 24"

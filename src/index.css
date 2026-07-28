@@ -1,0 +1,56 @@
+.cuisine-scrollbar {
+	scrollbar-width: thin;
+	scrollbar-color: #9ca3af #f3f4f6;
+}
+
+.dark .cuisine-scrollbar {
+	scrollbar-color: #6b7280 #1f2937;
+}
+
+.cuisine-scrollbar::-webkit-scrollbar {
+	width: 10px;
+}
+
+.cuisine-scrollbar::-webkit-scrollbar-track {
+	background: #f3f4f6;
+}
+
+.dark .cuisine-scrollbar::-webkit-scrollbar-track {
+	background: #1f2937;
+}
+
+.cuisine-scrollbar::-webkit-scrollbar-thumb {
+	background: #9ca3af;
+	border-radius: 9999px;
+	border: 2px solid #f3f4f6;
+}
+
+.dark .cuisine-scrollbar::-webkit-scrollbar-thumb {
+	background: #6b7280;
+	border-color: #1f2937;
+}
+
+.dark input:not([type="checkbox"]):not([type="radio"]),
+.dark textarea,
+.dark select {
+	color: #f3f4f6;
+	background-color: #1f2937;
+	border-color: #4b5563;
+}
+
+.dark input:not([type="checkbox"]):not([type="radio"])::placeholder,
+.dark textarea::placeholder {
+	color: #9ca3af;
+}
+
+.dark select option {
+	background-color: #1f2937;
+	color: #f3f4f6;
+}
+
+.dark input:-webkit-autofill,
+.dark textarea:-webkit-autofill,
+.dark select:-webkit-autofill {
+	-webkit-text-fill-color: #f3f4f6;
+	transition: background-color 9999s ease-in-out 0s;
+}

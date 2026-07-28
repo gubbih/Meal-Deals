@@ -1,6 +1,6 @@
 {
   "navigation": {
-    "brand": "Meal Deals",
+    "brand": "Cheap Meals",
     "home": "Hjem",
     "cuisines": "Køkkener",
     "mealTypes": "Måltidstyper",
@@ -227,6 +227,8 @@
     "mustBeLoggedIn": "Du skal være logget ind for at oprette et måltid",
     "mealSuccessfullyAdded": "Måltid tilføjet med succes!",
     "failedToAddMeal": "Kunne ikke tilføje måltid!",
-    "errorLoadingData": "Fejl ved indlæsning af fødevarekomponentdata"
+    "errorLoadingData": "Fejl ved indlæsning af fødevarekomponentdata",
+    "tryAgain": "Prøv igen",
+    "savingMeal": "Gemmer dit måltid..."
   }
 }

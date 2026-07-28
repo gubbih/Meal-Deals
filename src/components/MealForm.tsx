@@ -309,6 +309,8 @@ const MealForm: React.FC<MealFormProps> = ({
             loadingMessage={() => "Loading food components..."}
             menuPortalTarget={document.body}
             menuPosition="fixed"
+            menuPlacement="top"
+            maxMenuHeight={280}
             styles={{
               menuPortal: (base) => ({ ...base, zIndex: 9999 }),
               menu: (base) => ({
