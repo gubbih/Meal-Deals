@@ -18,11 +18,12 @@ require_cmd() {
 require_cmd git
 require_cmd npm
 
-APP_DIR="${APP_DIR:-/home/cheapmea/api.cheapmeals.dk}"
+APP_DIR="${APP_DIR:-/home/cheapmea/Meal-Deals}"
+STATIC_DIR="${STATIC_DIR:-/public_html}"
 DEPLOY_BRANCH="${DEPLOY_BRANCH:-main}"
 REPO_SLUG="${GITHUB_REPOSITORY:-}"
 GH_DEPLOY_TOKEN="${GH_DEPLOY_TOKEN:-}"
-PASSENGER_RESTART_FILE="${PASSENGER_RESTART_FILE:-tmp/restart.txt}"
+PASSENGER_RESTART_FILE="${PASSENGER_RESTART_FILE:-}"
 
 cd "$APP_DIR"
 
@@ -54,12 +55,34 @@ fi
 log "Building application"
 npm run build
 
+if [ ! -d build ]; then
+  fail "Build output directory not found: $APP_DIR/build"
+fi
+
+log "Deploying static build to ${STATIC_DIR}"
+mkdir -p "$STATIC_DIR"
+if command -v rsync >/dev/null 2>&1; then
+  rsync -a --delete \
+    --filter='P .htaccess' \
+    --filter='P .well-known' \
+    build/ "$STATIC_DIR/"
+else
+  # Fallback when rsync is unavailable: preserve critical root entries.
+  find "$STATIC_DIR" -mindepth 1 -maxdepth 1 \
+    ! -name '.htaccess' \
+    ! -name '.well-known' \
+    -exec rm -rf {} +
+  cp -a build/. "$STATIC_DIR/"
+fi
+
 log "Switching to production mode and pruning dev dependencies"
 export NODE_ENV=production
 npm prune --omit=dev
 
-log "Restarting Passenger"
-mkdir -p "$(dirname "$PASSENGER_RESTART_FILE")"
-touch "$PASSENGER_RESTART_FILE"
+if [ -n "${PASSENGER_RESTART_FILE:-}" ]; then
+  log "Restarting app process"
+  mkdir -p "$(dirname "$PASSENGER_RESTART_FILE")"
+  touch "$PASSENGER_RESTART_FILE"
+fi
 
 log "Deployment completed successfully"
