@@ -11,23 +11,24 @@ interface MealCardProps {
 }
 
 const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
-  const { addToFavorites, removeFromFavorites, favorites } = useFavoriteMeals();
+  const {
+    toggleFavorite,
+    favorites,
+    loading: favoriteLoading,
+  } = useFavoriteMeals();
 
   const handleToggleFavorite = async (
     mealId: string,
-    event: React.MouseEvent
+    event: React.MouseEvent,
   ) => {
     event.preventDefault();
     event.stopPropagation();
 
     if (!user) return;
+    if (favoriteLoading) return;
 
     try {
-      if (favorites.includes(mealId)) {
-        await removeFromFavorites(mealId);
-      } else {
-        await addToFavorites(mealId);
-      }
+      await toggleFavorite(mealId);
     } catch (error) {
       console.error("Failed to toggle favorite", error);
     }
@@ -46,9 +47,9 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
         acc[categoryName].push(component);
         return acc;
       },
-      {} as { [key: string]: typeof meal.foodComponents }
+      {} as { [key: string]: typeof meal.foodComponents },
     );
-  }, [meal.foodComponents]);
+  }, [meal]);
 
   return (
     <div key={meal.id} className="relative group pb-1">
@@ -83,13 +84,13 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
             {meal.description}
           </p>
 
-          {/* Price display */}
+          {/* Price display 
           {meal.price && (
             <p className="mt-2 text-lg font-medium text-gray-900 dark:text-white">
               {meal.price} {meal.priceCurrency || "DKK"}
             </p>
           )}
-
+          */}
           {/* Meal type and cuisine */}
           <div className="mt-2 flex flex-wrap gap-2">
             {meal.mealType && (

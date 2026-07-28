@@ -1,12 +1,15 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { Meal } from "../models/Meal";
 import { FoodComponent } from "../models/FoodComponent";
-import { cuisines, mealsTypes } from "../assets/Arrays";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { mealFormSchema, MealFormValues } from "../schemas/mealSchemas";
+import {
+  createMealFormSchema,
+  editMealFormSchema,
+  MealFormValues,
+} from "../schemas/mealSchemas";
 import { useTranslation } from "react-i18next";
 import {
   getTranslatedCuisines,
@@ -29,6 +32,8 @@ const MealForm: React.FC<MealFormProps> = ({
   onCancel,
 }) => {
   const { t } = useTranslation();
+  const isEditMode = Boolean(meal.id);
+  const [selectedImageName, setSelectedImageName] = useState("");
 
   const cuisineOptions = getTranslatedCuisines(t);
   const mealTypeOptions = getTranslatedMealTypes(t);
@@ -40,7 +45,9 @@ const MealForm: React.FC<MealFormProps> = ({
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<MealFormValues>({
-    resolver: zodResolver(mealFormSchema),
+    resolver: zodResolver(
+      isEditMode ? editMealFormSchema : createMealFormSchema,
+    ),
     defaultValues: {
       name: meal.name,
       description: meal.description,
@@ -50,6 +57,22 @@ const MealForm: React.FC<MealFormProps> = ({
       foodComponents: meal.foodComponents || [],
     },
     mode: "onChange",
+  });
+
+  const imageRegister = register("image", {
+    onChange: (event) => {
+      const files = (event.target as HTMLInputElement).files;
+      if (files && files.length > 0) {
+        setSelectedImageName(files[0].name);
+        setValue("imagePath", "", {
+          shouldValidate: true,
+          shouldDirty: true,
+          shouldTouch: true,
+        });
+      } else {
+        setSelectedImageName("");
+      }
+    },
   });
 
   // Transform food components for Select component display
@@ -69,7 +92,7 @@ const MealForm: React.FC<MealFormProps> = ({
             ...component,
             category: { categoryName: categoryGroup.category },
           },
-        }))
+        })),
       );
     }
 
@@ -82,16 +105,18 @@ const MealForm: React.FC<MealFormProps> = ({
   }, [foodComponents]);
 
   // Get current food components value for the Select component
-  const selectedFoodComponents = watch("foodComponents") || [];
+  const watchedFoodComponents = watch("foodComponents");
 
   // Convert the current form value to the format expected by Select
   const selectedOptions = useMemo(() => {
+    const selectedFoodComponents = watchedFoodComponents || [];
+
     return selectedFoodComponents.map((component) => ({
       value: component.id,
       label: `${component.category?.categoryName || "Unknown"}: ${component.componentName}`,
       component: component,
     }));
-  }, [selectedFoodComponents]);
+  }, [watchedFoodComponents]);
 
   // Group options by category for better display
   const groupedOptions = useMemo(() => {
@@ -155,7 +180,7 @@ const MealForm: React.FC<MealFormProps> = ({
         {/* Name */}
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Navn
+            {t("mealForm.mealName")}
           </label>
           <input
             type="text"
@@ -163,7 +188,7 @@ const MealForm: React.FC<MealFormProps> = ({
             className={`bg-gray-50 border ${
               errors.name ? "border-red-500" : "border-gray-300"
             } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-            placeholder="Enter meal name"
+            placeholder={t("mealForm.enterMealName")}
           />
           {errors.name && (
             <p className="mt-1 text-sm text-red-600 dark:text-red-400">
@@ -175,12 +200,12 @@ const MealForm: React.FC<MealFormProps> = ({
         {/* Description */}
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Beskrivelse
+            {t("mealForm.description")}
           </label>
           <textarea
             {...register("description")}
             rows={4}
-            placeholder="Enter meal description"
+            placeholder={t("mealForm.enterDescription")}
             className={`block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border ${
               errors.description ? "border-red-500" : "border-gray-300"
             } focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
@@ -192,30 +217,45 @@ const MealForm: React.FC<MealFormProps> = ({
           )}
         </div>
 
-        {/* Image URL */}
+        {/* Image */}
         <div>
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Billed Link
-          </label>
-          <input
-            type="text"
-            {...register("imagePath")}
-            placeholder="https://example.com/image.jpg"
-            className={`bg-gray-50 border ${
-              errors.imagePath ? "border-red-500" : "border-gray-300"
-            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-          />
+          <input type="hidden" {...register("imagePath")} />
 
-          <br />
-          {/* image button*/}
-          <input
-            type="file"
-            accept="image/*"
-            {...register("image")}
-            className={`bg-gray-50 border ${
-              errors.image ? "border-red-500" : "border-gray-300"
-            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-          />
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            {isEditMode
+              ? t("mealForm.uploadNewImage")
+              : t("mealForm.uploadImage")}
+          </label>
+          <div
+            className={`rounded-xl border-2 border-dashed p-4 sm:p-5 transition-colors ${
+              errors.image || errors.imagePath
+                ? "border-red-400 bg-red-50/60 dark:border-red-400 dark:bg-red-900/10"
+                : "border-emerald-300 bg-emerald-50/60 dark:border-emerald-500/60 dark:bg-emerald-900/10"
+            }`}
+          >
+            <input
+              id="meal-image-upload"
+              type="file"
+              accept="image/*"
+              {...imageRegister}
+              className="sr-only"
+            />
+            <label
+              htmlFor="meal-image-upload"
+              className="inline-flex cursor-pointer items-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+            >
+              {t("mealForm.chooseImage")}
+            </label>
+            <p className="mt-3 text-sm text-gray-700 dark:text-gray-200">
+              {selectedImageName ||
+                (isEditMode
+                  ? t("mealForm.keepCurrentImage")
+                  : t("mealForm.noFileSelected"))}
+            </p>
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              {t("mealForm.imageFileHint")}
+            </p>
+          </div>
           {errors.image?.message && (
             <p className="text-red-500 text-sm">
               {String(errors.image.message)}
@@ -231,7 +271,7 @@ const MealForm: React.FC<MealFormProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              Køkkenstil
+              {t("mealForm.cuisine")}
             </label>
             <Select
               className="my-react-select-container"
@@ -239,11 +279,11 @@ const MealForm: React.FC<MealFormProps> = ({
               options={cuisineOptions}
               value={
                 cuisineOptions.find(
-                  (option) => option.value === watch("mealCuisine")
+                  (option) => option.value === watch("mealCuisine"),
                 ) || null
               }
               onChange={handleCuisineChange}
-              placeholder="Select cuisine style"
+              placeholder={t("mealForm.selectCuisine")}
               isSearchable={true}
             />
             {errors.mealCuisine && (
@@ -256,7 +296,7 @@ const MealForm: React.FC<MealFormProps> = ({
           {/* mealType */}
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              Måltid
+              {t("mealForm.mealType")}
             </label>
             <Select
               className="my-react-select-container"
@@ -264,11 +304,11 @@ const MealForm: React.FC<MealFormProps> = ({
               options={mealTypeOptions}
               value={
                 mealTypeOptions.find(
-                  (option) => option.value === watch("mealType")
+                  (option) => option.value === watch("mealType"),
                 ) || null
               }
               onChange={handleMealTypeChange}
-              placeholder="Select meal type"
+              placeholder={t("mealForm.selectMealType")}
               isSearchable={true}
             />
             {errors.mealType && (
@@ -282,7 +322,7 @@ const MealForm: React.FC<MealFormProps> = ({
         {/* Food Components Multi-Select */}
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Madkomponenter
+            {t("mealForm.foodComponents")}
           </label>
 
           {/* Debug information 
@@ -303,12 +343,14 @@ const MealForm: React.FC<MealFormProps> = ({
             isMulti
             value={selectedOptions}
             onChange={handleFoodComponentChange}
-            placeholder="Vælg madkomponenter..."
-            noOptionsMessage={() => "No matching food components"}
+            placeholder={t("mealForm.selectFoodComponents")}
+            noOptionsMessage={() => t("mealForm.noMatchingFoodComponents")}
             isLoading={foodComponents.length === 0}
-            loadingMessage={() => "Loading food components..."}
+            loadingMessage={() => t("mealForm.loadingFoodComponents")}
             menuPortalTarget={document.body}
             menuPosition="fixed"
+            menuPlacement="top"
+            maxMenuHeight={280}
             styles={{
               menuPortal: (base) => ({ ...base, zIndex: 9999 }),
               menu: (base) => ({
@@ -410,14 +452,18 @@ const MealForm: React.FC<MealFormProps> = ({
             disabled={isSubmitting}
             className="bg-green-500 hover:bg-green-600 text-white p-2 rounded flex-1 text-center disabled:bg-green-300"
           >
-            {isSubmitting ? "Gemmer..." : meal.id ? "Opdater Ret" : "Opret Ret"}
+            {isSubmitting
+              ? t("editMealPage.updatingMeal")
+              : meal.id
+                ? t("editMealPage.updateMeal")
+                : t("mealForm.createMeal")}
           </button>
           <a
             href="/"
             onClick={onCancel}
             className="bg-red-500 hover:bg-red-600 text-white p-2 rounded flex-1 text-center"
           >
-            Annuller
+            {t("editMealPage.cancel")}
           </a>
         </div>
       </form>

@@ -1,5 +1,6 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { createMeal } from "../services/api";
 import { Meal } from "../models/Meal";
 import useCachedFoodComponents from "../hooks/useCachedFoodComponents";
@@ -12,6 +13,7 @@ import { useCache } from "../contexts/CacheContext";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 
 function CreateMealPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const {
@@ -44,15 +46,15 @@ function CreateMealPage() {
   // Only redirect if we're definitely logged out (not during loading)
   useEffect(() => {
     if (!authLoading && user === null) {
-      showToast("warning", "You must be logged in to create a meal");
+      showToast("warning", t("createMealPage.mustBeLoggedIn"));
       navigate("/auth");
     }
-  }, [user, authLoading, navigate, showToast]);
+  }, [user, authLoading, navigate, showToast, t]);
 
   const handleSubmit = async (formData: MealFormValues) => {
     console.log("handleSubmit called with:", formData);
     if (!user) {
-      showToast("error", "You must be logged in to create a meal");
+      showToast("error", t("createMealPage.mustBeLoggedIn"));
       navigate("/auth");
       return;
     }
@@ -72,7 +74,7 @@ function CreateMealPage() {
       // Invalidate meals cache since we've added a new meal
       invalidate("all-meals");
 
-      showToast("success", "Meal successfully added!");
+      showToast("success", t("createMealPage.mealSuccessfullyAdded"));
 
       // Add a small delay before navigation to ensure toast is visible
       setTimeout(() => {
@@ -81,14 +83,14 @@ function CreateMealPage() {
             refetch: true,
             toast: {
               type: "success",
-              message: "Meal successfully added!",
+              message: t("createMealPage.mealSuccessfullyAdded"),
             },
           },
         });
       }, 300);
     } catch (error) {
       console.error("Error adding meal:", error);
-      showToast("error", "Failed to add meal!");
+      showToast("error", t("createMealPage.failedToAddMeal"));
     } finally {
       setFormSubmitting(false);
     }
@@ -122,13 +124,15 @@ function CreateMealPage() {
   if (error) {
     return (
       <div className="p-4 text-red-600 dark:text-red-400">
-        <p className="font-medium mb-2">Error loading food components:</p>
+        <p className="font-medium mb-2">
+          {t("createMealPage.errorLoadingData")}:
+        </p>
         <p>{error}</p>
         <button
           onClick={() => window.location.reload()}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
-          Try Again
+          {t("createMealPage.tryAgain")}
         </button>
       </div>
     );
@@ -140,17 +144,17 @@ function CreateMealPage() {
         isVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         onConfirm={confirmNavigateAway}
-        message="Er du sikker på at gå væk fra denne side, tingene er ikke gemt?"
+        message={t("createMealPage.confirmLeave")}
       />
       <h1 className="text-xl justify-center flex font-semibold tracking-tight text-gray-900 dark:text-white mb-6 ">
-        Create New Meal
+        {t("createMealPage.createNewMeal")}
       </h1>
 
       {formSubmitting ? (
         <div className="flex flex-col items-center justify-center py-8">
           <LoadingSpinner />
           <p className="mt-4 text-gray-600 dark:text-gray-300">
-            Saving your meal...
+            {t("createMealPage.savingMeal")}
           </p>
         </div>
       ) : (

@@ -214,4 +214,13 @@
   .dark .Toastify__toast-theme--dark.Toastify__toast--info {
     @apply bg-blue-100 text-blue-900 hover:bg-blue-200 dark:bg-gray-700;
   }
+
+  /* Carousel dot colors for light/dark mode */
+  .custom-dot-list-style .react-multi-carousel-dot button {
+    @apply bg-gray-300 dark:bg-gray-600;
+  }
+
+  .custom-dot-list-style .react-multi-carousel-dot--active button {
+    @apply bg-blue-600 dark:bg-blue-400;
+  }
 }

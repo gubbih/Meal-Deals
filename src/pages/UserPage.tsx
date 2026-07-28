@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import Toast from "../components/Toast";
 import AuthForm from "../components/AuthForm";
 import { useTranslation } from "react-i18next";
-import { translateMealType } from "../utils/translationHelpers";
 
 function UserPage() {
   const { t } = useTranslation();
@@ -113,7 +112,7 @@ function UserPage() {
                   >
                     <div className="w-full h-36 rounded-md overflow-hidden mb-3">
                       <img
-                        src={"https://api.cheapmeals.dk" + meal.imagePath}
+                        src={meal.imagePath}
                         alt={meal.name}
                         className="h-full w-full object-cover"
                       />

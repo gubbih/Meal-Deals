@@ -1,8 +1,8 @@
 import axios from "axios";
 
 // API Configuration
-const API_BASE_URL = "http://localhost:3001";
-//process.env.REACT_APP_API_BASE_URL || "https://api.cheapmeals.dk";
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "https://api.cheapmeals.dk";
 
 // Request deduplication - prevent duplicate in-flight requests
 const pendingRequests = new Map<string, Promise<any>>();
@@ -29,7 +29,7 @@ export const getCircuitBreakerStatus = () => {
       failures: failure.count,
       resetAt: new Date(failure.resetAt).toISOString(),
       secondsUntilReset: Math.ceil((failure.resetAt - Date.now()) / 1000),
-    })
+    }),
   );
   return status;
 };
@@ -60,7 +60,7 @@ export const setAuthToken = (token: string | null) => {
 export const getAuthToken = (): string | null => {
   console.log(
     "Current auth token:",
-    authToken ? "set: " + authToken : "not set"
+    authToken ? "set: " + authToken : "not set",
   );
   return authToken;
 };
@@ -69,7 +69,7 @@ export const getAuthToken = (): string | null => {
 const storedToken = localStorage.getItem("authToken");
 console.log(
   "Initializing auth token from storage:",
-  storedToken ? "found" : "not found"
+  storedToken ? "found" : "not found",
 );
 if (storedToken) {
   setAuthToken(storedToken);
@@ -89,12 +89,12 @@ api.interceptors.request.use(
           // Only show error message once
           if (!failure.errorShown) {
             console.error(
-              `Too many failed requests to ${endpoint}. Temporarily blocked for ${CIRCUIT_RESET_TIME / 1000}s.`
+              `Too many failed requests to ${endpoint}. Temporarily blocked for ${CIRCUIT_RESET_TIME / 1000}s.`,
             );
             failure.errorShown = true;
           }
           throw new axios.Cancel(
-            `Service temporarily unavailable. Please try again in ${Math.ceil((failure.resetAt - now) / 1000)} seconds.`
+            `Service temporarily unavailable. Please try again in ${Math.ceil((failure.resetAt - now) / 1000)} seconds.`,
           );
         }
       } else {
@@ -105,7 +105,7 @@ api.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Response interceptor for handling auth errors and rate limiting
@@ -137,7 +137,7 @@ api.interceptors.response.use(
 
         if (failure.count >= MAX_FAILURES) {
           console.error(
-            `Circuit breaker opened for ${endpoint}. Too many failures (${failure.count}).`
+            `Circuit breaker opened for ${endpoint}. Too many failures (${failure.count}).`,
           );
           error.message = `Service temporarily unavailable. Please try again in ${CIRCUIT_RESET_TIME / 1000} seconds.`;
         }
@@ -163,7 +163,7 @@ api.interceptors.response.use(
       failedEndpoints.set(endpoint, failure);
 
       console.warn(
-        `Rate limit exceeded for ${endpoint}. Retry after ${Math.ceil(retryAfter / 1000)} seconds`
+        `Rate limit exceeded for ${endpoint}. Retry after ${Math.ceil(retryAfter / 1000)} seconds`,
       );
       error.message = `Too many requests. Please wait ${Math.ceil(retryAfter / 60000)} minutes before trying again.`;
     }
@@ -179,7 +179,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 // Helper function to deduplicate GET requests

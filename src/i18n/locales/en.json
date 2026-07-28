@@ -1,6 +1,6 @@
 {
   "navigation": {
-    "brand": "Meal Deals",
+    "brand": "Cheap Meals",
     "home": "Home",
     "cuisines": "Cuisines",
     "mealTypes": "Meal Types",
@@ -138,7 +138,18 @@
     "enterDescription": "Enter meal description",
     "imageUrl": "Image URL",
     "enterImageUrl": "Enter image URL",
+    "uploadImage": "Upload Image",
+    "uploadNewImage": "Upload New Image",
+    "chooseImage": "Choose Image",
+    "noFileSelected": "No file selected yet",
+    "keepCurrentImage": "Keeping current image unless you choose a new file",
+    "imageFileHint": "JPG, PNG, or WEBP. Max 5MB.",
     "cuisine": "Cuisine",
+    "foodComponents": "Food Components",
+    "selectFoodComponents": "Select food components",
+    "addIngredient": "Add Ingredient",
+    "noMatchingFoodComponents": "No matching food components",
+    "loadingFoodComponents": "Loading food components...",
     "selectCuisine": "Select cuisine",
     "mealType": "Meal Type",
     "selectMealType": "Select meal type",
@@ -208,7 +219,14 @@
     "noPermission": "You don't have permission to edit this meal",
     "errorOccurred": "An error occurred",
     "mustBeLoggedIn": "You must be logged in to edit a meal",
-    "home": "Home"
+    "home": "Home",
+    "updateMeal": "Update Meal",
+    "updatingMeal": "Updating your meal...",
+    "updateSuccess": "Meal updated successfully!",
+    "updateError": "Failed to update meal!",
+    "errorLoadingData": "Error loading food components data",
+    "tryAgain": "Try Again",
+    "cancel": "Cancel"
   },
   "cuisinePage": {
     "loading": "Loading...",
@@ -225,6 +243,8 @@
     "mustBeLoggedIn": "You must be logged in to create a meal",
     "mealSuccessfullyAdded": "Meal successfully added!",
     "failedToAddMeal": "Failed to add meal!",
-    "errorLoadingData": "Error loading food components data"
+    "errorLoadingData": "Error loading food components data",
+    "tryAgain": "Try Again",
+    "savingMeal": "Saving your meal..."
   }
 }

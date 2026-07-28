@@ -1,2 +1,2 @@
-//since firebase storge cost money I will use a free image hosting service such as supabase, cloudinary or imgur
+// Use a free image hosting service such as Supabase, Cloudinary, or Imgur.
 //Todo: Implement fetching image from Storage service

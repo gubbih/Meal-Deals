@@ -1,6 +1,6 @@
 {
   "navigation": {
-    "brand": "Meal Deals",
+    "brand": "Cheap Meals",
     "home": "Hjem",
     "cuisines": "Køkkener",
     "mealTypes": "Måltidstyper",
@@ -136,12 +136,23 @@
     "enterDescription": "Indtast måltidsbeskrivelse",
     "imageUrl": "Billede URL",
     "enterImageUrl": "Indtast billede URL",
+    "uploadImage": "Upload billede",
+    "uploadNewImage": "Upload nyt billede",
+    "chooseImage": "Vælg billede",
+    "noFileSelected": "Ingen fil valgt endnu",
+    "keepCurrentImage": "Bevarer nuværende billede, medmindre du vælger en ny fil",
+    "imageFileHint": "JPG, PNG eller WEBP. Maks 5MB.",
     "cuisine": "Køkken",
     "selectCuisine": "Vælg køkken",
     "mealType": "Måltidstype",
     "selectMealType": "Vælg måltidstype",
     "ingredients": "Ingredienser",
     "selectIngredients": "Vælg ingredienser",
+    "foodComponents": "Madkomponenter",
+    "selectFoodComponents": "Vælg madkomponenter",
+    "addIngredient": "Tilføj ingrediens",
+    "noMatchingFoodComponents": "Ingen matchende madkomponenter",
+    "loadingFoodComponents": "Indlæser madkomponenter...",
     "cancel": "Annuller",
     "saveMeal": "Gem Måltid",
     "createMeal": "Opret Måltid"
@@ -210,7 +221,14 @@
     "noPermission": "Du har ikke tilladelse til at redigere dette måltid",
     "errorOccurred": "Der opstod en fejl",
     "mustBeLoggedIn": "Du skal være logget ind for at redigere et måltid",
-    "home": "Hjem"
+    "home": "Hjem",
+    "updateMeal": "Opdater Måltid",
+    "updatingMeal": "Opdaterer dit måltid...",
+    "updateSuccess": "Måltid opdateret med succes!",
+    "updateError": "Kunne ikke opdatere måltid!",
+    "errorLoadingData": "Fejl ved indlæsning af fødevarekomponentdata",
+    "tryAgain": "Prøv igen",
+    "cancel": "Annuller"
   },
   "cuisinePage": {
     "loading": "Indlæser...",
@@ -227,6 +245,8 @@
     "mustBeLoggedIn": "Du skal være logget ind for at oprette et måltid",
     "mealSuccessfullyAdded": "Måltid tilføjet med succes!",
     "failedToAddMeal": "Kunne ikke tilføje måltid!",
-    "errorLoadingData": "Fejl ved indlæsning af fødevarekomponentdata"
+    "errorLoadingData": "Fejl ved indlæsning af fødevarekomponentdata",
+    "tryAgain": "Prøv igen",
+    "savingMeal": "Gemmer dit måltid..."
   }
 }

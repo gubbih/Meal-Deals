@@ -5,8 +5,10 @@ import useCachedMeals from "../hooks/useCachedMeals";
 import { useAuth } from "../contexts/AuthContext";
 import MealCard from "./MealCard";
 import { LoadingSpinner } from "./LoadingSpinner";
-import { cuisines, mealsTypes } from "../assets/Arrays";
-import { getTranslatedCuisines, getTranslatedMealTypes } from "../utils/translationHelpers";
+import {
+  getTranslatedCuisines,
+  getTranslatedMealTypes,
+} from "../utils/translationHelpers";
 
 interface MealsListViewProps {
   title?: string;
@@ -25,14 +27,14 @@ const MealsListView: React.FC<MealsListViewProps> = ({
 }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  
+
   // Filter and search state
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCuisine, setSelectedCuisine] = useState("");
   const [selectedMealType, setSelectedMealType] = useState("");
   const [createdBy, setCreatedBy] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(defaultPageSize);
+  const pageSize = defaultPageSize;
 
   // Build parameters for the API call
   const mealsParams = {
@@ -44,7 +46,8 @@ const MealsListView: React.FC<MealsListViewProps> = ({
     createdBy: createdBy || undefined,
   };
 
-  const { meals, pagination, loading, error, refetch } = useCachedMeals(mealsParams);
+  const { meals, pagination, loading, error, refetch } =
+    useCachedMeals(mealsParams);
 
   // Translated options
   const cuisineOptions = getTranslatedCuisines(t);
@@ -121,20 +124,30 @@ const MealsListView: React.FC<MealsListViewProps> = ({
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             {title}
           </h1>
-          
+
           {user && (
             <Link
               to="/create"
               className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
               </svg>
               Create Meal
             </Link>
           )}
         </div>
-        
+
         {pagination && (
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             Showing {meals.length} of {pagination.totalCount} meals
@@ -240,13 +253,25 @@ const MealsListView: React.FC<MealsListViewProps> = ({
       {meals.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-gray-400 dark:text-gray-500 mb-4">
-            <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            <svg
+              className="mx-auto h-12 w-12"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">No meals found</h3>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
+            No meals found
+          </h3>
           <p className="text-gray-500 dark:text-gray-400">
-            {(searchTerm || selectedCuisine || selectedMealType || createdBy)
+            {searchTerm || selectedCuisine || selectedMealType || createdBy
               ? "Try adjusting your search or filters"
               : "No meals have been created yet"}
           </p>
@@ -273,7 +298,7 @@ const MealsListView: React.FC<MealsListViewProps> = ({
           <div className="text-sm text-gray-700 dark:text-gray-300">
             Page {pagination.currentPage} of {pagination.totalPages}
           </div>
-          
+
           <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
@@ -282,40 +307,45 @@ const MealsListView: React.FC<MealsListViewProps> = ({
             >
               Previous
             </button>
-            
+
             {/* Page numbers */}
             <div className="flex gap-1">
-              {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                const startPage = Math.max(1, currentPage - 2);
-                const pageNum = startPage + i;
-                
-                if (pageNum > pagination.totalPages) return null;
-                
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => setCurrentPage(pageNum)}
-                    className={`px-3 py-2 text-sm rounded-md ${
-                      pageNum === currentPage
-                        ? "bg-blue-600 text-white"
-                        : "border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white"
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
+              {Array.from(
+                { length: Math.min(5, pagination.totalPages) },
+                (_, i) => {
+                  const startPage = Math.max(1, currentPage - 2);
+                  const pageNum = startPage + i;
+
+                  if (pageNum > pagination.totalPages) return null;
+
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`px-3 py-2 text-sm rounded-md ${
+                        pageNum === currentPage
+                          ? "bg-blue-600 text-white"
+                          : "border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                },
+              )}
             </div>
-            
+
             <button
-              onClick={() => setCurrentPage(Math.min(pagination.totalPages, currentPage + 1))}
+              onClick={() =>
+                setCurrentPage(Math.min(pagination.totalPages, currentPage + 1))
+              }
               disabled={currentPage === pagination.totalPages}
               className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white"
             >
               Next
             </button>
           </div>
-          
+
           <div className="text-sm text-gray-700 dark:text-gray-300">
             {pageSize} per page
           </div>

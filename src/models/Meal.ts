@@ -1,5 +1,4 @@
 import { FoodComponent } from "./FoodComponent";
-import { User } from "./User";
 
 export interface Meal {
   id: string;

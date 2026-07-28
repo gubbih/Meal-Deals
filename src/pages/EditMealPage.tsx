@@ -1,6 +1,7 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Meal } from "../models/Meal";
+import { getMeal } from "../services/api";
 import useCachedFoodComponents from "../hooks/useCachedFoodComponents";
 import MealForm from "../components/MealForm";
 import { useCachedMeal } from "../hooks/useCachedMeal";
@@ -68,11 +69,7 @@ function EditMealPage() {
     error: mealError,
     refetch: refetchMeal,
   } = useCachedMeal(id || "");
-  const {
-    updateMealData,
-    loading: updateLoading,
-    error: updateError,
-  } = useUpdateMeal();
+  const { updateMealData, loading: updateLoading } = useUpdateMeal();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [navigateAway, setNavigateAway] = useState(false);
@@ -147,17 +144,58 @@ function EditMealPage() {
               component.category?.categoryName ||
               component.categoryName ||
               "Uncategorized",
-          })
+          }),
         );
 
         // Combine existing meal data with form updates
+        const hasNewImage = data.image instanceof File;
         const updatedMeal: Meal = {
           ...fetchedMeal,
           ...data,
+          imagePath: hasNewImage
+            ? ""
+            : data.imagePath && data.imagePath.trim().length > 0
+              ? data.imagePath
+              : fetchedMeal.imagePath,
           foodComponents: processedFoodComponents,
         };
 
         await updateMealData(id || "", updatedMeal);
+
+        const persistedMeal = await getMeal(id || "");
+        if (!persistedMeal) {
+          throw new Error("Failed to verify persisted meal data");
+        }
+
+        const expectedFoodComponentIds = processedFoodComponents
+          .map((component) => component.id)
+          .sort((a, b) => a - b);
+        const persistedFoodComponentIds = (persistedMeal.foodComponents || [])
+          .map(
+            (component: any) =>
+              component?.component?.id || component?.id || null,
+          )
+          .filter((id: number | null): id is number => id !== null)
+          .sort((a, b) => a - b);
+
+        const sameFoodComponents =
+          expectedFoodComponentIds.length ===
+            persistedFoodComponentIds.length &&
+          expectedFoodComponentIds.every(
+            (componentId, index) =>
+              componentId === persistedFoodComponentIds[index],
+          );
+
+        const isPersisted =
+          persistedMeal.name === updatedMeal.name &&
+          persistedMeal.description === updatedMeal.description &&
+          persistedMeal.mealCuisine === updatedMeal.mealCuisine &&
+          persistedMeal.mealType === updatedMeal.mealType &&
+          sameFoodComponents;
+
+        if (!isPersisted) {
+          throw new Error("Meal update was acknowledged but not persisted");
+        }
 
         // Invalidate both the all-meals cache and this specific meal's cache
         invalidate("all-meals");
@@ -187,7 +225,7 @@ function EditMealPage() {
 
   const isLoading =
     authLoading || mealLoading || foodComponentsLoading || updateLoading;
-  const error = mealError || foodComponentsError || updateError;
+  const error = mealError || foodComponentsError;
 
   if (isLoading) {
     return (
@@ -261,7 +299,7 @@ function EditMealPage() {
 
   // Transform food components from nested structure to flat structure for the form
   const transformedFoodComponents = transformFoodComponents(
-    fetchedMeal.foodComponents || []
+    fetchedMeal.foodComponents || [],
   );
 
   console.log("Original food components:", fetchedMeal.foodComponents);
@@ -287,11 +325,6 @@ function EditMealPage() {
         onConfirm={confirmNavigateAway}
         message="Er du sikker på at gå væk fra denne side, tingene er ikke gemt?"
       />
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-          Edit Meal: {fetchedMeal.name}
-        </h1>
-      </div>
 
       {formSubmitting ? (
         <div className="flex flex-col items-center justify-center py-8">

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { FoodComponent } from "../models/FoodComponent";
@@ -24,8 +24,6 @@ const FoodComponentSelector: React.FC<FoodComponentSelectorProps> = ({
   disabled = false,
   maxSelections,
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-
   // Transform food components for Select component display
   const foodComponentOptions = useMemo(() => {
     return foodComponents.map((component) => ({
@@ -48,23 +46,7 @@ const FoodComponentSelector: React.FC<FoodComponentSelectorProps> = ({
   const groupedOptions = useMemo(() => {
     const groups: { [key: string]: any[] } = {};
 
-    // Filter options based on search term if provided
-    const filteredOptions = searchTerm
-      ? foodComponentOptions.filter(
-          (option) =>
-            option.component.componentName
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase()) ||
-            option.component.category.categoryName
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase()) ||
-            option.component.normalizedName
-              ?.toLowerCase()
-              .includes(searchTerm.toLowerCase())
-        )
-      : foodComponentOptions;
-
-    filteredOptions.forEach((option) => {
+    foodComponentOptions.forEach((option) => {
       const categoryName = option.component.category.categoryName;
       if (!groups[categoryName]) {
         groups[categoryName] = [];
@@ -76,11 +58,11 @@ const FoodComponentSelector: React.FC<FoodComponentSelectorProps> = ({
       .map(([label, options]) => ({
         label,
         options: options.sort((a, b) =>
-          a.component.componentName.localeCompare(b.component.componentName)
+          a.component.componentName.localeCompare(b.component.componentName),
         ),
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
-  }, [foodComponentOptions, searchTerm]);
+  }, [foodComponentOptions]);
 
   // Handle selection change
   const handleSelectionChange = (selectedOptions: any) => {
@@ -115,7 +97,7 @@ const FoodComponentSelector: React.FC<FoodComponentSelectorProps> = ({
         acc[categoryName].push(component);
         return acc;
       },
-      {} as { [key: string]: FoodComponent[] }
+      {} as { [key: string]: FoodComponent[] },
     );
   }, [selectedComponents]);
 
@@ -234,7 +216,7 @@ const FoodComponentSelector: React.FC<FoodComponentSelectorProps> = ({
                           type="button"
                           onClick={() => {
                             const updatedComponents = selectedComponents.filter(
-                              (c) => c.id !== component.id
+                              (c) => c.id !== component.id,
                             );
                             onSelectionChange(updatedComponents);
                           }}
@@ -246,7 +228,7 @@ const FoodComponentSelector: React.FC<FoodComponentSelectorProps> = ({
                     ))}
                   </div>
                 </div>
-              )
+              ),
             )}
           </div>
         </div>

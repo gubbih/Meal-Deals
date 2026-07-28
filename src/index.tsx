@@ -1,19 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css"; // Import Tailwind CSS
-import "./i18n"; // Initialize i18n
+import "./App.css";
+import "./index.css";
+import "./i18n";
 import App from "./App";
 
-// Create a root element
+const isDarkModeEnabled = localStorage.getItem("darkMode") === "true";
+document.documentElement.classList.toggle("dark", isDarkModeEnabled);
+document.body.classList.toggle("dark", isDarkModeEnabled);
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
 
-// Render the App component inside React.StrictMode
 root.render(
-  <div className="bg-white dark:bg-black dark:bg-gray-900 min-h-screen">
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </div>,
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
 );

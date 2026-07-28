@@ -43,7 +43,7 @@ function MealPage() {
   const [meal, setMeal] = useState<Meal | null>(null);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [groupedOffers, setGroupedOffers] = useState<Record<string, Offer[]>>(
-    {}
+    {},
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -90,7 +90,7 @@ function MealPage() {
     };
 
     fetchData();
-  }, [id]);
+  }, [id, t]);
 
   // Extract unique stores from offers
   useEffect(() => {
@@ -112,10 +112,10 @@ function MealPage() {
           const parsed = JSON.parse(savedStores);
           // Only include stores that exist in current offers
           const validStores = parsed.filter((store: string) =>
-            uniqueStores.includes(store)
+            uniqueStores.includes(store),
           );
           setSelectedStores(
-            validStores.length > 0 ? validStores : uniqueStores
+            validStores.length > 0 ? validStores : uniqueStores,
           );
         } catch {
           setSelectedStores(uniqueStores);
@@ -124,7 +124,7 @@ function MealPage() {
         setSelectedStores(uniqueStores);
       }
     }
-  }, [offers]);
+  }, [offers, t]);
 
   // Save selected stores to localStorage when they change
   useEffect(() => {
@@ -135,7 +135,7 @@ function MealPage() {
         console.error(t("mealPage.errors.saveStores"), error);
       }
     }
-  }, [selectedStores]);
+  }, [selectedStores, t]);
 
   // Process food components and match with offers
   useEffect(() => {
@@ -189,7 +189,7 @@ function MealPage() {
 
           matchedOffers.forEach((offer) => {
             const isDuplicate = grouped[key].some(
-              (existingOffer) => existingOffer.id === offer.id
+              (existingOffer) => existingOffer.id === offer.id,
             );
 
             if (!isDuplicate) {
@@ -206,7 +206,7 @@ function MealPage() {
       console.error(t("mealPage.errors.processingOffers"), error);
       setError(t("mealPage.errors.processingOffers"));
     }
-  }, [meal, offers, selectedStores]);
+  }, [meal, offers, selectedStores, availableStores.length, t]);
 
   const handleToggleFavorite = async () => {
     if (!user) {
@@ -336,14 +336,18 @@ function MealPage() {
               <button
                 onClick={handleToggleFavorite}
                 disabled={favLoading}
-                className={`flex items-center px-4 py-2 rounded-lg ${
+                className={`flex h-10 items-center justify-center px-4 rounded-lg border ${
                   isFavorite
-                    ? "bg-red-600 hover:bg-red-700 text-white"
-                    : "bg-white hover:bg-gray-100 text-gray-800"
-                } whitespace-nowrap shadow-md transition-colors`}
+                    ? "bg-red-600 hover:bg-red-700 dark:bg-red-500/85 dark:hover:bg-red-400/90 text-white border-transparent"
+                    : "bg-white/95 hover:bg-gray-100 dark:bg-gray-900/55 dark:hover:bg-gray-900/70 text-gray-800 dark:text-gray-100 border-gray-200/80 dark:border-white/10 backdrop-blur-sm"
+                } whitespace-nowrap shadow-md transition-colors disabled:cursor-not-allowed disabled:opacity-60`}
               >
                 <svg
-                  className={`w-5 h-5 ${isFavorite ? "text-white" : "text-gray-800"} mr-2`}
+                  className={`h-5 w-5 shrink-0 ${
+                    isFavorite
+                      ? "text-white"
+                      : "text-gray-800 dark:text-gray-100"
+                  } sm:mr-2`}
                   fill={isFavorite ? "currentColor" : "none"}
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -366,10 +370,10 @@ function MealPage() {
               {canEdit && (
                 <button
                   onClick={handleEdit}
-                  className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md transition-colors"
+                  className="flex h-10 items-center justify-center px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg border border-transparent shadow-md transition-colors"
                 >
                   <svg
-                    className="w-5 h-5 mr-2"
+                    className="h-5 w-5 shrink-0 sm:mr-2"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -420,7 +424,7 @@ function MealPage() {
                   .filter((offer) => offer.store === store);
 
                 const uniqueOffers = Array.from(
-                  new Set(matchedOffersForStore.map((o) => o.id))
+                  new Set(matchedOffersForStore.map((o) => o.id)),
                 );
                 const storeOfferCount = uniqueOffers.length;
 
@@ -430,7 +434,7 @@ function MealPage() {
                     onClick={() => {
                       if (selectedStores.includes(store)) {
                         setSelectedStores(
-                          selectedStores.filter((s) => s !== store)
+                          selectedStores.filter((s) => s !== store),
                         );
                       } else {
                         setSelectedStores([...selectedStores, store]);
@@ -503,7 +507,7 @@ function MealPage() {
                               item: component.componentName,
                               hasOffers: Boolean(
                                 groupedOffers[component.componentName]?.length >
-                                  0
+                                0,
                               ),
                               offers:
                                 groupedOffers[component.componentName] || [],
@@ -514,7 +518,7 @@ function MealPage() {
                       })
                       .filter(
                         (item): item is NonNullable<typeof item> =>
-                          item !== null
+                          item !== null,
                       );
 
                     sortedComponents.sort((a, b) => {
@@ -626,7 +630,7 @@ function MealPage() {
                         ))}
                       </ul>
                     </div>
-                  )
+                  ),
                 );
               })()}
             </div>

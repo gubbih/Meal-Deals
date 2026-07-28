@@ -43,7 +43,7 @@ export const useFilteredMeals = (meals: Meal[]) => {
         const hasFoodComponent = meal.foodComponents.some((component) =>
           component.componentName
             .toLowerCase()
-            .includes(filters.foodComponent!.toLowerCase())
+            .includes(filters.foodComponent!.toLowerCase()),
         );
 
         if (!hasFoodComponent) {

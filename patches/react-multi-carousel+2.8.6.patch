@@ -1,0 +1,22 @@
+diff --git a/node_modules/react-multi-carousel/tsconfig.json b/node_modules/react-multi-carousel/tsconfig.json
+index 3a02b13..33ef901 100644
+--- a/node_modules/react-multi-carousel/tsconfig.json
++++ b/node_modules/react-multi-carousel/tsconfig.json
+@@ -2,6 +2,7 @@
+   "compilerOptions": {
+     "outDir": "./lib",
+     "target": "es5",
++    "ignoreDeprecations": "6.0",
+     "module": "commonjs",
+     "noImplicitAny": true,
+     "strictNullChecks": true,
+@@ -11,8 +12,7 @@
+     "typeRoots": ["node_modules/@types"]
+   },
+   "include": [
+-    "./src/**/*.tsx",
+-    "./src/**/*.ts"
++    "./lib/**/*.d.ts"
+   ],
+   "exclude": [
+     "node_modules"
