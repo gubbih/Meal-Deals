@@ -1,0 +1,98 @@
+name: Deploy via SSH
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "package.json"
+      - "package-lock.json"
+      - "deploy-ssh.sh"
+      - ".github/workflows/deploy.yml"
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-22.04
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+      GH_DEPLOY_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
+      APP_DIR: /home/cheapmea/api.cheapmeals.dk
+      DEPLOY_BRANCH: main
+      REPO_SLUG: ${{ github.repository }}
+      PASSENGER_RESTART_FILE: tmp/restart.txt
+
+    steps:
+      - name: Validate SSH auth secrets
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SSH_HOST:-}" ] || [ -z "${SSH_USER:-}" ]; then
+            echo "Missing required secrets: SSH_HOST and/or SSH_USER"
+            exit 1
+          fi
+
+          if [ -z "${SSH_PRIVATE_KEY:-}" ] && [ -z "${SSH_PASSWORD:-}" ]; then
+            echo "Missing SSH auth secret: set SSH_PRIVATE_KEY or SSH_PASSWORD"
+            exit 1
+          fi
+
+      - name: Start SSH agent
+        if: env.SSH_PRIVATE_KEY != ''
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Install sshpass for password auth
+        if: env.SSH_PRIVATE_KEY == '' && env.SSH_PASSWORD != ''
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+
+      - name: Add server host key
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          printf "%s\n" "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy over SSH
+        run: |
+          set -euo pipefail
+
+          app_dir_q=$(printf "%q" "$APP_DIR")
+          deploy_branch_q=$(printf "%q" "$DEPLOY_BRANCH")
+          repo_slug_q=$(printf "%q" "$REPO_SLUG")
+          token_q=$(printf "%q" "$GH_DEPLOY_TOKEN")
+          restart_file_q=$(printf "%q" "$PASSENGER_RESTART_FILE")
+
+          # Forward deployment context to the remote script via environment variables.
+          if [ -n "${SSH_PRIVATE_KEY:-}" ]; then
+            ssh_cmd=(ssh -p "${SSH_PORT:-22}" "$SSH_USER@$SSH_HOST" "bash -se")
+          else
+            ssh_cmd=(sshpass -e ssh -p "${SSH_PORT:-22}" "$SSH_USER@$SSH_HOST" "bash -se")
+            export SSHPASS="$SSH_PASSWORD"
+          fi
+
+          "${ssh_cmd[@]}" <<EOF
+          set -euo pipefail
+          export APP_DIR=${app_dir_q}
+          export DEPLOY_BRANCH=${deploy_branch_q}
+          export GITHUB_REPOSITORY=${repo_slug_q}
+          export GH_DEPLOY_TOKEN=${token_q}
+          export PASSENGER_RESTART_FILE=${restart_file_q}
+          cd "\$APP_DIR"
+          bash ./deploy-ssh.sh
+          EOF

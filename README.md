@@ -20,6 +20,7 @@ fix issues.
 ### High Priority
 
 - [x] Move everything from Firebase to other host site
+
   - Move database
   - Move Hosting
   - Move Image hosting
@@ -121,3 +122,68 @@ The project follows a modular structure:
 ## Notes
 
 This is an ongoing project. Contributions and ideas are welcome! The project is not yet functional and is currently in the planning phase.
+
+---
+
+## SSH Auto-Deploy (cPanel + Passenger)
+
+This repository can auto-deploy on pushes to `main` using GitHub Actions and SSH.
+
+### What triggers deployment
+
+Deployment runs only when a pull request is merged into `main` and it changes at least one of:
+
+- `src/**`
+- `package.json`
+- `package-lock.json`
+- `deploy-ssh.sh`
+- `.github/workflows/deploy.yml`
+
+Merge commits are detected and skipped.
+
+### Files used
+
+- Workflow: `.github/workflows/deploy.yml`
+- Server script: `deploy-ssh.sh`
+
+### Required GitHub repository secrets
+
+- `SSH_HOST`: server hostname (example: `api.cheapmeals.dk`)
+- `SSH_PORT`: SSH port (usually `22`)
+- `SSH_USER`: SSH username
+- `SSH_PRIVATE_KEY`: private key for the deploy user (recommended)
+- `SSH_PASSWORD`: SSH password (optional fallback if no key is used)
+- `SSH_KNOWN_HOSTS`: output from `ssh-keyscan -p <port> <host>`
+
+Optional (recommended for private repositories when server SSH key is not already trusted by GitHub):
+
+- `GH_DEPLOY_TOKEN`: GitHub token with repository read access
+
+### Server prerequisites
+
+1. App directory exists at `/home/cheapmea/api.cheapmeals.dk`.
+2. The directory is a git clone of this repository.
+3. `node`, `npm`, and `git` are installed on the server.
+4. Passenger app restarts when `tmp/restart.txt` is touched.
+
+### First-time server setup example
+
+```bash
+cd /home/cheapmea
+git clone git@github.com:<org-or-user>/<repo>.git api.cheapmeals.dk
+cd api.cheapmeals.dk
+chmod +x deploy-ssh.sh
+```
+
+If using HTTPS for a private repo, ensure the server can fetch with credentials (or provide `GH_DEPLOY_TOKEN` as a repository secret).
+
+### Deployment flow on server
+
+`deploy-ssh.sh` does the following:
+
+1. Fetches latest code from `main` (supports private repo via token).
+2. Sets `NODE_ENV=development` for build tooling.
+3. Runs `npm ci --include=dev`, and falls back to `npm install --include=dev` if lockfile mismatch occurs.
+4. Builds the app (`build/`).
+5. Switches to production mode and prunes dev dependencies.
+6. Touches `tmp/restart.txt` to restart Passenger.
