@@ -11,7 +11,7 @@ This project is a work-in-progress for building a simple meal planning applicati
 ## Development Roadmap
 
 ### High Priority
-- [ ] Move everything from Firebase to other host site
+- [x] Move everything from Firebase to other host site
   - Move database
   - Move Hosting
   - Move Image hosting?
@@ -29,15 +29,10 @@ This project is a work-in-progress for building a simple meal planning applicati
   - Fix redirect after create/update
   - Implement loading states on all pages
 
-- [x] **Firebase security**
-
-  - Implement proper Firebase security rules
-  - Set up admin SDK correctly
-
-- [ ] **Data validation**
+- [x] **Data validation**
   - Implement proper form validation beyond HTML validation
   - Fix type casting issues in MealForm
-- [ ] **Limmiter on api calls**
+- [x] **Limmiter on api calls**
 
 ### Medium Priority
 
@@ -52,18 +47,18 @@ This project is a work-in-progress for building a simple meal planning applicati
   - Fix the duplicate offers issue from ABC stores
   - Implement a solution for efficiently handling multiple store catalogs
 
-- [ ] **Image handling**
+- [x] **Image handling**
 
-  - Implement image storage with Supabase
+  - Implement image storage. 
   - Add image upload functionality
 
 - [ ] **User features**
-  - Complete favorites functionality
+  - Complete favorites functionality - done
   - Add meal ratings/reviews
 
 ### Lower Priority
 
-- [ ] **Performance optimization**
+- [x] **Performance optimization**
 
   - Implement lazy loading for components and routes
   - Add caching for frequently accessed data
@@ -80,7 +75,7 @@ This project is a work-in-progress for building a simple meal planning applicati
 
 ## Technical Tasks
 
-- [ ] **Fix the foodComponents system**
+- [x] **Fix the foodComponents system**
 
   - Complete the implementation for adding all components
   - Improve the UI for selecting food components
@@ -90,13 +85,13 @@ This project is a work-in-progress for building a simple meal planning applicati
   - Add comprehensive unit and integration tests
   - Set up CI/CD pipeline with GitHub Actions
 
-- [ ] **Code refactoring**
+- [x] **Code refactoring**
 
   - Address TODOs in the codebase
   - Consolidate repeated code patterns
   - Improve type safety in areas using 'any'
 
-- [ ] **Environment setup**
+- [x] **Environment setup**
   - Configure proper environment variables for different stages
   - Complete Firebase configuration
 
