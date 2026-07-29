@@ -64,6 +64,11 @@ jobs:
           set -euo pipefail
           mkdir -p ~/.ssh
           printf "%s\n" "$SSH_PRIVATE_KEY" | sed 's/\r$//' > ~/.ssh/id_ed25519
+          if ! head -n 1 ~/.ssh/id_ed25519 | grep -q "BEGIN"; then
+            echo "ERROR: SSH private key format invalid. Check SSH_PRIVATE_KEY secret."
+            echo "Key should start with '-----BEGIN ...-----'"
+            exit 1
+          fi
           chmod 600 ~/.ssh/id_ed25519
 
       - name: Install sshpass for password auth
