@@ -302,7 +302,7 @@ function MealPage() {
         <div className="w-full h-96 relative">
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
           <img
-            src={"https://api.cheapmeals.dk" + meal.imagePath}
+            src={meal.imagePath}
             alt={meal.name}
             className="w-full h-full object-cover"
           />
@@ -507,7 +507,7 @@ function MealPage() {
                               item: component.componentName,
                               hasOffers: Boolean(
                                 groupedOffers[component.componentName]?.length >
-                                0,
+                                  0,
                               ),
                               offers:
                                 groupedOffers[component.componentName] || [],

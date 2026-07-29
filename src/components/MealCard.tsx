@@ -59,7 +59,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
           className="block overflow-hidden rounded-t-lg"
         >
           <img
-            src={"https://api.cheapmeals.dk" + meal.imagePath}
+            src={meal.imagePath}
             alt={meal.name}
             className="rounded-t-md h-40 sm:h-48 md:h-56 w-full object-cover transform transition-transform duration-300 group-hover:scale-105"
           />
