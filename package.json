@@ -30,7 +30,6 @@
     "react-icons": "^5.4.0",
     "react-multi-carousel": "^2.8.6",
     "react-router-dom": "^7.5.2",
-    "react-scripts": "5.0.1",
     "react-select": "^5.10.0",
     "react-toastify": "^11.0.3",
     "web-vitals": "^6.0.1",
@@ -41,10 +40,10 @@
     "postinstall": "patch-package",
     "prettier:format": "prettier --write \"**/*.{ts,tsx,js,md,mdx,css,yaml}\"",
     "prettier:check": "prettier --check \"**/*.{ts,tsx,js,md,mdx,css,yaml}\"",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "eslintConfig": {
     "extends": [
@@ -70,12 +69,15 @@
     "@types/luxon": "^3.4.2",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^6.0.4",
     "autoprefixer": "^10.4.20",
     "patch-package": "^8.0.1",
     "postcss": "^8.5.24",
     "postcss-cli": "^11.0.0",
     "prettier": "^3.9.6",
     "tailwindcss": "^3.4.19",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^8.1.5",
+    "vitest": "^4.1.10"
   }
 }
