@@ -326,7 +326,7 @@ const MealForm: React.FC<MealFormProps> = ({
           </label>
 
           {/* Debug information 
-          {process.env.NODE_ENV === "development" && (
+          {import.meta.env.DEV && (
             <div className="mb-2 p-2 bg-yellow-100 text-xs">
               <p>Food components count: {foodComponents.length}</p>
               <p>Options count: {foodComponentOptions.length}</p>

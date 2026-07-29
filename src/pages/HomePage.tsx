@@ -121,7 +121,7 @@ function HomePage() {
                 >
                   {t("mealTypePage.tryAgain")}
                 </button>
-                {process.env.NODE_ENV === "development" && (
+                {import.meta.env.DEV && (
                   <button
                     onClick={() => {
                       resetCircuitBreaker();
@@ -148,7 +148,7 @@ function HomePage() {
   return (
     <div className="w-full px-4 py-6">
       {/* Dev Tool - Clear Cache (only visible in development) */}
-      {process.env.NODE_ENV === "development" && (
+      {import.meta.env.DEV && (
         <div className="mb-4 p-2 bg-yellow-100 dark:bg-yellow-900 rounded">
           <button
             onClick={() => {

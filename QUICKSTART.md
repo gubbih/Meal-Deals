@@ -13,13 +13,13 @@ npm install
 Make sure your `.env` file contains:
 
 ```env
-REACT_APP_API_BASE_URL=https://api.cheapmeals.dk
+VITE_API_BASE_URL=https://api.cheapmeals.dk
 ```
 
 ### 3. Start the Application
 
 ```bash
-npm start
+npm run dev
 ```
 
 ## 📋 What Changed
@@ -122,7 +122,7 @@ console.log(data);
 **Solution**:
 
 - Check if API is running: `curl https://api.cheapmeals.dk/health`
-- Verify REACT_APP_API_BASE_URL in .env
+- Verify VITE_API_BASE_URL in .env
 - Check network connection
 
 ### Issue: "401 Unauthorized"

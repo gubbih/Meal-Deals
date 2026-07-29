@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "https://api.mealdeals.com";
+  import.meta.env.VITE_API_BASE_URL || "https://api.mealdeals.com";
 
 interface HealthCheckResponse {
   status: "healthy" | "unhealthy";

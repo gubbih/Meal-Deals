@@ -2,7 +2,7 @@ import axios from "axios";
 
 // API Configuration
 const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "https://api.cheapmeals.dk";
+  import.meta.env.VITE_API_BASE_URL || "https://api.cheapmeals.dk";
 
 // Request deduplication - prevent duplicate in-flight requests
 const pendingRequests = new Map<string, Promise<any>>();
