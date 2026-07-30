@@ -22,10 +22,7 @@ function HomePage() {
   const [errorOffers, setErrorOffers] = useState<string | null>(null);
 useEffect(() => {
     const fetchData = async () => {
-        setErrorOffers(t("mealPage.errors.noMealId"));
-        setLoadingOffers(false);
-        
-      
+        setLoadingOffers(true);
 
       try {
         setLoadingOffers(true);
@@ -65,7 +62,6 @@ useEffect(() => {
       </div>
     );
   }
-
   if (error) {
     const isRateLimit =
       error.toLowerCase().includes("too many") ||

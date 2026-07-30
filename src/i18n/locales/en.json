@@ -257,6 +257,5 @@
     "ingredients": "Ingredients",
     "creator": "Created by {{creator}}",
     "createdAt": "Created on {{date}}"
-    
   }
 }

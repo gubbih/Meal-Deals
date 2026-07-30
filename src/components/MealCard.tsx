@@ -15,13 +15,12 @@ interface MealCardProps {
 }
 
 const MealCard: React.FC<MealCardProps> = ({ meal, user, offers = [] }) => {
-  const { t } = useTranslation();
   const {
     toggleFavorite,
     favorites,
     loading: favoriteLoading,
   } = useFavoriteMeals();
-
+  const { t } = useTranslation();
   const handleToggleFavorite = async (
     mealId: string,
     event: React.MouseEvent,
@@ -70,8 +69,6 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user, offers = [] }) => {
         offerNames.has(c.componentName?.toLowerCase()) ||
         offerNames.has(c.normalizedName?.toLowerCase())
     ).length;
-
-    console.log(`${matched} out of ${components.length} components have a match`);
     return matched;
   }
 
@@ -131,10 +128,8 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user, offers = [] }) => {
             {/* Meal component counter */}
             {meal.foodComponents && meal.foodComponents.length > 0 && (
               <span className="inline-block px-2 py-1 text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-full">
-                {t("mealCard.offersOnIngredients", {
-                  count: countMatches(offers, meal.foodComponents),
-                  total: meal.foodComponents.length,
-                })}
+                {countMatches(offers, meal.foodComponents)} /{" "}
+                {meal.foodComponents.length} {t("mealCard.offersOnIngredients")}
               </span>
             )}
           </div>
@@ -142,8 +137,8 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user, offers = [] }) => {
           {/* Food components grouped by category */}
           {Object.keys(groupedFoodComponents).length > 0 && (
             <div className="mt-3">
-              <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
-                Ingredients:
+              <h4 className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                {t("mealCard.ingredients")}
               </h4>
               <div className="space-y-1">
                 {Object.entries(groupedFoodComponents)
@@ -176,7 +171,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user, offers = [] }) => {
           {/* Creator info */}
           {meal.user && (
             <div className="mt-3 text-xs text-gray-500 dark:text-gray-400">
-              {t("mealCard.creator", { creator: meal.user.displayName })}
+              {t("mealCard.creator")} {meal.user.displayName}
             </div>
           )}
         </div>

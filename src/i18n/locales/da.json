@@ -62,7 +62,9 @@
       "addedFavorite": "Tilføjet til favoritter",
       "removedFavorite": "Fjernet fra favoritter",
       "failedFavorite": "Kunne ikke opdatere favoritter",
-      "noEditPermission": "Du har ikke tilladelse til at redigere dette måltid"
+      "noEditPermission": "Du har ikke tilladelse til at redigere dette måltid",
+      "signedIn": "Logget ind",
+      "signedOut": "Logget ud"
     },
     "errors": {
       "noMealId": "Intet måltids-ID angivet",
@@ -257,7 +259,7 @@
     "editMeal": "Rediger Måltid",
     "deleteMeal": "Slet Måltid",
     "ingredients": "Ingredienser",
-    "creator": "Oprettet af {{creator}}",
+    "creator": "Oprettet af",
     "createdAt": "Oprettet den {{date}}"
   }
 }
