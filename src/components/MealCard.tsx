@@ -4,13 +4,16 @@ import { Meal } from "../models/Meal";
 import { User } from "../models/User";
 import FavoriteButton from "./FavoriteButton";
 import useFavoriteMeals from "../hooks/useFavoriteMeals";
+import { Offer } from "../models/Offer";
+import { FoodComponent } from "../models/FoodComponent";
 
 interface MealCardProps {
   meal: Meal;
   user: User | null;
+  offers?: Offer[];
 }
 
-const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
+const MealCard: React.FC<MealCardProps> = ({ meal, user, offers = [] }) => {
   const {
     toggleFavorite,
     favorites,
@@ -33,8 +36,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
       console.error("Failed to toggle favorite", error);
     }
   };
-
-  // Group food components by category
+    // Group food components by category
   const groupedFoodComponents = useMemo(() => {
     if (!meal.foodComponents || meal.foodComponents.length === 0) return {};
 
@@ -50,6 +52,27 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
       {} as { [key: string]: typeof meal.foodComponents },
     );
   }, [meal]);
+  
+  function countMatches(offers: Offer[], components: FoodComponent[]) {
+    const offerNames = new Set(
+      offers
+        .flatMap((o) =>
+          Array.isArray(o.foodComponent) ? o.foodComponent : [o.foodComponent]
+        )
+        .filter((name): name is string => Boolean(name))
+        .map((name) => name.toLowerCase())
+    );
+
+    const matched = components.filter(
+      (c) =>
+        offerNames.has(c.componentName?.toLowerCase()) ||
+        offerNames.has(c.normalizedName?.toLowerCase())
+    ).length;
+
+    console.log(`${matched} out of ${components.length} components have a match`);
+    return matched;
+  }
+
 
   return (
     <div key={meal.id} className="relative group pb-1">
@@ -101,6 +124,12 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
             {meal.mealCuisine && (
               <span className="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-full">
                 {meal.mealCuisine}
+              </span>
+            )}
+            {/* Meal component counter */}
+            {meal.foodComponents && meal.foodComponents.length > 0 && (
+              <span className="inline-block px-2 py-1 text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-full">
+                {countMatches(offers, meal.foodComponents)} out of {meal.foodComponents.length} ingredients have offers
               </span>
             )}
           </div>

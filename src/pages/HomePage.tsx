@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import useCachedMeals from "../hooks/useCachedMeals";
@@ -6,8 +6,10 @@ import { useAuth } from "../contexts/AuthContext";
 import MealCarousel from "../components/MealCarousel";
 import { useLocation } from "react-router-dom";
 import { useCache } from "../contexts/CacheContext";
-import { resetCircuitBreaker, getCircuitBreakerStatus } from "../services/api";
+import { resetCircuitBreaker, getCircuitBreakerStatus, getOffers } from "../services/api";
 import { getAuthToken } from "../services/api/client";
+import { Offer } from "../models/Offer";
+import { useEffect } from "react";  
 
 function HomePage() {
   const { t } = useTranslation();
@@ -15,6 +17,32 @@ function HomePage() {
   const { meals, loading, error, refetch } = useCachedMeals();
   const { user } = useAuth();
   const { invalidateAll } = useCache();
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [loadingOffers, setLoadingOffers] = useState(false);
+  const [errorOffers, setErrorOffers] = useState<string | null>(null);
+useEffect(() => {
+    const fetchData = async () => {
+        setErrorOffers(t("mealPage.errors.noMealId"));
+        setLoadingOffers(false);
+        
+      
+
+      try {
+        setLoadingOffers(true);
+
+        // Fetch offers data
+        const offersData = await getOffers();
+        setOffers(offersData);
+      } catch (error) {
+        console.error(t("mealPage.errors.fetchingData"), error);
+        setErrorOffers(error instanceof Error ? error.message : t("common.error"));
+      } finally {
+        setLoadingOffers(false);
+      }
+    };
+
+    fetchData();
+  }, [t]);
 
   // Filter favorite meals if user is logged in
   const favoriteMeals = user
@@ -201,7 +229,7 @@ function HomePage() {
       )}
 
       {/* All Meals Section */}
-      <MealCarousel meals={meals} title={t("homePage.exploreMeals")} />
+      <MealCarousel meals={meals} offers={offers} title={t("homePage.exploreMeals")} />
 
       {/* Create Meal Call to Action */}
       {user && (

@@ -5,6 +5,7 @@ import "react-multi-carousel/lib/styles.css";
 import { Meal } from "../models/Meal";
 import { useAuth } from "../contexts/AuthContext";
 import MealCard from "./MealCard";
+import { Offer } from "../models/Offer";
 
 // Responsive breakpoints for the carousel - improved for mobile
 const responsive = {
@@ -29,12 +30,14 @@ interface MealCarouselProps {
   meals: Meal[];
   title: string;
   isFavoriteSection?: boolean;
+  offers?: Offer[];
 }
 
 const MealCarousel: React.FC<MealCarouselProps> = ({
   meals,
   title,
   isFavoriteSection = false,
+  offers = [],
 }) => {
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -74,7 +77,7 @@ const MealCarousel: React.FC<MealCarouselProps> = ({
           partialVisible={true} // Shows partial next item
         >
           {meals.map((meal) => (
-            <MealCard key={meal.id} meal={meal} user={user} />
+            <MealCard key={meal.id} meal={meal} user={user} offers={offers} />
           ))}
         </Carousel>
       )}
