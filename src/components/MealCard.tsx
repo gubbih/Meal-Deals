@@ -6,6 +6,7 @@ import FavoriteButton from "./FavoriteButton";
 import useFavoriteMeals from "../hooks/useFavoriteMeals";
 import { Offer } from "../models/Offer";
 import { FoodComponent } from "../models/FoodComponent";
+import { useTranslation } from "react-i18next";
 
 interface MealCardProps {
   meal: Meal;
@@ -14,6 +15,7 @@ interface MealCardProps {
 }
 
 const MealCard: React.FC<MealCardProps> = ({ meal, user, offers = [] }) => {
+  const { t } = useTranslation();
   const {
     toggleFavorite,
     favorites,
@@ -129,7 +131,10 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user, offers = [] }) => {
             {/* Meal component counter */}
             {meal.foodComponents && meal.foodComponents.length > 0 && (
               <span className="inline-block px-2 py-1 text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-full">
-                {countMatches(offers, meal.foodComponents)} out of {meal.foodComponents.length} ingredients have offers
+                {t("mealCard.offersOnIngredients", {
+                  count: countMatches(offers, meal.foodComponents),
+                  total: meal.foodComponents.length,
+                })}
               </span>
             )}
           </div>
@@ -171,7 +176,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user, offers = [] }) => {
           {/* Creator info */}
           {meal.user && (
             <div className="mt-3 text-xs text-gray-500 dark:text-gray-400">
-              By {meal.user.displayName}
+              {t("mealCard.creator", { creator: meal.user.displayName })}
             </div>
           )}
         </div>

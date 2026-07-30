@@ -248,5 +248,16 @@
     "errorLoadingData": "Fejl ved indlæsning af fødevarekomponentdata",
     "tryAgain": "Prøv igen",
     "savingMeal": "Gemmer dit måltid..."
+  },
+  "mealCard": {
+    "offersOnIngredients": "Er på tilbud",
+    "offersAvailable": "{{count}} tilbud tilgængelige",
+    "noOffersAvailable": "Ingen tilbud tilgængelige",
+    "viewMeal": "Se Måltid",
+    "editMeal": "Rediger Måltid",
+    "deleteMeal": "Slet Måltid",
+    "ingredients": "Ingredienser",
+    "creator": "Oprettet af {{creator}}",
+    "createdAt": "Oprettet den {{date}}"
   }
 }
