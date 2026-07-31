@@ -4,19 +4,23 @@ import { Meal } from "../models/Meal";
 import { User } from "../models/User";
 import FavoriteButton from "./FavoriteButton";
 import useFavoriteMeals from "../hooks/useFavoriteMeals";
+import { Offer } from "../models/Offer";
+import { FoodComponent } from "../models/FoodComponent";
+import { useTranslation } from "react-i18next";
 
 interface MealCardProps {
   meal: Meal;
   user: User | null;
+  offers?: Offer[];
 }
 
-const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
+const MealCard: React.FC<MealCardProps> = ({ meal, user, offers = [] }) => {
   const {
     toggleFavorite,
     favorites,
     loading: favoriteLoading,
   } = useFavoriteMeals();
-
+  const { t } = useTranslation();
   const handleToggleFavorite = async (
     mealId: string,
     event: React.MouseEvent,
@@ -33,8 +37,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
       console.error("Failed to toggle favorite", error);
     }
   };
-
-  // Group food components by category
+    // Group food components by category
   const groupedFoodComponents = useMemo(() => {
     if (!meal.foodComponents || meal.foodComponents.length === 0) return {};
 
@@ -50,6 +53,25 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
       {} as { [key: string]: typeof meal.foodComponents },
     );
   }, [meal]);
+  
+  function countMatches(offers: Offer[], components: FoodComponent[]) {
+    const offerNames = new Set(
+      offers
+        .flatMap((o) =>
+          Array.isArray(o.foodComponent) ? o.foodComponent : [o.foodComponent]
+        )
+        .filter((name): name is string => Boolean(name))
+        .map((name) => name.toLowerCase())
+    );
+
+    const matched = components.filter(
+      (c) =>
+        offerNames.has(c.componentName?.toLowerCase()) ||
+        offerNames.has(c.normalizedName?.toLowerCase())
+    ).length;
+    return matched;
+  }
+
 
   return (
     <div key={meal.id} className="relative group pb-1">
@@ -103,13 +125,20 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
                 {meal.mealCuisine}
               </span>
             )}
+            {/* Meal component counter */}
+            {meal.foodComponents && meal.foodComponents.length > 0 && (
+              <span className="inline-block px-2 py-1 text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-full">
+                {countMatches(offers, meal.foodComponents)} /{" "}
+                {meal.foodComponents.length} {t("mealCard.offersOnIngredients")}
+              </span>
+            )}
           </div>
 
           {/* Food components grouped by category */}
           {Object.keys(groupedFoodComponents).length > 0 && (
             <div className="mt-3">
-              <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
-                Ingredients:
+              <h4 className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                {t("mealCard.ingredients")}
               </h4>
               <div className="space-y-1">
                 {Object.entries(groupedFoodComponents)
@@ -142,7 +171,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user }) => {
           {/* Creator info */}
           {meal.user && (
             <div className="mt-3 text-xs text-gray-500 dark:text-gray-400">
-              By {meal.user.displayName}
+              {t("mealCard.creator")} {meal.user.displayName}
             </div>
           )}
         </div>

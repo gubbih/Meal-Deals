@@ -246,5 +246,16 @@
     "errorLoadingData": "Error loading food components data",
     "tryAgain": "Try Again",
     "savingMeal": "Saving your meal..."
+  },
+  "mealCard": {
+    "offersOnIngredients": "Offers on Ingredients",
+    "offersAvailable": "{{count}} offers available",
+    "noOffersAvailable": "No offers available",
+    "viewMeal": "View Meal",
+    "editMeal": "Edit Meal",
+    "deleteMeal": "Delete Meal",
+    "ingredients": "Ingredients",
+    "creator": "Created by {{creator}}",
+    "createdAt": "Created on {{date}}"
   }
 }
