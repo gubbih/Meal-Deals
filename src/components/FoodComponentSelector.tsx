@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { FoodComponent } from "../models/FoodComponent";
+import { useTranslation } from "react-i18next";
 
 interface FoodComponentSelectorProps {
   foodComponents: FoodComponent[];
@@ -87,7 +88,7 @@ const FoodComponentSelector: React.FC<FoodComponentSelectorProps> = ({
       false
     );
   };
-
+  const { t } = useTranslation();
   // Group food components by category for display
   const groupedSelectedComponents = useMemo(() => {
     return selectedComponents.reduce(
@@ -182,7 +183,7 @@ const FoodComponentSelector: React.FC<FoodComponentSelectorProps> = ({
 
         {isMaxReached && (
           <div className="mt-1 text-sm text-amber-600 dark:text-amber-400">
-            Maximum of {maxSelections} components allowed
+            {t("foodComponentSelector.maxSelectionsReached", { maxSelections })}
           </div>
         )}
       </div>
@@ -222,7 +223,6 @@ const FoodComponentSelector: React.FC<FoodComponentSelectorProps> = ({
                           }}
                           className="ml-1 text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100"
                         >
-                          ×
                         </button>
                       </span>
                     ))}
@@ -237,7 +237,7 @@ const FoodComponentSelector: React.FC<FoodComponentSelectorProps> = ({
       {/* Quick category stats */}
       {selectedComponents.length > 0 && (
         <div className="text-xs text-gray-500 dark:text-gray-400">
-          Categories selected: {Object.keys(groupedSelectedComponents).length}
+          {t("foodComponentSelector.categoriesSelected", { count: Object.keys(groupedSelectedComponents).length })}
         </div>
       )}
     </div>

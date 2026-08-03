@@ -74,8 +74,6 @@ function MealPage() {
 
         // Fetch meal data
         const mealData = await getMeal(id);
-        console.log("Fetched meal data:", mealData);
-        console.log("Food components:", mealData.foodComponents);
         setMeal(mealData);
 
         // Fetch offers data
@@ -573,7 +571,7 @@ function MealPage() {
                                   </div>
                                   <div className="sm:col-span-2 flex items-center justify-center">
                                     <span className="inline-block px-3 py-1.5 bg-gray-100 dark:bg-gray-700 rounded-full text-xs text-gray-500 dark:text-gray-400">
-                                      Ingen aktuelle tilbud
+                                      {t("mealPage.noOffersAvailable")}
                                     </span>
                                   </div>
                                 </div>

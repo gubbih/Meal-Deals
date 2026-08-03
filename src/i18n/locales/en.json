@@ -12,7 +12,11 @@
     "profileSettings": "Profile Settings",
     "signOut": "Sign Out",
     "login": "Login",
-    "signUp": "Sign Up"
+    "signUp": "Sign Up",
+    "showingPages": "Showing pages {{currentPage}} of {{totalPages}}",
+    "showingMeals": "Showing meals {{currentPage}} of {{totalPages}}",
+    "createFirstMeal": "Create Your First Meal"
+    
   },
   "myMeals": {
     "title": "My Meals",
@@ -37,7 +41,11 @@
     "error": "Error",
     "success": "Success",
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "tryAgain": "Try Again",
+    "couldNotBeloaded": "Could not be loaded",
+    "previous": "Previous",
+    "next": "Next"
   },
   "mealPage": {
     "description": "Description",
@@ -51,8 +59,11 @@
     "clearAll": "Clear All",
     "noStoresSelected": "No stores selected - showing all offers",
     "showingOffers": "Showing offers from {{selected}} of {{total}} stores",
-    "offersOnIngredients": "Offers on Ingredients",
+    "offersOnIngredients": "Offers",
     "offersAvailable": "{{count}} offers available",
+    "clearFilters": "Clear Filters",
+    "mealsPerPage": "meals per page",
+    "noOffersAvailable": "No offers available",
     "favorite": {
       "add": "Add to Favorites",
       "remove": "Remove Favorite"
@@ -256,6 +267,14 @@
     "deleteMeal": "Delete Meal",
     "ingredients": "Ingredients",
     "creator": "Created by {{creator}}",
-    "createdAt": "Created on {{date}}"
-  }
+    "createdAt": "Created on {{date}}",
+    "moreCategories": "+{{count}} more categories",
+    "updatedAt": "Updated on {{date}}"
+  },
+  "foodComponentSelector": {
+    "selectFoodComponents": "Select food components",
+    "noMatchingFoodComponents": "No matching food components",
+    "loadingFoodComponents": "Loading food components..."  },
+    "maxSelectionsReached": "Maximum of {{maxSelections}} components allowed",
+    "categoriesSelected": "{{count}} categories selected"
 }

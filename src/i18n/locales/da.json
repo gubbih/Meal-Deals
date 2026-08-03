@@ -12,7 +12,10 @@
     "profileSettings": "Profil Indstillinger",
     "signOut": "Log Ud",
     "login": "Log Ind",
-    "signUp": "Tilmeld"
+    "signUp": "Tilmeld",
+    "showingPages": "Viser sider {{currentPage}} af {{totalPages}}",
+    "showingMeals": "Viser måltider {{currentPage}} af {{totalPages}}",
+    "createFirstMeal": "Opret Dit Første Måltid"
   },
   "myMeals": {
     "title": "Mine Måltider",
@@ -37,7 +40,11 @@
     "error": "Fejl",
     "success": "Succes",
     "cancel": "Annuller",
-    "confirm": "Bekræft"
+    "confirm": "Bekræft",
+    "tryAgain": "Prøv Igen",
+    "couldNotBeloaded": "Kunne ikke indlæses",
+    "previous": "Forrige",
+    "next": "Næste"
   },
   "mealPage": {
     "description": "Beskrivelse",
@@ -53,6 +60,9 @@
     "showingOffers": "Viser tilbud fra {{selected}} af {{total}} butikker",
     "offersOnIngredients": "Tilbud på Ingredienser",
     "offersAvailable": "{{count}} tilbud tilgængelige",
+    "clearFilters": "Ryd Filtre",
+    "mealsPerPage": "måltider pr. side",
+    "noOffersAvailable": "Ingen tilbud tilgængelige",
     "favorite": {
       "add": "Tilføj til Favoritter",
       "remove": "Fjern Favorit"
@@ -260,6 +270,14 @@
     "deleteMeal": "Slet Måltid",
     "ingredients": "Ingredienser",
     "creator": "Oprettet af",
-    "createdAt": "Oprettet den {{date}}"
-  }
+    "createdAt": "Oprettet den {{date}}",
+    "moreCategories": "+{{count}} flere kategorier",
+    "updatedAt": "Opdateret den {{date}}"
+  },
+  "foodComponentSelector": {
+    "selectFoodComponents": "Vælg madkomponenter",
+    "noMatchingFoodComponents": "Ingen matchende madkomponenter",
+    "loadingFoodComponents": "Indlæser madkomponenter..."  },
+    "maxSelectionsReached": "Maksimalt antal på {{maxSelections}} komponenter tilladt",
+    "categoriesSelected": "{{count}} kategorier valgt"
 }

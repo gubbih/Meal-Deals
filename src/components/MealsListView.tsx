@@ -104,13 +104,13 @@ const MealsListView: React.FC<MealsListViewProps> = ({
   if (error) {
     return (
       <div className="p-4 text-red-600 dark:text-red-400">
-        <p className="font-medium mb-2">Error loading meals:</p>
+        <p className="font-medium mb-2">{t("common.couldNotBeloaded")}</p>
         <p>{error}</p>
         <button
           onClick={() => refetch()}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
-          Try Again
+          {t("common.tryAgain")}
         </button>
       </div>
     );
@@ -143,14 +143,17 @@ const MealsListView: React.FC<MealsListViewProps> = ({
                   d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                 />
               </svg>
-              Create Meal
+              {t("mealCard.createMeal")}
             </Link>
           )}
         </div>
 
         {pagination && (
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Showing {meals.length} of {pagination.totalCount} meals
+            {t("common.showingMeals", { //Todo Test
+              currentPage: pagination.currentPage,
+              totalPages: pagination.totalPages,
+            })}
           </p>
         )}
       </div>
@@ -163,7 +166,7 @@ const MealsListView: React.FC<MealsListViewProps> = ({
             {showSearch && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Search Meals
+                  {t("mealPage.searchMeals")}
                 </label>
                 <input
                   type="text"
@@ -179,7 +182,7 @@ const MealsListView: React.FC<MealsListViewProps> = ({
             {showFilters && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Cuisine
+                  {t("mealPage.cuisine")}
                 </label>
                 <select
                   value={selectedCuisine}
@@ -200,7 +203,7 @@ const MealsListView: React.FC<MealsListViewProps> = ({
             {showFilters && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Meal Type
+                  {t("mealPage.mealType")}
                 </label>
                 <select
                   value={selectedMealType}
@@ -221,15 +224,15 @@ const MealsListView: React.FC<MealsListViewProps> = ({
             {showFilters && user && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Created By
+                  {t("mealPage.createdBy")}
                 </label>
                 <select
                   value={createdBy}
                   onChange={(e) => handleCreatedByChange(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                 >
-                  <option value="">All Creators</option>
-                  <option value={user.id}>My Meals</option>
+                  <option value="">{t("mealPage.allCreators")}</option>
+                  <option value={user.id}>{t("mealPage.myMeals")}</option>
                 </select>
               </div>
             )}
@@ -242,7 +245,7 @@ const MealsListView: React.FC<MealsListViewProps> = ({
                 onClick={clearFilters}
                 className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
-                Clear All Filters
+                {t("mealPage.clearFilters")}
               </button>
             </div>
           )}
@@ -268,7 +271,7 @@ const MealsListView: React.FC<MealsListViewProps> = ({
             </svg>
           </div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
-            No meals found
+            {t("error.mealNotFound")}
           </h3>
           <p className="text-gray-500 dark:text-gray-400">
             {searchTerm || selectedCuisine || selectedMealType || createdBy
@@ -280,7 +283,7 @@ const MealsListView: React.FC<MealsListViewProps> = ({
               to="/create"
               className="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Create the first meal
+              {t("navigation.createMeal")}
             </Link>
           )}
         </div>
@@ -296,7 +299,10 @@ const MealsListView: React.FC<MealsListViewProps> = ({
       {showPagination && pagination && pagination.totalPages > 1 && (
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm text-gray-700 dark:text-gray-300">
-            Page {pagination.currentPage} of {pagination.totalPages}
+            {t("common.showingPages", { //todo test
+              currentPage: pagination.currentPage,
+              totalPages: pagination.totalPages,
+            })} 
           </div>
 
           <div className="flex items-center gap-2">
@@ -305,7 +311,7 @@ const MealsListView: React.FC<MealsListViewProps> = ({
               disabled={currentPage === 1}
               className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white"
             >
-              Previous
+              {t("common.previous")}
             </button>
 
             {/* Page numbers */}
@@ -342,12 +348,12 @@ const MealsListView: React.FC<MealsListViewProps> = ({
               disabled={currentPage === pagination.totalPages}
               className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-white"
             >
-              Next
+              {t("common.next")}
             </button>
           </div>
 
           <div className="text-sm text-gray-700 dark:text-gray-300">
-            {pageSize} per page
+            {pageSize} {t("mealPage.mealsPerPage")}
           </div>
         </div>
       )}

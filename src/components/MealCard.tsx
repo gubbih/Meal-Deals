@@ -160,8 +160,9 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user, offers = [] }) => {
                   ))}
                 {Object.keys(groupedFoodComponents).length > 3 && (
                   <div className="text-xs text-gray-400">
-                    +{Object.keys(groupedFoodComponents).length - 3} more
-                    categories
+                    {t("mealCard.moreCategories", {
+                      count: Object.keys(groupedFoodComponents).length - 3,
+                    })}
                   </div>
                 )}
               </div>

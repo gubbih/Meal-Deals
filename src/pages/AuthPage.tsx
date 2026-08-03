@@ -1,9 +1,11 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import AuthForm from "../components/AuthForm";
 
 function AuthPage() {
+  const { t } = useTranslation();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,7 +26,7 @@ function AuthPage() {
     return (
       <div className="flex justify-center items-center p-8 h-64">
         <div className="animate-pulse text-gray-600 dark:text-gray-300">
-          Loading...
+          {t("common.loading")}
         </div>
       </div>
     );
@@ -41,7 +43,7 @@ function AuthPage() {
   return (
     <div className="container mx-auto p-4 max-w-md">
       <h1 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
-        {isSignUp ? "Create Account" : "Sign In"}
+        {isSignUp ? t("authForm.createAccount") : t("authForm.signIn")}
       </h1>
       <AuthForm
         onSuccess={handleAuthSuccess}
