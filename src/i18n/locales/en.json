@@ -64,6 +64,7 @@
     "clearFilters": "Clear Filters",
     "mealsPerPage": "meals per page",
     "noOffersAvailable": "No offers available",
+    "permissionDenied": "You don't have permission to edit this meal",
     "favorite": {
       "add": "Add to Favorites",
       "remove": "Remove Favorite"
@@ -75,7 +76,10 @@
       "failedFavorite": "Failed to update favorites",
       "noEditPermission": "You don't have permission to edit this meal",
       "signedIn": "You are signed in",
-      "signedOut": "You are signed out"
+      "signedOut": "You are signed out",
+      "authFailed": "Authentication failed",
+      "signInSuccess": "Signed in successfully",
+      "signUpSuccess": "Account created successfully"
     },
     "errors": {
       "noMealId": "No meal ID provided",

@@ -63,6 +63,7 @@
     "clearFilters": "Ryd Filtre",
     "mealsPerPage": "måltider pr. side",
     "noOffersAvailable": "Ingen tilbud tilgængelige",
+    "permissionDenied": "Du har ikke tilladelse til at redigere dette måltid",
     "favorite": {
       "add": "Tilføj til Favoritter",
       "remove": "Fjern Favorit"
@@ -277,7 +278,24 @@
   "foodComponentSelector": {
     "selectFoodComponents": "Vælg madkomponenter",
     "noMatchingFoodComponents": "Ingen matchende madkomponenter",
-    "loadingFoodComponents": "Indlæser madkomponenter..."  },
-    "maxSelectionsReached": "Maksimalt antal på {{maxSelections}} komponenter tilladt",
-    "categoriesSelected": "{{count}} kategorier valgt"
+    "loadingFoodComponents": "Indlæser madkomponenter..."  
+  },
+  "toastMessages": {
+    "signInToFavorite": "Log venligst ind for at tilføje favoritter",
+    "addedFavorite": "Tilføjet til favoritter",
+    "removedFavorite": "Fjernet fra favoritter",
+    "failedFavorite": "Kunne ikke opdatere favoritter",
+    "noEditPermission": "Du har ikke tilladelse til at redigere dette måltid",
+    "signedIn": "Logget ind",
+    "signedOut": "Logget ud",
+    "createMealSuccess": "Måltid oprettet med succes!",
+    "createMealError": "Kunne ikke oprette måltid!",
+    "updateMealSuccess": "Måltid opdateret med succes!",
+    "updateMealError": "Kunne ikke opdatere måltid!",
+    "deleteMealSuccess": "Måltid slettet med succes!",
+    "deleteMealError": "Kunne ikke slette måltid!"
+  },
+  "maxSelectionsReached": "Maksimalt antal på {{maxSelections}} komponenter tilladt",
+  "categoriesSelected": "{{count}} kategorier valgt"
 }
+
