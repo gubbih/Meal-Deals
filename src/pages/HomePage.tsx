@@ -189,7 +189,7 @@ useEffect(() => {
             }}
             className="ml-4 text-xs text-yellow-800 dark:text-yellow-200 underline"
           >
-            {t("homePage.logAuthToken")}
+            {t("homePage.getAuthToken")}
           </button>
         </div>
       )}

@@ -12,6 +12,7 @@ import { useToast } from "../contexts/ToastContext";
 import { useCache } from "../contexts/CacheContext";
 import { useAuth } from "../contexts/AuthContext";
 import { LoadingSpinner } from "../components/LoadingSpinner";
+import { useTranslation } from "react-i18next";
 
 // Helper function to transform nested food components structure to flat structure
 const transformFoodComponents = (foodComponents: any[]) => {
@@ -56,7 +57,7 @@ function EditMealPage() {
   const { showToast } = useToast();
   const { invalidate } = useCache();
   const { user, loading: authLoading } = useAuth();
-
+  const { t } = useTranslation();
   const {
     foodComponents,
     loading: foodComponentsLoading,
@@ -82,7 +83,7 @@ function EditMealPage() {
     if (!mealLoading && fetchedMeal && user) {
       if (fetchedMeal.createdBy !== user.id && !user.isAdmin) {
         setPermissionError(true);
-        showToast("error", "You don't have permission to edit this meal");
+        showToast("error", t("mealPage.permissionDenied"));
       }
     }
   }, [fetchedMeal, user, mealLoading, showToast]);
@@ -201,7 +202,7 @@ function EditMealPage() {
         invalidate("all-meals");
         invalidate(`meal-${id}`);
 
-        showToast("success", "Meal successfully updated!");
+        showToast("success", t("toast.mealUpdated"));
 
         // Add a small delay before navigation to ensure toast is visible
         setTimeout(() => {
@@ -209,14 +210,14 @@ function EditMealPage() {
             state: {
               toast: {
                 type: "success",
-                message: "Meal successfully updated!",
+                message: t("toast.mealUpdated")
               },
             },
           });
         }, 300);
       } catch (error) {
         console.error("Error updating meal:", error);
-        showToast("error", "Failed to update meal!");
+        showToast("error", t("toast.mealUpdateFailed"));
       } finally {
         setFormSubmitting(false);
       }
@@ -238,13 +239,13 @@ function EditMealPage() {
   if (notFoundError) {
     return (
       <div className="p-4 text-red-600 dark:text-red-400 flex flex-col items-center justify-center min-h-64">
-        <p className="text-lg font-medium mb-2">Meal not found</p>
-        <p>The meal you're looking for doesn't exist or has been deleted.</p>
+        <p className="text-lg font-medium mb-2">{t("mealPage.mealNotFound")}</p>
+        <p>{t("mealPage.mealNotFoundDescription")}</p>
         <button
           onClick={() => navigate("/")}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
-          Return to Home
+          {t("mealPage.returnToHome")}
         </button>
       </div>
     );
@@ -253,13 +254,13 @@ function EditMealPage() {
   if (permissionError) {
     return (
       <div className="p-4 text-red-600 dark:text-red-400 flex flex-col items-center justify-center min-h-64">
-        <p className="text-lg font-medium mb-2">Permission Denied</p>
-        <p>You don't have permission to edit this meal.</p>
+        <p className="text-lg font-medium mb-2">{t("mealPage.permissionDenied")}</p>
+        <p>{t("mealPage.permissionDeniedDescription")}</p>
         <button
           onClick={() => navigate(`/meal/${id}`)}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
-          View Meal
+          {t("mealPage.viewMeal")}
         </button>
       </div>
     );
@@ -268,7 +269,7 @@ function EditMealPage() {
   if (error) {
     return (
       <div className="p-4 text-red-600 dark:text-red-400 flex flex-col items-center justify-center min-h-64">
-        <p className="text-lg font-medium mb-2">Error</p>
+        <p className="text-lg font-medium mb-2">{t("mealPage.error")}</p>
         <p>{error}</p>
         <button
           onClick={() => {
@@ -277,7 +278,7 @@ function EditMealPage() {
           }}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
-          Try Again
+          {t("mealPage.tryAgain")}
         </button>
       </div>
     );
@@ -286,12 +287,12 @@ function EditMealPage() {
   if (!id || !fetchedMeal) {
     return (
       <div className="p-4 text-gray-600 dark:text-gray-400 flex flex-col items-center justify-center min-h-64">
-        <p className="text-lg font-medium mb-2">No meal data found</p>
+        <p className="text-lg font-medium mb-2">{t("mealPage.noMealDataFound")}</p>
         <button
           onClick={() => navigate("/")}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
-          Return to Home
+          {t("mealPage.returnToHome")}
         </button>
       </div>
     );
@@ -302,9 +303,6 @@ function EditMealPage() {
     fetchedMeal.foodComponents || [],
   );
 
-  console.log("Original food components:", fetchedMeal.foodComponents);
-  console.log("Transformed food components:", transformedFoodComponents);
-
   // Ensure meal has complete data for the form
   const mealWithDefaults: Meal = {
     ...fetchedMeal,
@@ -314,7 +312,7 @@ function EditMealPage() {
   };
 
   if (!id) {
-    return <div>loading...</div>;
+    return <div>{t("common.loading")}</div>;
   }
 
   return (
@@ -323,14 +321,14 @@ function EditMealPage() {
         isVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         onConfirm={confirmNavigateAway}
-        message="Er du sikker på at gå væk fra denne side, tingene er ikke gemt?"
+        message={t("editMealPage.confirmLeave")}
       />
 
       {formSubmitting ? (
         <div className="flex flex-col items-center justify-center py-8">
           <LoadingSpinner />
           <p className="mt-4 text-gray-600 dark:text-gray-300">
-            Updating your meal...
+            {t("editMealPage.savingMeal")}
           </p>
         </div>
       ) : (

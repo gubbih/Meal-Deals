@@ -52,7 +52,7 @@ function CreateMealPage() {
   }, [user, authLoading, navigate, showToast, t]);
 
   const handleSubmit = async (formData: MealFormValues) => {
-    console.log("handleSubmit called with:", formData);
+    //console.log("handleSubmit called with:", formData);
     if (!user) {
       showToast("error", t("createMealPage.mustBeLoggedIn"));
       navigate("/auth");
