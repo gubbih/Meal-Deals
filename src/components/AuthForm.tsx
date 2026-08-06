@@ -90,7 +90,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
           className={`px-4 py-2 font-medium rounded-lg w-full sm:w-auto ${
             !isSignUp
               ? "bg-blue-600 text-white"
-              : "text-gray-700 dark:text-gray-300"
+              : "text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
           }`}
           type="button"
         >
@@ -101,7 +101,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
           className={`px-4 py-2 font-medium rounded-lg w-full sm:w-auto ${
             isSignUp
               ? "bg-blue-600 text-white"
-              : "text-gray-700 dark:text-gray-300"
+              : "text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700"
           }`}
           type="button"
         >
@@ -126,8 +126,8 @@ const AuthForm: React.FC<AuthFormProps> = ({
               id="displayName"
               type="text"
               {...signupForm.register("displayName")}
-              className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
+              className={`block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+            />  
             {signupForm.formState.errors.displayName && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                 {signupForm.formState.errors.displayName.message}
@@ -146,7 +146,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
               id="signup-email"
               type="email"
               {...signupForm.register("email")}
-              className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className={`block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
             />
             {signupForm.formState.errors.email && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">
@@ -166,7 +166,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
               id="signup-password"
               type="password"
               {...signupForm.register("password")}
-              className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className={`block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
             />
             {signupForm.formState.errors.password && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">
@@ -208,7 +208,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
               id="login-email"
               type="email"
               {...loginForm.register("email")}
-              className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className={`block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
             />
             {loginForm.formState.errors.email && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">
@@ -228,7 +228,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
               id="login-password"
               type="password"
               {...loginForm.register("password")}
-              className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className={`block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
             />
             {loginForm.formState.errors.password && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">
