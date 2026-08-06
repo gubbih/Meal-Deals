@@ -213,6 +213,7 @@
   },
   "homePage": {
     "clearCache": "Clear Cache & Refresh Data (Dev Only)",
+    "getAuthToken": "Get Auth Token (Dev Only)",
     "title": "Cheap Meals: Delicious Cooking Made Affordable",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nulla sit amet aliquam lacinia, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl.",
     "getStarted": "Get Started",
@@ -263,14 +264,14 @@
     "savingMeal": "Saving your meal..."
   },
   "mealCard": {
-    "offersOnIngredients": "Offers on Ingredients",
+    "offersOnIngredients": "Offers",
     "offersAvailable": "{{count}} offers available",
     "noOffersAvailable": "No offers available",
     "viewMeal": "View Meal",
     "editMeal": "Edit Meal",
     "deleteMeal": "Delete Meal",
     "ingredients": "Ingredients",
-    "creator": "Created by {{creator}}",
+    "creator": "Created by",
     "createdAt": "Created on {{date}}",
     "moreCategories": "+{{count}} more categories",
     "updatedAt": "Updated on {{date}}"

@@ -30,12 +30,12 @@ export const cuisineKeys = [
 ];
 
 export const mealTypeKeys = [
-  "Morgenmad",
-  "Frokost",
-  "Aftensmad",
-  "Dessert",
+  "Breakfast",
+  "Lunch",
+  "Dinner",
   "Snack",
-  "Drikke",
+  "Dessert",
+  "Beverage"
 ];
 
 // Keep the original exports for backward compatibility and validation

@@ -7,6 +7,7 @@ import useFavoriteMeals from "../hooks/useFavoriteMeals";
 import { Offer } from "../models/Offer";
 import { FoodComponent } from "../models/FoodComponent";
 import { useTranslation } from "react-i18next";
+import { translateCuisine, translateMealType } from "../utils/translationHelpers";
 
 interface MealCardProps {
   meal: Meal;
@@ -117,12 +118,12 @@ const MealCard: React.FC<MealCardProps> = ({ meal, user, offers = [] }) => {
           <div className="mt-2 flex flex-wrap gap-2">
             {meal.mealType && (
               <span className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full">
-                {meal.mealType}
+                {translateMealType(meal.mealType, t)}
               </span>
             )}
             {meal.mealCuisine && (
               <span className="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-full">
-                {meal.mealCuisine}
+                {translateCuisine(meal.mealCuisine, t)}
               </span>
             )}
             {/* Meal component counter */}

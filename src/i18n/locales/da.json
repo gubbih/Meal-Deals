@@ -213,6 +213,7 @@
   },
   "homePage": {
     "clearCache": "Ryd Cache & Opdater Data (Kun Dev)",
+    "getAuthToken": "Hent Auth Token (Kun Dev)",
     "title": "Billige Måltider: Lækker Madlavning Gjort Overkommelig",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nulla sit amet aliquam lacinia, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl.",
     "getStarted": "Kom I Gang",
@@ -263,7 +264,7 @@
     "savingMeal": "Gemmer dit måltid..."
   },
   "mealCard": {
-    "offersOnIngredients": "Er på tilbud",
+    "offersOnIngredients": "Tilbud",
     "offersAvailable": "{{count}} tilbud tilgængelige",
     "noOffersAvailable": "Ingen tilbud tilgængelige",
     "viewMeal": "Se Måltid",
