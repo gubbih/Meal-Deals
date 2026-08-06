@@ -6,12 +6,15 @@ import { Link } from "react-router-dom";
 import Toast from "../components/Toast";
 import AuthForm from "../components/AuthForm";
 import { useTranslation } from "react-i18next";
+import { loadFavoritesForUser } from "../hooks/useFavoriteMeals";
+import MealCard from "../components/MealCard";
 
 function UserPage() {
   const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
   const { handleSignOut, loading: signOutLoading } = useSignOut();
   const { meals } = useFetchMeals();
+  const [favoriteMeals, setFavoriteMeals] = useState<typeof meals>([]);
   const [toast, setToast] = useState<{
     type: "success" | "error" | "warning";
     message: string;
@@ -21,10 +24,27 @@ function UserPage() {
     await handleSignOut();
     setToast({ type: "success", message: t("mealPage.toast.signedOut") });
   };
-  // Filter favorite meals
-  const favoriteMeals = user?.favoriteRecipes
-    ? meals.filter((meal) => user.favoriteRecipes?.includes(meal.id))
-    : [];
+  const fetchFavoriteMeals = async () => {
+    if (user) {
+      try {
+        const favoriteIds = await loadFavoritesForUser(user.id);
+        const favoriteMealsList = meals.filter((meal) =>
+          favoriteIds.includes(meal.id),
+        );
+        setFavoriteMeals(favoriteMealsList);
+      } catch (error) {
+        console.error("Failed to load favorite meals:", error);
+        setToast({
+          type: "error",
+          message: t("mealPage.toast.failedToLoadFavorites"),
+        });
+      }
+    }
+  };
+
+  React.useEffect(() => {
+    fetchFavoriteMeals();
+  }, [user, meals]);
 
   if (authLoading) {
     return (
@@ -37,7 +57,7 @@ function UserPage() {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4">
+    <div className="w-full max-w-6xl mx-auto">
       {toast && <Toast type={toast.type} message={toast.message} />}
 
       <h1 className="text-2xl sm:text-3xl font-semibold mb-6 text-center dark:text-white">
@@ -45,7 +65,7 @@ function UserPage() {
       </h1>
 
       {user ? (
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
           <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 sm:p-6 lg:col-span-2">
             <h2 className="text-xl font-semibold mb-4 dark:text-white">
               {t("userPage.profileInformation")}
@@ -86,7 +106,7 @@ function UserPage() {
                 </p>
               </div>
             </div>
-
+            <br />
             <button
               onClick={handleUserSignOut}
               disabled={signOutLoading}
@@ -98,34 +118,14 @@ function UserPage() {
             </button>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 sm:p-6 lg:col-span-3">
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-2 sm:p-6 lg:col-span-4">
             <h2 className="text-xl font-semibold mb-4 dark:text-white">
               {t("userPage.favoriteMeals")}
             </h2>
             {favoriteMeals.length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-h-[600px] overflow-y-auto pr-2">
                 {favoriteMeals.map((meal) => (
-                  <Link
-                    key={meal.id}
-                    to={`/meal/${meal.id}`}
-                    className="flex flex-col p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition h-full"
-                  >
-                    <div className="w-full h-36 rounded-md overflow-hidden mb-3">
-                      <img
-                        src={meal.imagePath}
-                        alt={meal.name}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-medium text-base text-gray-900 dark:text-white line-clamp-2">
-                        {meal.name}
-                      </h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        {meal.mealType}
-                      </p>
-                    </div>
-                  </Link>
+                  <MealCard key={meal.id} meal={meal} user={user} />
                 ))}
               </div>
             ) : (

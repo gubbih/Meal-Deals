@@ -16,7 +16,7 @@ const updateFavoritesStore = (userId: string, favorites: string[]) => {
   favoritesListeners.forEach((listener) => listener(userId, favorites));
 };
 
-const loadFavoritesForUser = async (userId: string): Promise<string[]> => {
+ export const loadFavoritesForUser = async (userId: string): Promise<string[]> => {
   if (favoritesCache.has(userId)) {
     return favoritesCache.get(userId) ?? [];
   }
