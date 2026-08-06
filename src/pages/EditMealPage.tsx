@@ -303,9 +303,6 @@ function EditMealPage() {
     fetchedMeal.foodComponents || [],
   );
 
-  console.log("Original food components:", fetchedMeal.foodComponents);
-  console.log("Transformed food components:", transformedFoodComponents);
-
   // Ensure meal has complete data for the form
   const mealWithDefaults: Meal = {
     ...fetchedMeal,

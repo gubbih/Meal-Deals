@@ -92,7 +92,7 @@ export const createMeal = async (
   mealData: Omit<Meal, "id" | "createdAt">,
 ): Promise<Meal> => {
   try {
-    console.log("Creating meal with data:", mealData);
+    //console.log("Creating meal with data:", mealData);
 
     // Check if there's a file to upload
     const hasFile = mealData.image instanceof File;
@@ -144,7 +144,7 @@ export const createMeal = async (
     }
 
     const response = await api.post("/api/meals", requestData, config);
-    console.log("Create meal response:", response);
+    //console.log("Create meal response:", response);
     return response.data.data.meal; // Backend returns {success, data: {meal}}
   } catch (error) {
     if (axios.isAxiosError(error)) {

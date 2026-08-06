@@ -61,6 +61,5 @@ export const translateCuisine = (cuisine: string | undefined, t: any) => {
  */
 export const translateMealType = (mealType: string | undefined, t: any) => {
   if (!mealType) return "";
-  console.log("Translating meal type:", mealType);
   return t(`mealTypes.${mealType}`);
 };
